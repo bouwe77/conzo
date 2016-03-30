@@ -27,7 +27,7 @@ namespace Example
          var screen = new Screen(() => "Hello World");
          var screen2 = new Screen(() => "moio");
 
-         var myApp = new ConsoleApplication(screen, "My FUCKING app");
+         var myApp = new ConsoleApplication(screen, "My cool app :)");
 
          myApp.Configure(screen)
             .AddCommand(ConsoleKey.D1, screen2);
