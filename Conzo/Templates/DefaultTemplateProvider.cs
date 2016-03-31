@@ -15,7 +15,7 @@ namespace Conzo.Templates
          _applicationTitle = applicationTitle;
       }
 
-      public string GetHeader()
+      private string GetHeader()
       {
          string header = string.Format(
             "{0}{1}{2}{3}{4}{5}",
@@ -28,7 +28,7 @@ namespace Conzo.Templates
          return header;
       }
 
-      public string GetFooter()
+      private string GetFooter()
       {
          string footer = string.Format(
             "{0}{1}{2}{3}{4}{5}{6}{7}{8}",
