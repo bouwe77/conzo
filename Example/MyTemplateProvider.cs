@@ -5,7 +5,7 @@ namespace Example
 {
    internal class MyTemplateProvider : ITemplateProvider
    {
-      public string GetHeader()
+      private string GetHeader()
       {
          string header = string.Format(
             "{0}{1}{2}{3}{4}{5}",
@@ -18,7 +18,7 @@ namespace Example
          return header;
       }
 
-      public string GetFooter()
+      private string GetFooter()
       {
          string footer = string.Format(
             "{0}{1}{2}{3}{4}{5}{6}",
