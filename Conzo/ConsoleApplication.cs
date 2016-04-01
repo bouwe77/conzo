@@ -10,15 +10,70 @@ namespace Conzo
 {
    public class ConsoleApplication : IConsoleApplication
    {
-      internal const string DefaultApplicationTitle = "my CONZO application";
-      internal const ConsoleKey DefaultQuitKey = ConsoleKey.Q;
       private readonly IConsoleWrapper _consoleWrapper;
       private readonly IKeyboardListener _keyboardListener;
       private readonly IScreenManager _screenManager;
       private readonly ITemplateProvider _templateProvider;
-
+      private string _applicationTitle;
       private ConsoleKey _quitKey;
       private int _quitDelay;
+
+      /// <summary>
+      /// Gets or sets the application title which is displayed by the <see cref="ITemplateProvider"/>.
+      /// </summary>
+      public string ApplicationTitle
+      {
+         get
+         {
+            return _applicationTitle;
+         }
+         set
+         {
+            _applicationTitle = Enforce.StringNotNullOrEmpty(value, "ApplicationTitle can not be empty");
+
+            if (_templateProvider != null)
+            {
+               _templateProvider.ApplicationTitle = value;
+            }
+         }
+      }
+
+      /// <summary>
+      /// Gets or sets the key that makes the application quit.
+      /// </summary>
+      public ConsoleKey QuitKey
+      {
+         get
+         {
+            return _quitKey;
+         }
+         set
+         {
+            SupportedKeys.Validate(value);
+            _quitKey = value;
+
+            if (_templateProvider != null)
+            {
+               _templateProvider.QuitKey = _quitKey;
+            }
+         }
+      }
+
+      /// <summary>
+      /// Gets or sets the quit delay in milliseconds.
+      /// Use this if you want to display a screen when hitting the <see cref="QuitKey"/>, because then you need a delay so the user will at least see the screen.
+      /// </summary>
+      public int QuitDelay
+      {
+         get
+         {
+            return _quitDelay;
+         }
+         set
+         {
+            _quitDelay = Enforce.Condition(value, value >= 0, "QuitDelay must 0 or greater");
+         }
+      }
 
       /// <summary>
       /// Initializes a new instance of the <see cref="ConsoleApplication"/> class.
@@ -47,7 +102,7 @@ namespace Conzo
             new ConsoleWrapper(),
             new KeyboardListener(),
             new ScreenManager(),
-            new DefaultTemplateProvider(DefaultQuitKey, DefaultApplicationTitle))
+            new DefaultTemplateProvider())
       {
       }
 
@@ -66,29 +121,23 @@ namespace Conzo
          IScreenManager screenManager,
          ITemplateProvider templateProvider)
       {
-         _quitKey = DefaultQuitKey;
+         QuitKey = Defaults.QuitKey;
+         ApplicationTitle = Defaults.ApplicationTitle;
+         QuitDelay = Defaults.QuitDelay;
+
          _consoleWrapper = Enforce.ArgumentNotNull(consoleManager, "ConsoleManager can not be null");
          _keyboardListener = Enforce.ArgumentNotNull(keyboardListener, "KeyboardListener can not be null");
          _screenManager = Enforce.ArgumentNotNull(screenManager, "ScreenManager can not be null");
 
-         _templateProvider = templateProvider ?? new DefaultTemplateProvider(_quitKey, DefaultApplicationTitle);
+         _templateProvider = templateProvider ?? new DefaultTemplateProvider();
+         _templateProvider.ApplicationTitle = _applicationTitle;
+         _templateProvider.QuitKey = _quitKey;
 
          AddOrUpdateScreen(startScreen);
       }
 
-      //TODO FIX this method will set defaults if argument is not supplied.
-      public void Configure(ConsoleKey quitKey = DefaultQuitKey, int quitDelay = 0, string applicationTitle = DefaultApplicationTitle)
-      {
-         _quitKey = SupportedKeys.Validate(quitKey);
-         _quitDelay = quitDelay;
-
-         _templateProvider.QuitKey = quitKey;
-         _templateProvider.ApplicationTitle = applicationTitle;
-      }
-
-
       //TODO Allow adding commands that apply to all screens. Solution: introduce a general list of configurations that apply to all screens, whether they are created before or after configuring it.
-      
+
       public ScreenConfiguration AddOrUpdateScreen(Screen screen)
       {
          Enforce.ArgumentNotNull(screen, "screen can not be null");
@@ -145,10 +194,10 @@ namespace Conzo
 
          ShowScreen();
 
-         if (key == _quitKey)
+         if (key == QuitKey)
          {
             // The quit key is pressed, after displaying the screen, wait a while and then stop the keyboard listener which will result in the program stops.
-            Thread.Sleep(_quitDelay);
+            Thread.Sleep(QuitDelay);
             _keyboardListener.Stop();
          }
       }

@@ -6,20 +6,20 @@ namespace Conzo.Templates
 {
    internal class DefaultTemplateProvider : ITemplateProvider
    {
-      private readonly string _applicationTitle;
+      //private readonly string _applicationTitle;
 
-      public DefaultTemplateProvider(ConsoleKey quitKey, string applicationTitle)
-      {
-         QuitKey = quitKey;
-         _applicationTitle = applicationTitle;
-      }
+      //public DefaultTemplateProvider(ConsoleKey quitKey, string applicationTitle)
+      //{
+      //QuitKey = quitKey;
+      //_applicationTitle = applicationTitle;
+      //}
 
       private string GetHeader()
       {
          string header = string.Format(
             "{0}{1}{2}{3}{4}{5}",
             Environment.NewLine,
-            _applicationTitle,
+            ApplicationTitle,
             Environment.NewLine,
             "-------------------------------------------------------",
             Environment.NewLine,

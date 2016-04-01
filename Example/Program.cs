@@ -23,9 +23,12 @@ namespace Example
       {
          var screen = new Screen(() => "Hello World, press 1 to continue...");
 
-         var myApp = new ConsoleApplication(screen);
-
-         myApp.Configure(quitDelay: 2000);
+         var myApp = new ConsoleApplication(screen)
+         {
+            ApplicationTitle = "HOI",
+            QuitKey = ConsoleKey.D,
+            QuitDelay = 2000
+         };
 
          myApp.AddOrUpdateScreen(screen)
             .AddCommand(ConsoleKey.D1, new Screen(() => "moio"));

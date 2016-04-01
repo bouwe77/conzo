@@ -39,6 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Defaults.cs" />
     <Compile Include="IConsoleApplication.cs" />
     <Compile Include="Keys\SupportedKeys.cs" />
     <Compile Include="Utilities\Enforce.cs" />

@@ -5,9 +5,9 @@ namespace Conzo.Utilities
 {
    internal static class Enforce
    {
-      public static T ArgumentNotNull<T>(T argument, string description) where T : class
+      public static T Condition<T>(T argument, bool condition, string description)
       {
-         if (argument == null)
+         if (!condition)
          {
             throw new ArgumentException(description);
          }
@@ -15,14 +15,14 @@ namespace Conzo.Utilities
          return argument;
       }
 
+      public static T ArgumentNotNull<T>(T argument, string description) where T : class
+      {
+         return Condition(argument, argument != null, description);
+      }
+
       public static string StringNotNullOrEmpty(string argument, string description)
       {
-         if (string.IsNullOrEmpty(argument))
-         {
-            throw new ArgumentException(description);
-         }
-
-         return argument;
+         return Condition(argument, !string.IsNullOrEmpty(argument), description);
       }
 
       public static void DictionaryKeyDoesNotExist<T1, T2>(Dictionary<T1, T2> dictionary, T1 key, string description)
@@ -32,6 +32,7 @@ namespace Conzo.Utilities
             throw new ArgumentException(description);
          }
       }
+
       public static void DictionaryKeyExists<T1, T2>(Dictionary<T1, T2> dictionary, T1 key, string description)
       {
          if (!dictionary.ContainsKey(key))

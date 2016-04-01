@@ -5,8 +5,10 @@ namespace Conzo
 {
    public interface IConsoleApplication
    {
-      void Configure(ConsoleKey quitKey = ConsoleApplication.DefaultQuitKey, int quitDelay = 0, string applicationTitle = "");
       ScreenConfiguration AddOrUpdateScreen(Screen screen);
       void Start();
+      ConsoleKey QuitKey { get; set; }
+      string ApplicationTitle { get; set; }
+      int QuitDelay { get; set; }
    }
 }
