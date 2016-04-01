@@ -6,12 +6,11 @@ namespace Conzo.Templates
 {
    internal class DefaultTemplateProvider : ITemplateProvider
    {
-      private readonly ConsoleKey _quitKey;
       private readonly string _applicationTitle;
 
       public DefaultTemplateProvider(ConsoleKey quitKey, string applicationTitle)
       {
-         _quitKey = quitKey;
+         QuitKey = quitKey;
          _applicationTitle = applicationTitle;
       }
 
@@ -22,7 +21,7 @@ namespace Conzo.Templates
             Environment.NewLine,
             _applicationTitle,
             Environment.NewLine,
-            "-------------------------------------------------------", 
+            "-------------------------------------------------------",
             Environment.NewLine,
             Environment.NewLine);
          return header;
@@ -38,7 +37,7 @@ namespace Conzo.Templates
             "-------------------------------------------------------",
             Environment.NewLine,
             "Press ",
-            _quitKey.ToString().ToUpper(),
+            QuitKey.ToString().ToUpper(),
             " to quit",
             Environment.NewLine);
 
@@ -50,5 +49,9 @@ namespace Conzo.Templates
          string renderedTemplate = string.Format("{0}{1}{2}", GetHeader(), stuff, GetFooter());
          return renderedTemplate;
       }
+
+      public ConsoleKey QuitKey { get; set; }
+
+      public string ApplicationTitle { get; set; }
    }
 }

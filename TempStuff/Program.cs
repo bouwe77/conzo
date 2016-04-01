@@ -21,24 +21,29 @@ namespace TempStuff
 
       private static void DoSomething()
       {
-         var handler = new LongRunningTaskHandler(Bla, 100);
+         var handler = new LongRunningTaskHandler(DisplaySpinner, 100);
          handler.ExecuteLongRunningTask(Floep);
       }
 
       private static void Floep()
       {
-         Thread.Sleep(5000);
+         Thread.Sleep(400);
+         Console.WriteLine("Done!");
       }
 
-      private static void Bla()
+      private static void DisplaySpinner()
       {
          var spinnerCharacters = new[] { '|', '/', '-', '\\' };
 
-         char c = spinnerCharacters[_counter];
+         char spinnerCharacter = spinnerCharacters[_counter];
+
+         string textToDisplay = "Please wait... " + spinnerCharacter;
 
          Console.CursorVisible = false;
          Console.SetCursorPosition(2,2);
-         Console.Write(c);
+         Console.WriteLine(textToDisplay);
+         Console.WriteLine();
+         Console.WriteLine();
 
          _counter++;
          if (_counter == spinnerCharacters.Length)

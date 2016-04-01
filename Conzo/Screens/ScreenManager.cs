@@ -16,7 +16,7 @@ namespace Conzo.Screens
          _configuredScreens = new Dictionary<Screen, ScreenConfiguration>();
       }
 
-      public ScreenConfiguration AddConfiguration(Screen screen)
+      public ScreenConfiguration AddOrUpdateScreen(Screen screen)
       {
          Enforce.ArgumentNotNull(screen, "screen can not be null");
 

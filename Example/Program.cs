@@ -2,8 +2,6 @@
 using Conzo;
 using Conzo.Screens;
 
-//TODO Indien er async meuk gebruikt moet worden: NuGet package Nito.AsynxEx toevoegen en dan de AsyncContext gebruiken: https://github.com/StephenCleary/AsyncEx/wiki/AsyncContext
-
 namespace Example
 {
    class Program
@@ -21,22 +19,19 @@ namespace Example
          }
       }
 
-
       private static void Example2()
       {
-         var screen = new Screen(() => "Hello World");
-         var screen2 = new Screen(() => "moio");
+         var screen = new Screen(() => "Hello World, press 1 to continue...");
 
-         var myApp = new ConsoleApplication(screen, "My cool app :)");
+         var myApp = new ConsoleApplication(screen);
 
-         myApp.Configure(screen)
-            .AddCommand(ConsoleKey.D1, screen2);
+         myApp.Configure(quitDelay: 2000);
 
-         myApp.Configure(screen2);
+         myApp.AddOrUpdateScreen(screen)
+            .AddCommand(ConsoleKey.D1, new Screen(() => "moio"));
 
          myApp.Start();
       }
-
 
       private static void Example1()
       {
@@ -50,19 +45,19 @@ namespace Example
          var myTemplateProvider = new MyTemplateProvider();
          var myApp = new ConsoleApplication(welcome, myTemplateProvider);
 
-         myApp.Configure(welcome)
+         myApp.AddOrUpdateScreen(welcome)
             .AddCommand(ConsoleKey.D1, screen1)
             .AddCommand(ConsoleKey.Q, outro);
 
-         myApp.Configure(screen1)
+         myApp.AddOrUpdateScreen(screen1)
             .AddCommand(ConsoleKey.D2, screen2)
             .AddCommand(ConsoleKey.Q, outro);
 
-         myApp.Configure(screen2)
+         myApp.AddOrUpdateScreen(screen2)
             .AddCommand(ConsoleKey.D1, screen1)
             .AddCommand(ConsoleKey.Q, outro);
 
-         myApp.Configure(outro);
+         myApp.AddOrUpdateScreen(outro);
 
          myApp.Start();
       }

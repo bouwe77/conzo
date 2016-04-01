@@ -27,7 +27,7 @@ namespace Example
             Environment.NewLine,
             "-------------------------------------------------------",
             Environment.NewLine,
-            "Press Q to quit",
+            "Press " + QuitKey + " to quit",
             Environment.NewLine);
 
          return footer;
@@ -38,5 +38,9 @@ namespace Example
          string renderedTemplate = string.Format("{0}{1}{2}", GetHeader(), stuff, GetFooter());
          return renderedTemplate;
       }
+
+      public ConsoleKey QuitKey { get; set; }
+
+      public string ApplicationTitle { get; set; }
    }
 }

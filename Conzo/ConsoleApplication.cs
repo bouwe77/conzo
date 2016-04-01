@@ -8,15 +8,17 @@ using Conzo.Utilities;
 
 namespace Conzo
 {
-   public class ConsoleApplication
+   public class ConsoleApplication : IConsoleApplication
    {
-      private const ConsoleKey DefaultQuitKey = ConsoleKey.Q;
+      internal const string DefaultApplicationTitle = "my CONZO application";
+      internal const ConsoleKey DefaultQuitKey = ConsoleKey.Q;
       private readonly IConsoleWrapper _consoleWrapper;
       private readonly IKeyboardListener _keyboardListener;
       private readonly IScreenManager _screenManager;
       private readonly ITemplateProvider _templateProvider;
 
-      public ConsoleKey QuitKey { get; set; }
+      private ConsoleKey _quitKey;
+      private int _quitDelay;
 
       /// <summary>
       /// Initializes a new instance of the <see cref="ConsoleApplication"/> class.
@@ -27,8 +29,6 @@ namespace Conzo
       public ConsoleApplication(Screen startScreen, ITemplateProvider templateProvider)
          : this(
             startScreen,
-            DefaultQuitKey,
-            null,
             new ConsoleWrapper(),
             new KeyboardListener(),
             new ScreenManager(),
@@ -39,19 +39,15 @@ namespace Conzo
       /// <summary>
       /// Initializes a new instance of the <see cref="ConsoleApplication"/> class.
       /// Use this constructor if you want to use Conzo's default <see cref="ITemplateProvider"/>.
-      /// The <paramref name="applicationTitle"/> is displayed in the default template.
       /// </summary>
       /// <param name="startScreen">The start screen.</param>
-      /// <param name="applicationTitle">The application title.</param>
-      public ConsoleApplication(Screen startScreen, string applicationTitle)
+      public ConsoleApplication(Screen startScreen)
          : this(
             startScreen,
-            DefaultQuitKey,
-            applicationTitle,
             new ConsoleWrapper(),
             new KeyboardListener(),
             new ScreenManager(),
-            new DefaultTemplateProvider(DefaultQuitKey, applicationTitle))
+            new DefaultTemplateProvider(DefaultQuitKey, DefaultApplicationTitle))
       {
       }
 
@@ -59,48 +55,49 @@ namespace Conzo
       /// Initializes a new instance of the <see cref="ConsoleApplication"/> class.
       /// </summary>
       /// <param name="startScreen">The start screen.</param>
-      /// <param name="quitKey">The quit key.</param>
-      /// <param name="applicationTitle">The application title.</param>
       /// <param name="consoleManager">The console manager.</param>
       /// <param name="keyboardListener">The keyboard listener.</param>
       /// <param name="screenManager">The screen manager.</param>
       /// <param name="templateProvider">The template provider.</param>
       internal ConsoleApplication(
          Screen startScreen,
-         ConsoleKey quitKey,
-         string applicationTitle,
          IConsoleWrapper consoleManager,
          IKeyboardListener keyboardListener,
          IScreenManager screenManager,
          ITemplateProvider templateProvider)
       {
+         _quitKey = DefaultQuitKey;
          _consoleWrapper = Enforce.ArgumentNotNull(consoleManager, "ConsoleManager can not be null");
          _keyboardListener = Enforce.ArgumentNotNull(keyboardListener, "KeyboardListener can not be null");
          _screenManager = Enforce.ArgumentNotNull(screenManager, "ScreenManager can not be null");
 
-         if (templateProvider != null)
-         {
-            _templateProvider = templateProvider;
-         }
-         else
-         {
-            Enforce.StringNotNullOrEmpty(applicationTitle, "ApplicationTitle can not be null");
-            _templateProvider = new DefaultTemplateProvider(quitKey, applicationTitle);
-         }
+         _templateProvider = templateProvider ?? new DefaultTemplateProvider(_quitKey, DefaultApplicationTitle);
 
-         Configure(startScreen);
-         QuitKey = SupportedKeys.Validate(quitKey);
+         AddOrUpdateScreen(startScreen);
       }
 
-      public ScreenConfiguration Configure(Screen screen)
+      //TODO FIX this method will set defaults if argument is not supplied.
+      public void Configure(ConsoleKey quitKey = DefaultQuitKey, int quitDelay = 0, string applicationTitle = DefaultApplicationTitle)
+      {
+         _quitKey = SupportedKeys.Validate(quitKey);
+         _quitDelay = quitDelay;
+
+         _templateProvider.QuitKey = quitKey;
+         _templateProvider.ApplicationTitle = applicationTitle;
+      }
+
+
+      //TODO Allow adding commands that apply to all screens. Solution: introduce a general list of configurations that apply to all screens, whether they are created before or after configuring it.
+      
+      public ScreenConfiguration AddOrUpdateScreen(Screen screen)
       {
          Enforce.ArgumentNotNull(screen, "screen can not be null");
 
-         var configuration = _screenManager.AddConfiguration(screen);
+         var configuration = _screenManager.AddOrUpdateScreen(screen);
          return configuration;
       }
 
-      public Screen StartScreen
+      internal Screen StartScreen
       {
          get { return _screenManager.StartScreen; }
          set { _screenManager.StartScreen = value; }
@@ -148,10 +145,10 @@ namespace Conzo
 
          ShowScreen();
 
-         if (key == QuitKey)
+         if (key == _quitKey)
          {
-            // The quit key is pressed, wait a while and then stop the keyboard listener so the program will also stop.
-            Thread.Sleep(2000);
+            // The quit key is pressed, after displaying the screen, wait a while and then stop the keyboard listener which will result in the program stops.
+            Thread.Sleep(_quitDelay);
             _keyboardListener.Stop();
          }
       }

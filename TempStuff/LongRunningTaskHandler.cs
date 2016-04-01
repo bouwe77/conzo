@@ -6,14 +6,23 @@ namespace TempStuff
 {
    public class LongRunningTaskHandler
    {
-      private Timer _timer;
-      private readonly Action _indicateProgress;
-      private readonly double _intervalInMilliseconds;
+      private Timer _delayBeforeProgressTimer;
+      private readonly double _delayInMilliseconds;
 
-      public LongRunningTaskHandler(Action indicateProgess, double intervalInMilliseconds)
+      private Timer _progressIndicationTimer;
+      private readonly double _progressIndicationIntervalInMilliseconds;
+      private readonly Action _indicateProgress;
+
+      /// <summary>
+      /// Initializes a new instance of the <see cref="LongRunningTaskHandler"/> class.
+      /// </summary>
+      /// <param name="indicateProgess">The action that indicates the progess.</param>
+      /// <param name="progressIndicationIntervalInMilliseconds">The progress indication interval in milliseconds.</param>
+      public LongRunningTaskHandler(Action indicateProgess, double progressIndicationIntervalInMilliseconds)
       {
          _indicateProgress = indicateProgess;
-         _intervalInMilliseconds = intervalInMilliseconds;
+         _progressIndicationIntervalInMilliseconds = progressIndicationIntervalInMilliseconds;
+         _delayInMilliseconds = 500;
       }
 
       public void ExecuteLongRunningTask(Action longRunningTask)
@@ -27,20 +36,40 @@ namespace TempStuff
 
       private void StopTimer()
       {
-         _timer.Stop();
+         if (_progressIndicationTimer != null)
+         {
+            _progressIndicationTimer.Stop();
+         }
       }
 
       private void StartTimer()
       {
-         _timer = new Timer();
-         _timer.Elapsed += TimerElapsed;
-         _timer.Interval = _intervalInMilliseconds;
-         _timer.Start();
+         // Wait before indicating progress.
+         _delayBeforeProgressTimer = new Timer();
+         _delayBeforeProgressTimer.Elapsed += DelayBeforeProgressTimerElapsed;
+         _delayBeforeProgressTimer.Interval = _delayInMilliseconds;
+         _delayBeforeProgressTimer.Start();
       }
 
-      private void TimerElapsed(object source, ElapsedEventArgs e)
+      private void DelayBeforeProgressTimerElapsed(object sender, ElapsedEventArgs e)
       {
-         _indicateProgress.Invoke();
+         // The delay is over, stop that timer and start the timer that indicates progress.
+         _delayBeforeProgressTimer.Stop();
+         _delayBeforeProgressTimer.Elapsed -= DelayBeforeProgressTimerElapsed;
+
+         _progressIndicationTimer = new Timer();
+         _progressIndicationTimer.Elapsed += ProgressTimerElapsed;
+         _progressIndicationTimer.Interval = _progressIndicationIntervalInMilliseconds;
+         _progressIndicationTimer.Start();
+      }
+
+      private void ProgressTimerElapsed(object source, ElapsedEventArgs e)
+      {
+         // Invoke the action that indicates the progress.
+         if (_indicateProgress != null)
+         {
+            _indicateProgress.Invoke();
+         }
       }
    }
 }

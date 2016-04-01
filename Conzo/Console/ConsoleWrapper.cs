@@ -99,8 +99,8 @@ namespace Conzo.Console
       private void SetBackAndForeGroundColor()
       {
          // Set the background for the whole console window by calling Clear() afterwards, but before writing output.
-         System.Console.BackgroundColor = ConsoleColor.Black;
-         System.Console.ForegroundColor = ConsoleColor.Green;
+         System.Console.BackgroundColor = ConsoleColor.DarkBlue;
+         System.Console.ForegroundColor = ConsoleColor.White;
          System.Console.Clear();
       }
    }

@@ -4,7 +4,7 @@ namespace Conzo.Screens
 {
    internal interface IScreenManager
    {
-      ScreenConfiguration AddConfiguration(Screen screen);
+      ScreenConfiguration AddOrUpdateScreen(Screen screen);
       Screen GetNextScreen(ConsoleKey key);
       void Validate();
       Screen StartScreen { get; set; }
