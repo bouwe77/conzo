@@ -3,7 +3,7 @@ using Conzo.Templates;
 
 namespace Conzo
 {
-   public static class ConsoleApplicationFactory
+   public partial class ConsoleApplication
    {
       private static bool _created;
 
@@ -14,6 +14,16 @@ namespace Conzo
             throw new Exception("ConsoleApplication can only be created once.");
          }
 
+         SetDefaults(configuration);
+
+         var consoleApplication = new ConsoleApplication(configuration);
+         _created = true;
+
+         return consoleApplication;
+      }
+
+      private static void SetDefaults(ConsoleApplicationConfiguration configuration)
+      {
          if (string.IsNullOrEmpty(configuration.ApplicationTitle))
          {
             configuration.ApplicationTitle = Defaults.ApplicationTitle;
@@ -33,11 +43,6 @@ namespace Conzo
          {
             configuration.TemplateProvider = new DefaultTemplateProvider(configuration.QuitKey, configuration.ApplicationTitle);
          }
-
-         var consoleApplication = new ConsoleApplication(configuration);
-         _created = true;
-
-         return consoleApplication;
       }
    }
 }

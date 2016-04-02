@@ -29,8 +29,9 @@ namespace Example
          //   QuitKey = ConsoleKey.D,
          //   QuitDelay = 2000
          };
+        
 
-         var myApp = ConsoleApplicationFactory.Create(config);
+         var myApp = ConsoleApplication.Create(config);
 
          myApp.AddOrUpdateScreen(screen)
             .AddCommand(ConsoleKey.D1, new Screen(Hoppekeej));
@@ -53,7 +54,7 @@ namespace Example
          var outro = new Screen(controller.GetOutro);
 
          var config = new ConsoleApplicationConfiguration(welcome);
-         var myApp = ConsoleApplicationFactory.Create(config);
+         var myApp = ConsoleApplication.Create(config);
 
          myApp.AddOrUpdateScreen(welcome)
             .AddCommand(ConsoleKey.D1, screen1)

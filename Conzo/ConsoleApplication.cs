@@ -3,12 +3,11 @@ using System.Threading;
 using Conzo.Console;
 using Conzo.Keys;
 using Conzo.Screens;
-using Conzo.Templates;
 using Conzo.Utilities;
 
 namespace Conzo
 {
-   public class ConsoleApplication : IConsoleApplication
+   public partial class ConsoleApplication : IConsoleApplication
    {
       private readonly IConsoleWrapper _consoleWrapper;
       private readonly IKeyboardListener _keyboardListener;
@@ -20,7 +19,6 @@ namespace Conzo
 
       /// <summary>
       /// Initializes a new instance of the <see cref="ConsoleApplication" /> class.
-      /// Use this constructor if you want to use Conzo's default <see cref="ITemplateProvider" />.
       /// </summary>
       /// <param name="configuration">The configuration.</param>
       internal ConsoleApplication(ConsoleApplicationConfiguration configuration)

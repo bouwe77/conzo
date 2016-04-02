@@ -17,7 +17,7 @@ namespace Conzo
       /// </summary>
       public string ApplicationTitle
       {
-         get
+         internal get
          {
             return _applicationTitle;
          }
@@ -32,7 +32,7 @@ namespace Conzo
       /// </summary>
       public ConsoleKey QuitKey
       {
-         get
+         internal get
          {
             return _quitKey;
          }
@@ -50,7 +50,7 @@ namespace Conzo
       /// </summary>
       public int QuitDelay
       {
-         get
+         internal get
          {
             return _quitDelay;
          }
@@ -64,7 +64,7 @@ namespace Conzo
       internal bool QuitDelaySet { get; private set; }
       internal bool QuitKeySet { get; private set; }
 
-      internal ITemplateProvider TemplateProvider { get; set; }
+      public ITemplateProvider TemplateProvider { internal get; set; }
 
       internal Screen StartScreen { get; set; }
 
