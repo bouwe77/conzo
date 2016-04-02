@@ -23,17 +23,24 @@ namespace Example
       {
          var screen = new Screen(() => "Hello World, press 1 to continue...");
 
-         var myApp = new ConsoleApplication(screen)
+         var config = new ConsoleApplicationConfiguration(screen)
          {
-            ApplicationTitle = "HOI",
-            QuitKey = ConsoleKey.D,
-            QuitDelay = 2000
+         //   ApplicationTitle = "HOI",
+         //   QuitKey = ConsoleKey.D,
+         //   QuitDelay = 2000
          };
 
+         var myApp = ConsoleApplicationFactory.Create(config);
+
          myApp.AddOrUpdateScreen(screen)
-            .AddCommand(ConsoleKey.D1, new Screen(() => "moio"));
+            .AddCommand(ConsoleKey.D1, new Screen(Hoppekeej));
 
          myApp.Start();
+      }
+
+      private static string Hoppekeej()
+      {
+         return "moio " + DateTime.Now;
       }
 
       private static void Example1()
@@ -45,8 +52,8 @@ namespace Example
          var screen2 = new Screen(controller.GetScreen2);
          var outro = new Screen(controller.GetOutro);
 
-         var myTemplateProvider = new MyTemplateProvider();
-         var myApp = new ConsoleApplication(welcome, myTemplateProvider);
+         var config = new ConsoleApplicationConfiguration(welcome);
+         var myApp = ConsoleApplicationFactory.Create(config);
 
          myApp.AddOrUpdateScreen(welcome)
             .AddCommand(ConsoleKey.D1, screen1)

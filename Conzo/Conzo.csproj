@@ -39,6 +39,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ConsoleApplicationConfiguration.cs" />
+    <Compile Include="ConsoleApplicationFactory.cs" />
     <Compile Include="Defaults.cs" />
     <Compile Include="IConsoleApplication.cs" />
     <Compile Include="Keys\SupportedKeys.cs" />

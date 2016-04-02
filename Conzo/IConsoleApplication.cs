@@ -1,5 +1,4 @@
-﻿using System;
-using Conzo.Screens;
+﻿using Conzo.Screens;
 
 namespace Conzo
 {
@@ -7,8 +6,6 @@ namespace Conzo
    {
       ScreenConfiguration AddOrUpdateScreen(Screen screen);
       void Start();
-      ConsoleKey QuitKey { get; set; }
-      string ApplicationTitle { get; set; }
-      int QuitDelay { get; set; }
+      void Stop();
    }
 }

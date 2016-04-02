@@ -8,7 +8,7 @@ namespace Conzo.Keys
       private bool _listenToKeyPressed;
       private readonly IConsoleWrapper _consoleManager;
 
-      //TODO deze handler in aparte class
+      //TODO deze handler in aparte class want nu verwijst de IKeyboardListener interface naar deze class
       public delegate void KeyPressedHandler(KeyPressedEventArgs keyPressedEventArgs);
       public event KeyPressedHandler KeyPressed;
 

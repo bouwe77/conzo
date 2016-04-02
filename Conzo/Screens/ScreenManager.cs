@@ -9,7 +9,7 @@ namespace Conzo.Screens
    {
       private readonly Dictionary<Screen, ScreenConfiguration> _configuredScreens;
       private Screen _startScreen;
-      private Screen _currentScreen;
+      //private Screen _currentScreen;
 
       internal ScreenManager()
       {
@@ -36,25 +36,30 @@ namespace Conzo.Screens
             StartScreen = screen;
          }
 
-         if (CurrentScreen == null)
-         {
-            CurrentScreen = screen;
-         }
+         //if (CurrentScreen == null)
+         //{
+         //   CurrentScreen = screen;
+         //}
 
          return configuration;
       }
 
-      public Screen GetNextScreen(ConsoleKey key)
+      public Screen GetNewCurrentScreen(Screen currentScreen, ConsoleKey key)
       {
-         Screen nextScreen = null;
+         Screen newCurrentScreen = null;
 
-         if (_configuredScreens.ContainsKey(_currentScreen))
+         if (_configuredScreens.ContainsKey(currentScreen))
          {
-            var configuration = _configuredScreens[_currentScreen];
-            nextScreen = configuration.GetScreen(key);
+            var configuration = _configuredScreens[currentScreen];
+            newCurrentScreen = configuration.GetScreen(key);
          }
 
-         return nextScreen;
+         if (newCurrentScreen == null)
+         {
+            newCurrentScreen = currentScreen;
+         }
+
+         return newCurrentScreen;
       }
 
       public void Validate()
@@ -117,17 +122,17 @@ namespace Conzo.Screens
          }
       }
 
-      public Screen CurrentScreen
-      {
-         get
-         {
-            return _currentScreen;
-         }
-         set
-         {
-            Enforce.ArgumentNotNull(value, "currentScreen can not be null");
-            _currentScreen = value;
-         }
-      }
+      //public Screen CurrentScreen
+      //{
+      //   get
+      //   {
+      //      return _currentScreen;
+      //   }
+      //   set
+      //   {
+      //      Enforce.ArgumentNotNull(value, "currentScreen can not be null");
+      //      _currentScreen = value;
+      //   }
+      //}
    }
 }

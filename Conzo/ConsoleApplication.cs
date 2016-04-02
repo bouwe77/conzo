@@ -13,127 +13,47 @@ namespace Conzo
       private readonly IConsoleWrapper _consoleWrapper;
       private readonly IKeyboardListener _keyboardListener;
       private readonly IScreenManager _screenManager;
-      private readonly ITemplateProvider _templateProvider;
-      private string _applicationTitle;
-      private ConsoleKey _quitKey;
-      private int _quitDelay;
+      private readonly ConsoleApplicationConfiguration _configuration;
+      private bool _started;
+      private Screen _currentScreen;
+      private string _currentScreenContents;
 
       /// <summary>
-      /// Gets or sets the application title which is displayed by the <see cref="ITemplateProvider"/>.
+      /// Initializes a new instance of the <see cref="ConsoleApplication" /> class.
+      /// Use this constructor if you want to use Conzo's default <see cref="ITemplateProvider" />.
       /// </summary>
-      public string ApplicationTitle
-      {
-         get
-         {
-            return _applicationTitle;
-         }
-         set
-         {
-            _applicationTitle = Enforce.StringNotNullOrEmpty(value, "ApplicationTitle can not be empty");
-
-            if (_templateProvider != null)
-            {
-               _templateProvider.ApplicationTitle = value;
-            }
-         }
-      }
-
-      /// <summary>
-      /// Gets or sets the key that makes the application quit.
-      /// </summary>
-      public ConsoleKey QuitKey
-      {
-         get
-         {
-            return _quitKey;
-         }
-         set
-         {
-            SupportedKeys.Validate(value);
-            _quitKey = value;
-
-            if (_templateProvider != null)
-            {
-               _templateProvider.QuitKey = _quitKey;
-            }
-         }
-      }
-
-      /// <summary>
-      /// Gets or sets the quit delay in milliseconds.
-      /// Use this if you want to display a screen when hitting the <see cref="QuitKey"/>, because then you need a delay so the user will at least see the screen.
-      /// </summary>
-      public int QuitDelay
-      {
-         get
-         {
-            return _quitDelay;
-         }
-         set
-         {
-            _quitDelay = Enforce.Condition(value, value >= 0, "QuitDelay must 0 or greater");
-         }
-      }
-
-      /// <summary>
-      /// Initializes a new instance of the <see cref="ConsoleApplication"/> class.
-      /// Use this constructor if you want to use your own <see cref="ITemplateProvider"/>.
-      /// </summary>
-      /// <param name="startScreen">The start screen.</param>
-      /// <param name="templateProvider">The template provider.</param>
-      public ConsoleApplication(Screen startScreen, ITemplateProvider templateProvider)
+      /// <param name="configuration">The configuration.</param>
+      internal ConsoleApplication(ConsoleApplicationConfiguration configuration)
          : this(
-            startScreen,
+            configuration,
             new ConsoleWrapper(),
             new KeyboardListener(),
-            new ScreenManager(),
-            templateProvider)
+            new ScreenManager())
       {
       }
 
       /// <summary>
-      /// Initializes a new instance of the <see cref="ConsoleApplication"/> class.
-      /// Use this constructor if you want to use Conzo's default <see cref="ITemplateProvider"/>.
+      /// Initializes a new instance of the <see cref="ConsoleApplication" /> class.
       /// </summary>
-      /// <param name="startScreen">The start screen.</param>
-      public ConsoleApplication(Screen startScreen)
-         : this(
-            startScreen,
-            new ConsoleWrapper(),
-            new KeyboardListener(),
-            new ScreenManager(),
-            new DefaultTemplateProvider())
-      {
-      }
-
-      /// <summary>
-      /// Initializes a new instance of the <see cref="ConsoleApplication"/> class.
-      /// </summary>
-      /// <param name="startScreen">The start screen.</param>
+      /// <param name="configuration">The configuration.</param>
       /// <param name="consoleManager">The console manager.</param>
       /// <param name="keyboardListener">The keyboard listener.</param>
       /// <param name="screenManager">The screen manager.</param>
-      /// <param name="templateProvider">The template provider.</param>
       internal ConsoleApplication(
-         Screen startScreen,
+         ConsoleApplicationConfiguration configuration,
          IConsoleWrapper consoleManager,
          IKeyboardListener keyboardListener,
-         IScreenManager screenManager,
-         ITemplateProvider templateProvider)
+         IScreenManager screenManager)
       {
-         QuitKey = Defaults.QuitKey;
-         ApplicationTitle = Defaults.ApplicationTitle;
-         QuitDelay = Defaults.QuitDelay;
+         _configuration = Enforce.ArgumentNotNull(configuration, "Configuration can not be null");
 
          _consoleWrapper = Enforce.ArgumentNotNull(consoleManager, "ConsoleManager can not be null");
+         _consoleWrapper.Initialize();
+         
          _keyboardListener = Enforce.ArgumentNotNull(keyboardListener, "KeyboardListener can not be null");
+         _keyboardListener.KeyPressed += OnKeyPressed;
+
          _screenManager = Enforce.ArgumentNotNull(screenManager, "ScreenManager can not be null");
-
-         _templateProvider = templateProvider ?? new DefaultTemplateProvider();
-         _templateProvider.ApplicationTitle = _applicationTitle;
-         _templateProvider.QuitKey = _quitKey;
-
-         AddOrUpdateScreen(startScreen);
       }
 
       //TODO Allow adding commands that apply to all screens. Solution: introduce a general list of configurations that apply to all screens, whether they are created before or after configuring it.
@@ -142,34 +62,52 @@ namespace Conzo
       {
          Enforce.ArgumentNotNull(screen, "screen can not be null");
 
-         var configuration = _screenManager.AddOrUpdateScreen(screen);
-         return configuration;
-      }
-
-      internal Screen StartScreen
-      {
-         get { return _screenManager.StartScreen; }
-         set { _screenManager.StartScreen = value; }
+         var screenConfiguration = _screenManager.AddOrUpdateScreen(screen);
+         return screenConfiguration;
       }
 
       public void Start()
       {
+         if (_started)
+         {
+            throw new Exception("ConsoleApplication can only be started once.");
+         }
+
+         _started = true;
+
+         _currentScreen = _configuration.StartScreen;
+         RefreshCurrentScreenContents();
+
          _screenManager.Validate();
 
-         _consoleWrapper.Initialize();
-
-         _keyboardListener.KeyPressed += OnKeyPressed;
-
-         ShowScreen();
+         ShowCurrentScreenContents();
 
          _keyboardListener.Start();
       }
 
-      private void ShowScreen()
+      private void RefreshCurrentScreenContents()
       {
-         var screen = _screenManager.CurrentScreen;
-         string currentScreenContents = screen.GetScreenContents.Invoke();
-         string renderedTemplate = _templateProvider.GetRenderedTemplate(currentScreenContents);
+         try
+         {
+            _currentScreenContents = _currentScreen.GetScreenContents.Invoke();
+         }
+         catch (Exception exception)
+         {
+            // If we end up here an unexpected exception occurred and the application crashed.
+            //TODO Een Screen met error tonen of zo? En een key command eraan toevoegen. "Press any key to continue..."
+            throw;
+         }
+      }
+
+      public void Stop()
+      {
+         // Stopping listening to keys pressed will stop the program.
+         _keyboardListener.Stop();
+      }
+
+      private void ShowCurrentScreenContents()
+      {
+         string renderedTemplate = _configuration.TemplateProvider.GetRenderedTemplate(_currentScreenContents);
          _consoleWrapper.WriteToConsole(renderedTemplate);
       }
 
@@ -177,28 +115,21 @@ namespace Conzo
       {
          ConsoleKey key = keyPressedEventArgs.Key;
 
-         try
+         // Only refresh the current screen stuff if another screen must be displayed after pressing this key.
+         var newCurrentScreen = _screenManager.GetNewCurrentScreen(_currentScreen, key);
+         if (!newCurrentScreen.Equals(_currentScreen))
          {
-            var nextScreen = _screenManager.GetNextScreen(key);
-            if (nextScreen != null)
-            {
-               _screenManager.CurrentScreen = nextScreen;
-            }
-         }
-         catch (Exception exception)
-         {
-            // If we end up here an unexpected exception occurred and the application crashed.
-            //TODO Een Screen met error tonen of zo?
-            throw;
+            _currentScreen = newCurrentScreen;
+            RefreshCurrentScreenContents();
          }
 
-         ShowScreen();
+         ShowCurrentScreenContents();
 
-         if (key == QuitKey)
+         if (key == _configuration.QuitKey)
          {
-            // The quit key is pressed, after displaying the screen, wait a while and then stop the keyboard listener which will result in the program stops.
-            Thread.Sleep(QuitDelay);
-            _keyboardListener.Stop();
+            // The quit key is pressed, after displaying the screen, wait a while and then stop the application.
+            Thread.Sleep(_configuration.QuitDelay);
+            Stop();
          }
       }
    }
