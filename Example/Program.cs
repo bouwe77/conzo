@@ -29,7 +29,6 @@ namespace Example
          //   QuitKey = ConsoleKey.D,
          //   QuitDelay = 2000
          };
-        
 
          var myApp = ConsoleApplication.Create(config);
 

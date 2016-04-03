@@ -8,6 +8,6 @@ namespace Conzo.Screens
       Screen GetNewCurrentScreen(Screen currentScreen, ConsoleKey key);
       void Validate();
       Screen StartScreen { get; set; }
-      //Screen CurrentScreen { get; set; }
+      void AddGlobalCommand(ConsoleKey consoleKey, Screen screen);
    }
 }

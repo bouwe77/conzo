@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Conzo.Keys;
 using Conzo.Utilities;
 
 namespace Conzo.Screens
@@ -9,7 +10,7 @@ namespace Conzo.Screens
    {
       private readonly Dictionary<Screen, ScreenConfiguration> _configuredScreens;
       private Screen _startScreen;
-      //private Screen _currentScreen;
+      private readonly Dictionary<ConsoleKey, Screen> _globalCommands;
 
       internal ScreenManager()
       {
@@ -25,6 +26,7 @@ namespace Conzo.Screens
          {
             configuration = new ScreenConfiguration();
             _configuredScreens.Add(screen, configuration);
+         hier moeten dus ook de global commands worden toegevoegd
          }
          else
          {
@@ -36,11 +38,6 @@ namespace Conzo.Screens
             StartScreen = screen;
          }
 
-         //if (CurrentScreen == null)
-         //{
-         //   CurrentScreen = screen;
-         //}
-
          return configuration;
       }
 
@@ -48,6 +45,9 @@ namespace Conzo.Screens
       {
          Screen newCurrentScreen = null;
 
+         //TODO Also check global commands here
+         // Determine whether there are there any screen configurations for the current screen.
+         // And if so, determine whether for this key a screen is configured.
          if (_configuredScreens.ContainsKey(currentScreen))
          {
             var configuration = _configuredScreens[currentScreen];
@@ -71,7 +71,6 @@ namespace Conzo.Screens
          }
 
          //TODO refactor this:
-
          var screensThatHaveCommandPointingToIt = new List<Screen>();
          foreach (var screenConfiguration in _configuredScreens.Values)
          {
@@ -104,7 +103,7 @@ namespace Conzo.Screens
 
          if (isOrphaned)
          {
-            throw new Exception("You can not configure a orphaned screen, i.e. a screen that has no command pointing to it");            
+            throw new Exception("You can not configure a orphaned screen, i.e. a screen that has no command pointing to it");
          }
       }
 
@@ -122,17 +121,18 @@ namespace Conzo.Screens
          }
       }
 
-      //public Screen CurrentScreen
-      //{
-      //   get
-      //   {
-      //      return _currentScreen;
-      //   }
-      //   set
-      //   {
-      //      Enforce.ArgumentNotNull(value, "currentScreen can not be null");
-      //      _currentScreen = value;
-      //   }
-      //}
+      public void AddGlobalCommand(ConsoleKey key, Screen screen)
+      {
+         SupportedKeys.Validate(key);
+         Enforce.DictionaryKeyDoesNotExist(_globalCommands, key, "Dictionary _globalCommands already contains key" + key);
+         Enforce.ArgumentNotNull(screen, "screen can not be null");
+
+         _globalCommands.Add(key, screen);
+         hiero
+         foreach (var configuredScreen in _configuredScreens)
+         {
+            configuredScreen.Value.AddCommand(key, screen);
+         }
+      }
    }
 }

@@ -56,6 +56,11 @@ namespace Conzo
 
       //TODO Allow adding commands that apply to all screens. Solution: introduce a general list of configurations that apply to all screens, whether they are created before or after configuring it.
 
+      public void AddGlobalCommand(ConsoleKey key, Screen screen)
+      {
+         _screenManager.AddGlobalCommand(key, screen);
+      }
+
       public ScreenConfiguration AddOrUpdateScreen(Screen screen)
       {
          Enforce.ArgumentNotNull(screen, "screen can not be null");

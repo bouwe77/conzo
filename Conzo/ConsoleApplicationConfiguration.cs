@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Conzo.Keys;
 using Conzo.Screens;
 using Conzo.Templates;
@@ -17,14 +18,8 @@ namespace Conzo
       /// </summary>
       public string ApplicationTitle
       {
-         internal get
-         {
-            return _applicationTitle;
-         }
-         set
-         {
-            _applicationTitle = Enforce.StringNotNullOrEmpty(value, "ApplicationTitle can not be empty");
-         }
+         internal get { return _applicationTitle; }
+         set { _applicationTitle = Enforce.StringNotNullOrEmpty(value, "ApplicationTitle can not be empty"); }
       }
 
       /// <summary>
@@ -32,10 +27,7 @@ namespace Conzo
       /// </summary>
       public ConsoleKey QuitKey
       {
-         internal get
-         {
-            return _quitKey;
-         }
+         internal get { return _quitKey; }
          set
          {
             SupportedKeys.Validate(value);
@@ -50,10 +42,7 @@ namespace Conzo
       /// </summary>
       public int QuitDelay
       {
-         internal get
-         {
-            return _quitDelay;
-         }
+         internal get { return _quitDelay; }
          set
          {
             _quitDelay = Enforce.Condition(value, value >= 0, "QuitDelay must 0 or greater");
@@ -66,7 +55,7 @@ namespace Conzo
 
       public ITemplateProvider TemplateProvider { internal get; set; }
 
-      internal Screen StartScreen { get; set; }
+      internal Screen StartScreen { get; private set; }
 
       public ConsoleApplicationConfiguration(Screen startScreen)
       {
