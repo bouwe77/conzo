@@ -1,10 +1,18 @@
 ﻿using System;
+using Conzo.Configuration;
 using Conzo.Utilities;
 
 namespace Conzo.Console
 {
-   internal class ConsoleWrapper : IConsoleWrapper
+   internal class ConsoleWriter : IConsoleWriter
    {
+      private readonly LayoutConfiguration _layoutConfiguration;
+
+      public ConsoleWriter(LayoutConfiguration layoutConfiguration)
+      {
+         _layoutConfiguration = Enforce.ArgumentNotNull(layoutConfiguration, "layoutConfiguration can not be null");
+      }
+
       public void Initialize()
       {
          // CTRL+C will not quit the program but is just an ordinary key combination.
@@ -12,11 +20,6 @@ namespace Conzo.Console
          SetWindowsSize();
          SetCursor();
          SetBackAndForeGroundColor();
-      }
-
-      public ConsoleKey ReadFromConsole()
-      {
-         return System.Console.ReadKey(true).Key;
       }
 
       public void WriteToConsole(string textToWrite)
@@ -99,9 +102,10 @@ namespace Conzo.Console
       private void SetBackAndForeGroundColor()
       {
          // Set the background for the whole console window by calling Clear() afterwards, but before writing output.
-         System.Console.BackgroundColor = ConsoleColor.DarkBlue;
-         System.Console.ForegroundColor = ConsoleColor.White;
+         System.Console.BackgroundColor = _layoutConfiguration.BackgroundColor;
+         System.Console.ForegroundColor = _layoutConfiguration.TextColor;
          System.Console.Clear();
       }
+
    }
 }

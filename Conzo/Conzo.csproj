@@ -39,22 +39,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConsoleApplicationConfiguration.cs" />
+    <Compile Include="Configuration\ConsoleApplicationConfiguration.cs" />
+    <Compile Include="Configuration\LayoutConfiguration.cs" />
     <Compile Include="ConsoleApplication.Factory.cs" />
-    <Compile Include="Defaults.cs" />
+    <Compile Include="Console\ConsoleWriter.cs" />
+    <Compile Include="Console\IConsoleWriter.cs" />
+    <Compile Include="Configuration\Defaults.cs" />
     <Compile Include="IConsoleApplication.cs" />
     <Compile Include="Keys\SupportedKeys.cs" />
     <Compile Include="Utilities\Enforce.cs" />
     <Compile Include="Keys\IKeyboardListener.cs" />
     <Compile Include="Keys\KeyboardListener.cs" />
     <Compile Include="Keys\KeyPressedEventArgs.cs" />
-    <Compile Include="Screens\Screen.cs" />
+    <Compile Include="Commands\Command.cs" />
     <Compile Include="ConsoleApplication.cs" />
-    <Compile Include="Screens\ScreenConfiguration.cs" />
-    <Compile Include="Screens\ScreenManager.cs" />
-    <Compile Include="Console\ConsoleWrapper.cs" />
-    <Compile Include="Console\IConsoleWrapper.cs" />
-    <Compile Include="Screens\IScreenManager.cs" />
+    <Compile Include="Commands\CommandConfiguration.cs" />
+    <Compile Include="Commands\CommandManager.cs" />
+    <Compile Include="Console\ConsoleReader.cs" />
+    <Compile Include="Console\IConsoleReader.cs" />
+    <Compile Include="Commands\ICommandManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Templates\DefaultTemplateProvider.cs" />
     <Compile Include="Templates\ITemplateProvider.cs" />

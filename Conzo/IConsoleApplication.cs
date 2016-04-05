@@ -1,12 +1,12 @@
 ﻿using System;
-using Conzo.Screens;
+using Conzo.Commands;
 
 namespace Conzo
 {
    public interface IConsoleApplication
    {
-      ScreenConfiguration AddOrUpdateScreen(Screen screen);
-      void AddGlobalCommand(ConsoleKey key, Screen screen);
+      CommandConfiguration Configure(Command command);
+      void AddGlobalCommand(ConsoleKey key, Command command);
       void Start();
       void Stop();
    }

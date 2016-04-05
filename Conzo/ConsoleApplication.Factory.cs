@@ -1,4 +1,5 @@
 ﻿using System;
+using Conzo.Configuration;
 using Conzo.Templates;
 
 namespace Conzo
@@ -42,6 +43,11 @@ namespace Conzo
          if (configuration.TemplateProvider == null)
          {
             configuration.TemplateProvider = new DefaultTemplateProvider(configuration.QuitKey, configuration.ApplicationTitle);
+         }
+
+         if (configuration.Layout == null)
+         {
+            configuration.Layout = new LayoutConfiguration(Defaults.BackgroundColor, Defaults.TextColor);
          }
       }
    }

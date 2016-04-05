@@ -1,6 +1,7 @@
 ﻿using System;
 using Conzo;
-using Conzo.Screens;
+using Conzo.Commands;
+using Conzo.Configuration;
 
 namespace Example
 {
@@ -21,10 +22,11 @@ namespace Example
 
       private static void Example2()
       {
-         var screen = new Screen(() => "Hello World, press 1 to continue...");
+         var command = new Command(() => "Hello World, press 1 to continue...");
 
-         var config = new ConsoleApplicationConfiguration(screen)
+         var config = new ConsoleApplicationConfiguration(command)
          {
+         //   Layout = new LayoutConfiguration(ConsoleColor.Gray, ConsoleColor.Black)
          //   ApplicationTitle = "HOI",
          //   QuitKey = ConsoleKey.D,
          //   QuitDelay = 2000
@@ -32,8 +34,8 @@ namespace Example
 
          var myApp = ConsoleApplication.Create(config);
 
-         myApp.AddOrUpdateScreen(screen)
-            .AddCommand(ConsoleKey.D1, new Screen(Hoppekeej));
+         myApp.Configure(command)
+            .AddNextCommand(ConsoleKey.D1, new Command(Hoppekeej));
 
          myApp.Start();
       }
@@ -47,27 +49,27 @@ namespace Example
       {
          var controller = new Controller();
 
-         var welcome = new Screen(controller.GetWelcome);
-         var screen1 = new Screen(controller.GetScreen1);
-         var screen2 = new Screen(controller.GetScreen2);
-         var outro = new Screen(controller.GetOutro);
+         var welcome = new Command(controller.GetWelcome);
+         var command1 = new Command(controller.GetCommand1);
+         var command2 = new Command(controller.GetCommand2);
+         var outro = new Command(controller.GetOutro);
 
          var config = new ConsoleApplicationConfiguration(welcome);
          var myApp = ConsoleApplication.Create(config);
 
-         myApp.AddOrUpdateScreen(welcome)
-            .AddCommand(ConsoleKey.D1, screen1)
-            .AddCommand(ConsoleKey.Q, outro);
+         myApp.Configure(welcome)
+            .AddNextCommand(ConsoleKey.D1, command1)
+            .AddNextCommand(ConsoleKey.Q, outro);
 
-         myApp.AddOrUpdateScreen(screen1)
-            .AddCommand(ConsoleKey.D2, screen2)
-            .AddCommand(ConsoleKey.Q, outro);
+         myApp.Configure(command1)
+            .AddNextCommand(ConsoleKey.D2, command2)
+            .AddNextCommand(ConsoleKey.Q, outro);
 
-         myApp.AddOrUpdateScreen(screen2)
-            .AddCommand(ConsoleKey.D1, screen1)
-            .AddCommand(ConsoleKey.Q, outro);
+         myApp.Configure(command2)
+            .AddNextCommand(ConsoleKey.D1, command1)
+            .AddNextCommand(ConsoleKey.Q, outro);
 
-         myApp.AddOrUpdateScreen(outro);
+         myApp.Configure(outro);
 
          myApp.Start();
       }
@@ -80,14 +82,14 @@ namespace Example
          return "Welcome!" + Environment.NewLine + "Press 1 to continue...";
       }
 
-      public string GetScreen1()
+      public string GetCommand1()
       {
-         return "This is screen 1..." + Environment.NewLine + "Press 2 to go to screen 2...";
+         return "This is command 1..." + Environment.NewLine + "Press 2 to go to command 2...";
       }
 
-      public string GetScreen2()
+      public string GetCommand2()
       {
-         return "This is screen 2..." + Environment.NewLine + "Press 1 to go to screen 1...";
+         return "This is command 2..." + Environment.NewLine + "Press 1 to go to command 1...";
       }
 
       public string GetOutro()

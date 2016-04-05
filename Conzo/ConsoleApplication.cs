@@ -2,20 +2,20 @@
 using System.Threading;
 using Conzo.Console;
 using Conzo.Keys;
-using Conzo.Screens;
+using Conzo.Commands;
 using Conzo.Utilities;
 
 namespace Conzo
 {
    public partial class ConsoleApplication : IConsoleApplication
    {
-      private readonly IConsoleWrapper _consoleWrapper;
+      private readonly IConsoleWriter _consoleWriter;
       private readonly IKeyboardListener _keyboardListener;
-      private readonly IScreenManager _screenManager;
+      private readonly ICommandManager _commandManager;
       private readonly ConsoleApplicationConfiguration _configuration;
       private bool _started;
-      private Screen _currentScreen;
-      private string _currentScreenContents;
+      private Command _currentCommand;
+      private string _currentContents;
 
       /// <summary>
       /// Initializes a new instance of the <see cref="ConsoleApplication" /> class.
@@ -24,9 +24,9 @@ namespace Conzo
       internal ConsoleApplication(ConsoleApplicationConfiguration configuration)
          : this(
             configuration,
-            new ConsoleWrapper(),
+            new ConsoleWriter(configuration.Layout),
             new KeyboardListener(),
-            new ScreenManager())
+            new CommandManager())
       {
       }
 
@@ -34,39 +34,39 @@ namespace Conzo
       /// Initializes a new instance of the <see cref="ConsoleApplication" /> class.
       /// </summary>
       /// <param name="configuration">The configuration.</param>
-      /// <param name="consoleManager">The console manager.</param>
+      /// <param name="consoleWriter">The console writer.</param>
       /// <param name="keyboardListener">The keyboard listener.</param>
-      /// <param name="screenManager">The screen manager.</param>
+      /// <param name="commandManager">The command manager.</param>
       internal ConsoleApplication(
          ConsoleApplicationConfiguration configuration,
-         IConsoleWrapper consoleManager,
+         IConsoleWriter consoleWriter,
          IKeyboardListener keyboardListener,
-         IScreenManager screenManager)
+         ICommandManager commandManager)
       {
          _configuration = Enforce.ArgumentNotNull(configuration, "Configuration can not be null");
 
-         _consoleWrapper = Enforce.ArgumentNotNull(consoleManager, "ConsoleManager can not be null");
-         _consoleWrapper.Initialize();
+         _consoleWriter = Enforce.ArgumentNotNull(consoleWriter, "ConsoleWriter can not be null");
+         _consoleWriter.Initialize();
          
          _keyboardListener = Enforce.ArgumentNotNull(keyboardListener, "KeyboardListener can not be null");
          _keyboardListener.KeyPressed += OnKeyPressed;
 
-         _screenManager = Enforce.ArgumentNotNull(screenManager, "ScreenManager can not be null");
+         _commandManager = Enforce.ArgumentNotNull(commandManager, "CommandManager can not be null");
       }
 
-      //TODO Allow adding commands that apply to all screens. Solution: introduce a general list of configurations that apply to all screens, whether they are created before or after configuring it.
+      //TODO Allow adding commands that apply to all commands. Solution: introduce a general list of configurations that apply to all commands, whether they are created before or after configuring it.
 
-      public void AddGlobalCommand(ConsoleKey key, Screen screen)
+      public void AddGlobalCommand(ConsoleKey key, Command command)
       {
-         _screenManager.AddGlobalCommand(key, screen);
+         _commandManager.AddGlobalCommand(key, command);
       }
 
-      public ScreenConfiguration AddOrUpdateScreen(Screen screen)
+      public CommandConfiguration Configure(Command command)
       {
-         Enforce.ArgumentNotNull(screen, "screen can not be null");
+         Enforce.ArgumentNotNull(command, "command can not be null");
 
-         var screenConfiguration = _screenManager.AddOrUpdateScreen(screen);
-         return screenConfiguration;
+         var commandConfiguration = _commandManager.Configure(command);
+         return commandConfiguration;
       }
 
       public void Start()
@@ -78,26 +78,26 @@ namespace Conzo
 
          _started = true;
 
-         _currentScreen = _configuration.StartScreen;
-         RefreshCurrentScreenContents();
+         _currentCommand = _configuration.StartCommand;
+         RefreshCurrentCommandContents();
 
-         _screenManager.Validate();
+         _commandManager.Validate();
 
-         ShowCurrentScreenContents();
+         ShowCurrentCommandContents();
 
          _keyboardListener.Start();
       }
 
-      private void RefreshCurrentScreenContents()
+      private void RefreshCurrentCommandContents()
       {
          try
          {
-            _currentScreenContents = _currentScreen.GetScreenContents.Invoke();
+            _currentContents = _currentCommand.Action.Invoke();
          }
          catch (Exception exception)
          {
             // If we end up here an unexpected exception occurred and the application crashed.
-            //TODO Een Screen met error tonen of zo? En een key command eraan toevoegen. "Press any key to continue..."
+            //TODO Een Command met error tonen of zo? En een key command eraan toevoegen. "Press any key to continue..."
             throw;
          }
       }
@@ -108,29 +108,29 @@ namespace Conzo
          _keyboardListener.Stop();
       }
 
-      private void ShowCurrentScreenContents()
+      private void ShowCurrentCommandContents()
       {
-         string renderedTemplate = _configuration.TemplateProvider.GetRenderedTemplate(_currentScreenContents);
-         _consoleWrapper.WriteToConsole(renderedTemplate);
+         string renderedTemplate = _configuration.TemplateProvider.GetRenderedTemplate(_currentContents);
+         _consoleWriter.WriteToConsole(renderedTemplate);
       }
 
       private void OnKeyPressed(KeyPressedEventArgs keyPressedEventArgs)
       {
          ConsoleKey key = keyPressedEventArgs.Key;
 
-         // Only refresh the current screen stuff if another screen must be displayed after pressing this key.
-         var newCurrentScreen = _screenManager.GetNewCurrentScreen(_currentScreen, key);
-         if (!newCurrentScreen.Equals(_currentScreen))
+         // Only refresh the current command stuff if another command must be displayed after pressing this key.
+         var newCurrentCommand = _commandManager.GetNewCurrentCommand(_currentCommand, key);
+         if (!newCurrentCommand.Equals(_currentCommand))
          {
-            _currentScreen = newCurrentScreen;
-            RefreshCurrentScreenContents();
+            _currentCommand = newCurrentCommand;
+            RefreshCurrentCommandContents();
          }
 
-         ShowCurrentScreenContents();
+         ShowCurrentCommandContents();
 
          if (key == _configuration.QuitKey)
          {
-            // The quit key is pressed, after displaying the screen, wait a while and then stop the application.
+            // The quit key is pressed, after displaying the command, wait a while and then stop the application.
             Thread.Sleep(_configuration.QuitDelay);
             Stop();
          }

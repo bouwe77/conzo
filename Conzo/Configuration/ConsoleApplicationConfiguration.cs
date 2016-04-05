@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using Conzo.Configuration;
 using Conzo.Keys;
-using Conzo.Screens;
+using Conzo.Commands;
 using Conzo.Templates;
 using Conzo.Utilities;
 
@@ -38,7 +39,7 @@ namespace Conzo
 
       /// <summary>
       /// Gets or sets the quit delay in milliseconds.
-      /// Use this if you want to display a screen when hitting the <see cref="QuitKey"/>, because then you need a delay so the user will at least see the screen.
+      /// Use this if you want to display a command when hitting the <see cref="QuitKey"/>, because then you need a delay so the user will at least see the command.
       /// </summary>
       public int QuitDelay
       {
@@ -55,11 +56,13 @@ namespace Conzo
 
       public ITemplateProvider TemplateProvider { internal get; set; }
 
-      internal Screen StartScreen { get; private set; }
+      public LayoutConfiguration Layout { internal get; set; }
 
-      public ConsoleApplicationConfiguration(Screen startScreen)
+      internal Command StartCommand { get; private set; }
+
+      public ConsoleApplicationConfiguration(Command startCommand)
       {
-         StartScreen = startScreen;
+         StartCommand = startCommand;
       }
    }
 }

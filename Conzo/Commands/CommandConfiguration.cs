@@ -1,0 +1,46 @@
+﻿using System;
+using System.Collections.Generic;
+using Conzo.Keys;
+using Conzo.Utilities;
+
+namespace Conzo.Commands
+{
+   public class CommandConfiguration
+   {
+      private readonly Dictionary<ConsoleKey, Command> _commands = new Dictionary<ConsoleKey, Command>();
+
+      /// <summary>
+      /// Initializes a new instance of the <see cref="CommandConfiguration"/> class.
+      /// Prevents creating new instances from outside the project.
+      /// </summary>
+      internal CommandConfiguration()
+      {
+      }
+
+      public CommandConfiguration AddNextCommand(ConsoleKey key, Command command)
+      {
+         SupportedKeys.Validate(key);
+         Enforce.DictionaryKeyDoesNotExist(_commands, key, "Dictionary _commands already contains key" + key);
+         Enforce.ArgumentNotNull(command, "command can not be null");
+
+         _commands.Add(key, command);
+         return this;
+      }
+
+      internal Command GetCommand(ConsoleKey consoleKey)
+      {
+         Command command = null;
+         if (_commands.ContainsKey(consoleKey))
+         {
+            command = _commands[consoleKey];
+         }
+
+         return command;
+      }
+
+      internal IEnumerable<Command> GetAllCommands()
+      {
+         return _commands.Values;
+      }
+   }
+}
