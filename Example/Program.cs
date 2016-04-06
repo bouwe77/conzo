@@ -11,8 +11,8 @@ namespace Example
       {
          try
          {
-            Example2();
-         //Example1();
+            //Example2();
+         Example1();
          }
          catch (Exception exception)
          {
@@ -59,24 +59,23 @@ namespace Example
          var command2 = new Command(controller.GetCommand2);
          var outro = new Command(controller.GetOutro);
 
-         var settings = new Settings(welcome);
+         var settings = new Settings(welcome)
+         {
+            QuitDelay = 2000
+         };
+
          var myApp = ConsoleApplication.Create(settings);
 
-         //TODO Onderstaande QuitKey met outro vervangen door GlobalCommand zodra dit werkt.
-
          myApp.Configure(welcome)
-            .AddNextCommand(ConsoleKey.D1, command1)
-            .AddNextCommand(settings.QuitKey, outro);
+            .AddNextCommand(ConsoleKey.D1, command1);
 
          myApp.Configure(command1)
-            .AddNextCommand(ConsoleKey.D2, command2)
-            .AddNextCommand(settings.QuitKey, outro);
+            .AddNextCommand(ConsoleKey.D2, command2);
+
+         myApp.AddGlobalCommand(settings.QuitKey, outro);
 
          myApp.Configure(command2)
-            .AddNextCommand(ConsoleKey.D1, command1)
-            .AddNextCommand(settings.QuitKey, outro);
-
-         myApp.Configure(outro);
+            .AddNextCommand(ConsoleKey.D1, command1);
 
          myApp.Run();
       }

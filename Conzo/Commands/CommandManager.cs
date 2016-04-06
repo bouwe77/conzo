@@ -33,8 +33,8 @@ namespace Conzo.Commands
             }
 
             configuration.GlobalCommandsAdded = true;
-            _configuredCommands.Add(command, configuration);
 
+            _configuredCommands.Add(command, configuration);
          }
          else
          {
