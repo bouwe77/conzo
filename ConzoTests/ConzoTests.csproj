@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Configuration\ConsoleApplicationConfigurationTest.cs" />
     <Compile Include="ConsoleApplication.IntegrationTests.cs" />
     <Compile Include="ConsoleApplicationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -64,6 +65,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
+    <Compile Include="ConsoleApplicationTest.Factory.cs" />
     <None Include="ConzoTests.snk" />
     <None Include="packages.config" />
   </ItemGroup>

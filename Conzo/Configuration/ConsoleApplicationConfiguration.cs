@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using Conzo.Configuration;
 using Conzo.Keys;
 using Conzo.Commands;
 using Conzo.Templates;
 using Conzo.Utilities;
 
-namespace Conzo
+namespace Conzo.Configuration
 {
    public class ConsoleApplicationConfiguration
    {
@@ -19,7 +17,7 @@ namespace Conzo
       /// </summary>
       public string ApplicationTitle
       {
-         internal get { return _applicationTitle; }
+         get { return _applicationTitle; }
          set { _applicationTitle = Enforce.StringNotNullOrEmpty(value, "ApplicationTitle can not be empty"); }
       }
 
@@ -28,7 +26,7 @@ namespace Conzo
       /// </summary>
       public ConsoleKey QuitKey
       {
-         internal get { return _quitKey; }
+         get { return _quitKey; }
          set
          {
             SupportedKeys.Validate(value);
@@ -62,7 +60,7 @@ namespace Conzo
 
       public ConsoleApplicationConfiguration(Command startCommand)
       {
-         StartCommand = startCommand;
+         StartCommand = Enforce.ArgumentNotNull(startCommand, "startCommand can not be null");
       }
    }
 }

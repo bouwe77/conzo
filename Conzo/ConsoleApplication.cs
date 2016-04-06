@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using Conzo.Configuration;
 using Conzo.Console;
 using Conzo.Keys;
 using Conzo.Commands;
@@ -44,13 +45,8 @@ namespace Conzo
          ICommandManager commandManager)
       {
          _configuration = Enforce.ArgumentNotNull(configuration, "Configuration can not be null");
-
          _consoleWriter = Enforce.ArgumentNotNull(consoleWriter, "ConsoleWriter can not be null");
-         _consoleWriter.Initialize();
-         
          _keyboardListener = Enforce.ArgumentNotNull(keyboardListener, "KeyboardListener can not be null");
-         _keyboardListener.KeyPressed += OnKeyPressed;
-
          _commandManager = Enforce.ArgumentNotNull(commandManager, "CommandManager can not be null");
       }
 
@@ -79,6 +75,10 @@ namespace Conzo
          _currentCommand = _configuration.StartCommand;
          RefreshCurrentCommandContents();
 
+         _keyboardListener.KeyPressed += OnKeyPressed;
+
+         _consoleWriter.Initialize();
+
          _commandManager.Validate();
 
          ShowCurrentCommandContents();
@@ -102,6 +102,11 @@ namespace Conzo
 
       public void Stop()
       {
+         if (!_started)
+         {
+            throw new Exception("Can not stop an application that is not started");
+         }
+
          // Stopping listening to keys pressed will stop the program.
          _keyboardListener.Stop();
       }

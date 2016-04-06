@@ -28,6 +28,14 @@ namespace Conzo
          return Create(configuration, () => new ConsoleApplication(configuration), () => new DefaultTemplateProvider(configuration.QuitKey, configuration.ApplicationTitle));
       }
 
+      /// <summary>
+      /// For unit tests only: Resets the factory to enable creating multiple <see cref="ConsoleApplication"/> instances in different tests.
+      /// </summary>
+      internal static void Reset()
+      {
+         _created = false;
+      }
+
       private static void SetDefaults(ConsoleApplicationConfiguration configuration, Func<ITemplateProvider> templateProviderFactoryMethod)
       {
          if (string.IsNullOrEmpty(configuration.ApplicationTitle))

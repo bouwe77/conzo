@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using Conzo.Commands;
+using Conzo.Configuration;
 using Conzo.Console;
 using Conzo.Keys;
 using Conzo.Templates;
@@ -15,6 +16,7 @@ namespace Conzo
    [TestClass]
    public class ConsoleApplicationIntegrationTest
    {
+      //TODO Only mock Console related stuff!
       private Mock<IConsoleWriter> _consoleWriterMock;
       private Mock<IKeyboardListener> _keyboardListenerMock;
       private Mock<ICommandManager> _commandManagerMock;
@@ -27,6 +29,7 @@ namespace Conzo
          _keyboardListenerMock = new Mock<IKeyboardListener>();
          _commandManagerMock = new Mock<ICommandManager>();
          _templateProviderMock = new Mock<ITemplateProvider>();
+         ConsoleApplication.Reset();
       }
 
       [TestCleanup]
@@ -70,6 +73,9 @@ namespace Conzo
          _keyboardListenerMock.Verify(x => x.Start(), Times.Once);
          Assert.IsTrue(startCommandInvoked);
       }
+
+      //TODO Raise event _keyboardListenerMock.Raise(x => x.KeyPressed += null, EventArgs.Empty);
+
 
       private void SetupTemplateProviderMock(string renderedTemplateToReturn)
       {

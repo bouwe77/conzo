@@ -62,17 +62,19 @@ namespace Example
          var config = new ConsoleApplicationConfiguration(welcome);
          var myApp = ConsoleApplication.Create(config);
 
+         //TODO Onderstaande QuitKey met outro vervangen door GlobalCommand zodra dit werkt.
+
          myApp.Configure(welcome)
             .AddNextCommand(ConsoleKey.D1, command1)
-            .AddNextCommand(ConsoleKey.Q, outro);
+            .AddNextCommand(config.QuitKey, outro);
 
          myApp.Configure(command1)
             .AddNextCommand(ConsoleKey.D2, command2)
-            .AddNextCommand(ConsoleKey.Q, outro);
+            .AddNextCommand(config.QuitKey, outro);
 
          myApp.Configure(command2)
             .AddNextCommand(ConsoleKey.D1, command1)
-            .AddNextCommand(ConsoleKey.Q, outro);
+            .AddNextCommand(config.QuitKey, outro);
 
          myApp.Configure(outro);
 
