@@ -13,10 +13,11 @@ namespace Conzo.Commands
 
       /// <summary>
       /// Initializes a new instance of the <see cref="CommandConfiguration"/> class.
-      /// Prevents creating new instances from outside the project.
+      /// This constructor prevents creating new instances from outside the project.
       /// </summary>
       internal CommandConfiguration()
       {
+         // Avoid creating instances from outside the project.
       }
 
       public CommandConfiguration AddNextCommand(ConsoleKey key, Command nextCommand)
@@ -26,6 +27,7 @@ namespace Conzo.Commands
          Enforce.ArgumentNotNull(nextCommand, "nextCommand can not be null");
 
          _commands.Add(key, nextCommand);
+
          return this;
       }
 

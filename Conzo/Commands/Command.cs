@@ -11,8 +11,8 @@ namespace Conzo.Commands
          Action = Enforce.ArgumentNotNull(action, "action can not be null");
       }
 
-      public string Id { get; private set; }
-      public Func<string> Action { get; private set; } 
+      internal string Id { get; private set; }
+      internal Func<string> Action { get; private set; } 
 
       protected bool Equals(Command other)
       {

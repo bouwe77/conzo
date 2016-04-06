@@ -23,7 +23,7 @@ namespace Example
       private static void Example2()
       {
          var command = new Command(() => "Hello World, press 1 to continue...");
-
+         
          var config = new ConsoleApplicationConfiguration(command)
          {
             Layout = new LayoutConfiguration

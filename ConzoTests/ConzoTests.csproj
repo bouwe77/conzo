@@ -49,6 +49,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CommandConfigurationTest.cs" />
+    <Compile Include="Commands\CommandTest.cs" />
     <Compile Include="Configuration\ConsoleApplicationConfigurationTest.cs" />
     <Compile Include="ConsoleApplication.IntegrationTests.cs" />
     <Compile Include="ConsoleApplicationTest.cs" />
