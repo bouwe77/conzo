@@ -15,6 +15,7 @@ namespace Conzo.Commands
       internal CommandManager()
       {
          _configuredCommands = new Dictionary<Command, CommandConfiguration>();
+         _globalCommands = new Dictionary<ConsoleKey, Command>();
       }
 
       public CommandConfiguration Configure(Command command)
@@ -25,8 +26,15 @@ namespace Conzo.Commands
          if (!_configuredCommands.ContainsKey(command))
          {
             configuration = new CommandConfiguration();
+
+            foreach (var globalCommand in _globalCommands)
+            {
+               configuration.AddNextCommand(globalCommand.Key, globalCommand.Value);
+            }
+
+            configuration.GlobalCommandsAdded = true;
             _configuredCommands.Add(command, configuration);
-         //TODO hier moeten dus ook de global commands worden toegevoegd
+
          }
          else
          {
@@ -45,7 +53,6 @@ namespace Conzo.Commands
       {
          Command newCurrentCommand = null;
 
-         //TODO Also check global commands here
          // Determine whether there are there any command configurations for the current command.
          // And if so, determine whether for this key a command is configured.
          if (_configuredCommands.ContainsKey(currentCommand))
@@ -128,7 +135,7 @@ namespace Conzo.Commands
          Enforce.ArgumentNotNull(command, "command can not be null");
 
          _globalCommands.Add(key, command);
-         
+
          foreach (var configuredCommand in _configuredCommands)
          {
             configuredCommand.Value.AddNextCommand(key, command);

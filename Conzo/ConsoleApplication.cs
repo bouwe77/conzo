@@ -54,8 +54,6 @@ namespace Conzo
          _commandManager = Enforce.ArgumentNotNull(commandManager, "CommandManager can not be null");
       }
 
-      //TODO Allow adding commands that apply to all commands. Solution: introduce a general list of configurations that apply to all commands, whether they are created before or after configuring it.
-
       public void AddGlobalCommand(ConsoleKey key, Command command)
       {
          _commandManager.AddGlobalCommand(key, command);

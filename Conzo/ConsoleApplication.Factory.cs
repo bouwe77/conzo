@@ -8,22 +8,27 @@ namespace Conzo
    {
       private static bool _created;
 
-      public static IConsoleApplication Create(ConsoleApplicationConfiguration configuration)
+      internal static IConsoleApplication Create(ConsoleApplicationConfiguration configuration, Func<IConsoleApplication> consoleApplicationFactoryMethod, Func<ITemplateProvider> templateProviderFactoryMethod)
       {
          if (_created)
          {
             throw new Exception("ConsoleApplication can only be created once.");
          }
 
-         SetDefaults(configuration);
+         SetDefaults(configuration, templateProviderFactoryMethod);
 
-         var consoleApplication = new ConsoleApplication(configuration);
+         var consoleApplication = consoleApplicationFactoryMethod.Invoke();
          _created = true;
 
          return consoleApplication;
       }
 
-      private static void SetDefaults(ConsoleApplicationConfiguration configuration)
+      public static IConsoleApplication Create(ConsoleApplicationConfiguration configuration)
+      {
+         return Create(configuration, () => new ConsoleApplication(configuration), () => new DefaultTemplateProvider(configuration.QuitKey, configuration.ApplicationTitle));
+      }
+
+      private static void SetDefaults(ConsoleApplicationConfiguration configuration, Func<ITemplateProvider> templateProviderFactoryMethod)
       {
          if (string.IsNullOrEmpty(configuration.ApplicationTitle))
          {
@@ -42,12 +47,28 @@ namespace Conzo
 
          if (configuration.TemplateProvider == null)
          {
-            configuration.TemplateProvider = new DefaultTemplateProvider(configuration.QuitKey, configuration.ApplicationTitle);
+            configuration.TemplateProvider = templateProviderFactoryMethod.Invoke();
          }
 
          if (configuration.Layout == null)
          {
-            configuration.Layout = new LayoutConfiguration(Defaults.BackgroundColor, Defaults.TextColor);
+            configuration.Layout = new LayoutConfiguration
+            {
+               BackgroundColor = Defaults.BackgroundColor,
+               TextColor = Defaults.TextColor
+            };
+         }
+         else
+         {
+            if (!configuration.Layout.BackgroundColorSet)
+            {
+               configuration.Layout.BackgroundColor = Defaults.BackgroundColor;
+            }
+
+            if (!configuration.Layout.TextColorSet)
+            {
+               configuration.Layout.TextColor = Defaults.TextColor;
+            }
          }
       }
    }

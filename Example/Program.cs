@@ -26,7 +26,10 @@ namespace Example
 
          var config = new ConsoleApplicationConfiguration(command)
          {
-         //   Layout = new LayoutConfiguration(ConsoleColor.Gray, ConsoleColor.Black)
+            Layout = new LayoutConfiguration
+            {
+               BackgroundColor = ConsoleColor.DarkRed
+            }
          //   ApplicationTitle = "HOI",
          //   QuitKey = ConsoleKey.D,
          //   QuitDelay = 2000
@@ -36,6 +39,8 @@ namespace Example
 
          myApp.Configure(command)
             .AddNextCommand(ConsoleKey.D1, new Command(Hoppekeej));
+
+         myApp.AddGlobalCommand(ConsoleKey.A, new Command(() => "Ja deze"));
 
          myApp.Start();
       }

@@ -4,13 +4,36 @@ namespace Conzo.Configuration
 {
    public class LayoutConfiguration
    {
-      public LayoutConfiguration(ConsoleColor backgroundColor, ConsoleColor textColor)
+      private ConsoleColor _backgroundColor;
+      private ConsoleColor _textColor;
+
+      public ConsoleColor BackgroundColor
       {
-         BackgroundColor = backgroundColor;
-         TextColor = textColor;
+         get
+         {
+            return _backgroundColor;
+         }
+         set
+         {
+            _backgroundColor = value;
+            BackgroundColorSet = true;
+         }
       }
 
-      public ConsoleColor BackgroundColor { get; private set; }
-      public ConsoleColor TextColor { get; private set; }
+      public ConsoleColor TextColor
+      {
+         get
+         {
+            return _textColor;
+         }
+         set
+         {
+            _textColor = value;
+            TextColorSet = true;
+         }
+      }
+
+      internal bool BackgroundColorSet { get; private set; }
+      internal bool TextColorSet { get; private set; }
    }
 }

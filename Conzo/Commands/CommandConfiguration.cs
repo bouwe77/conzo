@@ -9,6 +9,8 @@ namespace Conzo.Commands
    {
       private readonly Dictionary<ConsoleKey, Command> _commands = new Dictionary<ConsoleKey, Command>();
 
+      internal bool GlobalCommandsAdded { get; set; }
+
       /// <summary>
       /// Initializes a new instance of the <see cref="CommandConfiguration"/> class.
       /// Prevents creating new instances from outside the project.
@@ -17,13 +19,13 @@ namespace Conzo.Commands
       {
       }
 
-      public CommandConfiguration AddNextCommand(ConsoleKey key, Command command)
+      public CommandConfiguration AddNextCommand(ConsoleKey key, Command nextCommand)
       {
          SupportedKeys.Validate(key);
          Enforce.DictionaryKeyDoesNotExist(_commands, key, "Dictionary _commands already contains key" + key);
-         Enforce.ArgumentNotNull(command, "command can not be null");
+         Enforce.ArgumentNotNull(nextCommand, "nextCommand can not be null");
 
-         _commands.Add(key, command);
+         _commands.Add(key, nextCommand);
          return this;
       }
 
