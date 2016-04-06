@@ -17,7 +17,7 @@ namespace Conzo
       private Mock<ICommandManager> _commandManagerMock;
       private Mock<IConsoleApplication> _consoleApplicationMock;
       private Mock<ITemplateProvider> _templateProviderMock;
-      private ConsoleApplicationConfiguration _configuration;
+      private Settings _settings;
       private Command _command;
 
       [TestInitialize]
@@ -29,7 +29,7 @@ namespace Conzo
          _consoleApplicationMock = new Mock<IConsoleApplication>();
          _templateProviderMock = new Mock<ITemplateProvider>();
          _command = new Command(() => "dummy");
-         _configuration = GetConsoleApplicationConfiguration();
+         _settings = GetSettings();
          ConsoleApplication.Reset();
       }
 
@@ -52,7 +52,7 @@ namespace Conzo
 
       [TestMethod]
       [ExpectedException(typeof(ArgumentException))]
-      public void Constructor_ThrowsException_WhenConfigurationNull()
+      public void Constructor_ThrowsException_WhenSettingsNull()
       {
          var consoleApplication = new ConsoleApplication(null, _consoleWriterMock.Object, _keyboardListenerMock.Object, _commandManagerMock.Object);
       }
@@ -61,21 +61,21 @@ namespace Conzo
       [ExpectedException(typeof(ArgumentException))]
       public void Constructor_ThrowsException_WhenConsoleWriterNull()
       {
-         var consoleApplication = new ConsoleApplication(_configuration, null, _keyboardListenerMock.Object, _commandManagerMock.Object);
+         var consoleApplication = new ConsoleApplication(_settings, null, _keyboardListenerMock.Object, _commandManagerMock.Object);
       }
 
       [TestMethod]
       [ExpectedException(typeof(ArgumentException))]
       public void Constructor_ThrowsException_WhenKeyboardListenerNull()
       {
-         var consoleApplication = new ConsoleApplication(_configuration, _consoleWriterMock.Object, null, _commandManagerMock.Object);
+         var consoleApplication = new ConsoleApplication(_settings, _consoleWriterMock.Object, null, _commandManagerMock.Object);
       }
 
       [TestMethod]
       [ExpectedException(typeof(ArgumentException))]
       public void Constructor_ThrowsException_WhenCommandManagerNull()
       {
-         var consoleApplication = new ConsoleApplication(_configuration, _consoleWriterMock.Object, _keyboardListenerMock.Object, null);
+         var consoleApplication = new ConsoleApplication(_settings, _consoleWriterMock.Object, _keyboardListenerMock.Object, null);
       }
 
       [TestMethod]
@@ -102,7 +102,7 @@ namespace Conzo
       public void Start_Success()
       {
          var consoleApplication = GetConsoleApplicationWithMocks();
-         consoleApplication.Start();
+         consoleApplication.Run();
       }
 
       [TestMethod]
@@ -110,15 +110,15 @@ namespace Conzo
       public void Start_ThrowsException_WhenStartedMultipleTimes()
       {
          var consoleApplication = GetConsoleApplicationWithMocks();
-         consoleApplication.Start();
-         consoleApplication.Start();
+         consoleApplication.Run();
+         consoleApplication.Run();
       }
 
       [TestMethod]
       public void Stop_Success()
       {
          var consoleApplication = GetConsoleApplicationWithMocks();
-         consoleApplication.Start();
+         consoleApplication.Run();
          consoleApplication.Stop();
       }
 
@@ -146,17 +146,17 @@ namespace Conzo
 
       private IConsoleApplication GetConsoleApplicationWithMocks()
       {
-         return new ConsoleApplication(_configuration, _consoleWriterMock.Object, _keyboardListenerMock.Object, _commandManagerMock.Object);
+         return new ConsoleApplication(_settings, _consoleWriterMock.Object, _keyboardListenerMock.Object, _commandManagerMock.Object);
       }
 
-      private ConsoleApplicationConfiguration GetConsoleApplicationConfiguration()
+      private Settings GetSettings()
       {
-         var config = new ConsoleApplicationConfiguration(_command)
+         var settings = new Settings(_command)
          {
             TemplateProvider = new Mock<ITemplateProvider>().Object
          };
 
-         return config;
+         return settings;
       }
    }
 }

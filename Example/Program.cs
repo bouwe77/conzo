@@ -24,9 +24,9 @@ namespace Example
       {
          var command = new Command(() => "Hello World, press 1 to continue...");
          
-         var config = new ConsoleApplicationConfiguration(command)
+         var settings = new Settings(command)
          {
-            Layout = new LayoutConfiguration
+            Layout = new LayoutSettings
             {
                BackgroundColor = ConsoleColor.DarkRed
             }
@@ -35,14 +35,14 @@ namespace Example
          //   QuitDelay = 2000
          };
 
-         var myApp = ConsoleApplication.Create(config);
+         var myApp = ConsoleApplication.Create(settings);
 
          myApp.Configure(command)
             .AddNextCommand(ConsoleKey.D1, new Command(Hoppekeej));
 
          myApp.AddGlobalCommand(ConsoleKey.A, new Command(() => "Ja deze"));
 
-         myApp.Start();
+         myApp.Run();
       }
 
       private static string Hoppekeej()
@@ -59,26 +59,26 @@ namespace Example
          var command2 = new Command(controller.GetCommand2);
          var outro = new Command(controller.GetOutro);
 
-         var config = new ConsoleApplicationConfiguration(welcome);
-         var myApp = ConsoleApplication.Create(config);
+         var settings = new Settings(welcome);
+         var myApp = ConsoleApplication.Create(settings);
 
          //TODO Onderstaande QuitKey met outro vervangen door GlobalCommand zodra dit werkt.
 
          myApp.Configure(welcome)
             .AddNextCommand(ConsoleKey.D1, command1)
-            .AddNextCommand(config.QuitKey, outro);
+            .AddNextCommand(settings.QuitKey, outro);
 
          myApp.Configure(command1)
             .AddNextCommand(ConsoleKey.D2, command2)
-            .AddNextCommand(config.QuitKey, outro);
+            .AddNextCommand(settings.QuitKey, outro);
 
          myApp.Configure(command2)
             .AddNextCommand(ConsoleKey.D1, command1)
-            .AddNextCommand(config.QuitKey, outro);
+            .AddNextCommand(settings.QuitKey, outro);
 
          myApp.Configure(outro);
 
-         myApp.Start();
+         myApp.Run();
       }
    }
 

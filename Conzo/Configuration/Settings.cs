@@ -6,7 +6,7 @@ using Conzo.Utilities;
 
 namespace Conzo.Configuration
 {
-   public class ConsoleApplicationConfiguration
+   public class Settings
    {
       private string _applicationTitle;
       private ConsoleKey _quitKey;
@@ -54,11 +54,11 @@ namespace Conzo.Configuration
 
       public ITemplateProvider TemplateProvider { internal get; set; }
 
-      public LayoutConfiguration Layout { internal get; set; }
+      public LayoutSettings Layout { internal get; set; }
 
       internal Command StartCommand { get; private set; }
 
-      public ConsoleApplicationConfiguration(Command startCommand)
+      public Settings(Command startCommand)
       {
          StartCommand = Enforce.ArgumentNotNull(startCommand, "startCommand can not be null");
       }

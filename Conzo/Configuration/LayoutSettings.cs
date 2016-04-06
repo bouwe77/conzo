@@ -2,7 +2,7 @@
 
 namespace Conzo.Configuration
 {
-   public class LayoutConfiguration
+   public class LayoutSettings
    {
       private ConsoleColor _backgroundColor;
       private ConsoleColor _textColor;

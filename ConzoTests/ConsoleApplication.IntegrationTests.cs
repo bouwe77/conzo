@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Runtime.InteropServices;
 using Conzo.Commands;
 using Conzo.Configuration;
 using Conzo.Console;
@@ -52,21 +51,21 @@ namespace Conzo
             return text;
          });
 
-         var configuration = new ConsoleApplicationConfiguration(startCommand);
+         var settings = new Settings(startCommand);
 
          SetupTemplateProviderMock(text);
          SetupConsoleWriterMock(text);
 
          Func<IConsoleApplication> consoleApplicationFactoryMethod = () => new ConsoleApplication(
-            configuration,
+            settings,
             _consoleWriterMock.Object,
             _keyboardListenerMock.Object,
             _commandManagerMock.Object);
 
          Func<ITemplateProvider> templateProviderFactoryMethod = () => _templateProviderMock.Object;
-         var consoleApplication = ConsoleApplication.Create(configuration, consoleApplicationFactoryMethod, templateProviderFactoryMethod);
+         var consoleApplication = ConsoleApplication.Create(settings, consoleApplicationFactoryMethod, templateProviderFactoryMethod);
 
-         consoleApplication.Start();
+         consoleApplication.Run();
 
          _commandManagerMock.Verify(x => x.Validate(), Times.Once);
          _keyboardListenerMock.Verify(x => x.Start(), Times.Once);

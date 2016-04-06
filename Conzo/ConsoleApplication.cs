@@ -13,19 +13,19 @@ namespace Conzo
       private readonly IConsoleWriter _consoleWriter;
       private readonly IKeyboardListener _keyboardListener;
       private readonly ICommandManager _commandManager;
-      private readonly ConsoleApplicationConfiguration _configuration;
-      private bool _started;
+      private readonly Settings _settings;
+      private bool _running;
       private Command _currentCommand;
       private string _currentContents;
 
       /// <summary>
       /// Initializes a new instance of the <see cref="ConsoleApplication" /> class.
       /// </summary>
-      /// <param name="configuration">The configuration.</param>
-      internal ConsoleApplication(ConsoleApplicationConfiguration configuration)
+      /// <param name="settings">The settings.</param>
+      internal ConsoleApplication(Settings settings)
          : this(
-            configuration,
-            new ConsoleWriter(configuration.Layout),
+            settings,
+            new ConsoleWriter(settings.Layout),
             new KeyboardListener(),
             new CommandManager())
       {
@@ -34,17 +34,17 @@ namespace Conzo
       /// <summary>
       /// Initializes a new instance of the <see cref="ConsoleApplication" /> class.
       /// </summary>
-      /// <param name="configuration">The configuration.</param>
+      /// <param name="settings">The settings.</param>
       /// <param name="consoleWriter">The console writer.</param>
       /// <param name="keyboardListener">The keyboard listener.</param>
       /// <param name="commandManager">The command manager.</param>
       internal ConsoleApplication(
-         ConsoleApplicationConfiguration configuration,
+         Settings settings,
          IConsoleWriter consoleWriter,
          IKeyboardListener keyboardListener,
          ICommandManager commandManager)
       {
-         _configuration = Enforce.ArgumentNotNull(configuration, "Configuration can not be null");
+         _settings = Enforce.ArgumentNotNull(settings, "Settings can not be null");
          _consoleWriter = Enforce.ArgumentNotNull(consoleWriter, "ConsoleWriter can not be null");
          _keyboardListener = Enforce.ArgumentNotNull(keyboardListener, "KeyboardListener can not be null");
          _commandManager = Enforce.ArgumentNotNull(commandManager, "CommandManager can not be null");
@@ -63,16 +63,16 @@ namespace Conzo
          return commandConfiguration;
       }
 
-      public void Start()
+      public void Run()
       {
-         if (_started)
+         if (_running)
          {
-            throw new Exception("ConsoleApplication can only be started once.");
+            throw new Exception("ConsoleApplication can only be running once.");
          }
 
-         _started = true;
+         _running = true;
 
-         _currentCommand = _configuration.StartCommand;
+         _currentCommand = _settings.StartCommand;
          RefreshCurrentCommandContents();
 
          _keyboardListener.KeyPressed += OnKeyPressed;
@@ -102,9 +102,9 @@ namespace Conzo
 
       public void Stop()
       {
-         if (!_started)
+         if (!_running)
          {
-            throw new Exception("Can not stop an application that is not started");
+            throw new Exception("Can not stop an application that is not running");
          }
 
          // Stopping listening to keys pressed will stop the program.
@@ -113,7 +113,7 @@ namespace Conzo
 
       private void ShowCurrentCommandContents()
       {
-         string renderedTemplate = _configuration.TemplateProvider.GetRenderedTemplate(_currentContents);
+         string renderedTemplate = _settings.TemplateProvider.GetRenderedTemplate(_currentContents);
          _consoleWriter.WriteToConsole(renderedTemplate);
       }
 
@@ -131,10 +131,10 @@ namespace Conzo
 
          ShowCurrentCommandContents();
 
-         if (key == _configuration.QuitKey)
+         if (key == _settings.QuitKey)
          {
             // The quit key is pressed, after displaying the command, wait a while and then stop the application.
-            Thread.Sleep(_configuration.QuitDelay);
+            Thread.Sleep(_settings.QuitDelay);
             Stop();
          }
       }

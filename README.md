@@ -15,9 +15,9 @@ TODO: Describe the installation process
 static void Main()
 {
   var startCommand = new Command(() => "Hello World");
-  var config = new ConsoleApplicationConfiguration(startCommand);
-  var myApp = ConsoleApplication.Create(config);
-  myApp.Start();
+  var settings = new Settings(startCommand);
+  var myApp = ConsoleApplication.Create(settings);
+  myApp.Run();
 }
 ```
 

@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Conzo.Configuration
 {
    [TestClass]
-   public class ConsoleApplicationConfigurationTest
+   public class SettingsTest
    {
       private Command _command;
 
@@ -18,74 +18,74 @@ namespace Conzo.Configuration
       [TestMethod]
       public void Constructor_Success()
       {
-         var config = GetValidConfiguration();
+         var settings = GetValidSettings();
       }
 
       [TestMethod]
       [ExpectedException(typeof(ArgumentException))]
       public void Constructor_ThrowsException_WhenCommandIsNull()
       {
-         var config = new ConsoleApplicationConfiguration(null);
+         var settings = new Settings(null);
       }
 
       [TestMethod]
       [ExpectedException(typeof(ArgumentException))]
       public void SetApplicationTitle_ThrowsException_WhenNull()
       {
-         var config = GetValidConfiguration();
-         config.ApplicationTitle = null;
+         var settings = GetValidSettings();
+         settings.ApplicationTitle = null;
       }
 
       [TestMethod]
       [ExpectedException(typeof(ArgumentException))]
       public void SetApplicationTitle_ThrowsException_WhenEmpty()
       {
-         var config = GetValidConfiguration();
-         config.ApplicationTitle = string.Empty;
+         var settings = GetValidSettings();
+         settings.ApplicationTitle = string.Empty;
       }
 
       [TestMethod]
       public void SetApplicationTitle_Success()
       {
-         var config = GetValidConfiguration();
-         config.ApplicationTitle = "ApplicationTitle";
+         var settings = GetValidSettings();
+         settings.ApplicationTitle = "ApplicationTitle";
       }
 
       [TestMethod]
       [ExpectedException(typeof(ArgumentException))]
       public void SetQuitDelay_ThrowsException_WhenLessThanZero()
       {
-         var config = GetValidConfiguration();
-         config.QuitDelay = -1;
+         var settings = GetValidSettings();
+         settings.QuitDelay = -1;
       }
 
       [TestMethod]
       public void SetQuitDelay_Success_WhenZero()
       {
-         var config = GetValidConfiguration();
-         config.QuitDelay = 0;
-         Assert.IsTrue(config.QuitDelaySet);
+         var settings = GetValidSettings();
+         settings.QuitDelay = 0;
+         Assert.IsTrue(settings.QuitDelaySet);
       }
 
       [TestMethod]
       [ExpectedException(typeof(ArgumentException))]
       public void SetQuitKey_ThrowsException_WhenKeyNotSupported()
       {
-         var config = GetValidConfiguration();
-         config.QuitKey = ConsoleKey.PrintScreen;
+         var settings = GetValidSettings();
+         settings.QuitKey = ConsoleKey.PrintScreen;
       }
 
       [TestMethod]
       public void SetQuitKey_Success_WhenKeySupported()
       {
-         var config = GetValidConfiguration();
-         config.QuitKey = ConsoleKey.A;
-         Assert.IsTrue(config.QuitKeySet);
+         var settings = GetValidSettings();
+         settings.QuitKey = ConsoleKey.A;
+         Assert.IsTrue(settings.QuitKeySet);
       }
 
-      private ConsoleApplicationConfiguration GetValidConfiguration()
+      private Settings GetValidSettings()
       {
-         return new ConsoleApplicationConfiguration(_command);
+         return new Settings(_command);
       }
    }
 }

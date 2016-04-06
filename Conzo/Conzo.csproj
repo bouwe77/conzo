@@ -45,8 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Configuration\ConsoleApplicationConfiguration.cs" />
-    <Compile Include="Configuration\LayoutConfiguration.cs" />
+    <Compile Include="Configuration\Settings.cs" />
+    <Compile Include="Configuration\LayoutSettings.cs" />
     <Compile Include="ConsoleApplication.Factory.cs" />
     <Compile Include="Console\ConsoleWriter.cs" />
     <Compile Include="Console\IConsoleWriter.cs" />

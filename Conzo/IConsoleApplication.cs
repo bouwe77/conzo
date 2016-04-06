@@ -7,7 +7,7 @@ namespace Conzo
    {
       CommandConfiguration Configure(Command command);
       void AddGlobalCommand(ConsoleKey key, Command command);
-      void Start();
+      void Run();
       void Stop();
    }
 }

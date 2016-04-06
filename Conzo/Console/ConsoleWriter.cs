@@ -6,11 +6,11 @@ namespace Conzo.Console
 {
    internal class ConsoleWriter : IConsoleWriter
    {
-      private readonly LayoutConfiguration _layoutConfiguration;
+      private readonly LayoutSettings _layoutSettings;
 
-      public ConsoleWriter(LayoutConfiguration layoutConfiguration)
+      public ConsoleWriter(LayoutSettings layoutSettings)
       {
-         _layoutConfiguration = Enforce.ArgumentNotNull(layoutConfiguration, "layoutConfiguration can not be null");
+         _layoutSettings = Enforce.ArgumentNotNull(layoutSettings, "layoutSettings can not be null");
       }
 
       public void Initialize()
@@ -102,8 +102,8 @@ namespace Conzo.Console
       private void SetBackAndForeGroundColor()
       {
          // Set the background for the whole console window by calling Clear() afterwards, but before writing output.
-         System.Console.BackgroundColor = _layoutConfiguration.BackgroundColor;
-         System.Console.ForegroundColor = _layoutConfiguration.TextColor;
+         System.Console.BackgroundColor = _layoutSettings.BackgroundColor;
+         System.Console.ForegroundColor = _layoutSettings.TextColor;
          System.Console.Clear();
       }
 
