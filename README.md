@@ -8,7 +8,12 @@ TODO: Describe the installation process
 
 ## Usage
 
-TODO: Write usage instructions
+```C#
+var command = new Command(() => "Hello World");
+var config = new ConsoleApplicationConfiguration(command);
+var myApp = ConsoleApplication.Create(config);
+myApp.Start();
+```
 
 ## License
 
