@@ -16,7 +16,6 @@ namespace Conzo
    [TestClass]
    public class ConsoleApplicationIntegrationTest
    {
-      //TODO Only mock Console related stuff!
       private Mock<IConsoleWriter> _consoleWriterMock;
       private Mock<IKeyboardListener> _keyboardListenerMock;
       private Mock<ICommandManager> _commandManagerMock;
