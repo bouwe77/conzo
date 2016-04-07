@@ -12,10 +12,13 @@ TODO: Describe the installation process
 ## Usage
 
 ```C#
-var command = new Command(() => "Hello World");
-var config = new ConsoleApplicationConfiguration(command);
-var myApp = ConsoleApplication.Create(config);
-myApp.Start();
+static void Main()
+{
+  var startCommand = new Command(() => "Hello World");
+  var config = new ConsoleApplicationConfiguration(startCommand);
+  var myApp = ConsoleApplication.Create(config);
+  myApp.Start();
+}
 ```
 
 ## License
