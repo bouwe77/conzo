@@ -9,9 +9,9 @@ Conzo is a framework for creating user friendly .NET console applications.
 
 TODO: Describe the installation process
 
-## Usage
+## Examples
 
-### Quickstart
+### Hello World
 
 ```C#
 static void Main()
@@ -34,19 +34,20 @@ static void Main()
 }
 ```
 
-### More advanced example: next commands
+### Next commands
 
 ```C#
 static void Main()
 {
-  var startCommand = new Command(() => "Hello World");
+  var startCommand = new Command(() => "Hello World, press A to continue...");
   
   var settings = new Settings(startCommand)
 
   var myApp = ConsoleApplication.Create(settings);
   
-  // Create a next command. After the startCommand is invoked and displayed you can press A to continue to the next command.
-  var nextCommand = new Command(() => "This is the next command");
+  // Create a new command and add it as the next command for startCommand.
+  // After the startCommand is invoked and displayed you can press A to continue to the next command.
+  var nextCommand = new Command(() => "This is the next command, press B to continue...");
   myApp.Configure(startCommand)
     .AddNextCommand(ConsoleKey.A, nextCommand);
   
