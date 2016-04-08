@@ -3,11 +3,9 @@
 Conzo is a framework for creating user friendly .NET console applications.
 
 ## Features
-
 TODO
 
 ## Installation
-
 TODO
 
 ## Examples
@@ -35,7 +33,7 @@ static void Main()
 }
 ```
 
-### Next commands
+### Add more commands
 
 ```C#
 static void Main()
