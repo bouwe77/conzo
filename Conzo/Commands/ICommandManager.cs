@@ -9,5 +9,6 @@ namespace Conzo.Commands
       void Validate();
       Command StartCommand { get; set; }
       void AddGlobalCommand(ConsoleKey consoleKey, Command command);
+      bool ExecuteCommand(Command command, out string commandContents);
    }
 }

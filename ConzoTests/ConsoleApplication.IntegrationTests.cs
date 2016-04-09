@@ -55,6 +55,7 @@ namespace Conzo
 
          SetupTemplateProviderMock(text);
          SetupConsoleWriterMock(text);
+         SetupCommandManagerMock(startCommand);
 
          Func<IConsoleApplication> consoleApplicationFactoryMethod = () => new ConsoleApplication(
             settings,
@@ -72,8 +73,16 @@ namespace Conzo
          Assert.IsTrue(startCommandInvoked);
       }
 
-      //TODO Raise event _keyboardListenerMock.Raise(x => x.KeyPressed += null, EventArgs.Empty);
+      private void SetupCommandManagerMock(Command startCommand)
+      {
+         // Set up the command manager so it asserts that the Configure method is called for the start command.
+         _commandManagerMock
+            .Setup(x => x.Configure(It.IsAny<Command>()))
+            .Callback<Command>(actualArgument => Assert.AreEqual(startCommand, actualArgument));
+      }
 
+      //TODO test commands with conditions
+      //TODO Raise event _keyboardListenerMock.Raise(x => x.KeyPressed += null, EventArgs.Empty);
 
       private void SetupTemplateProviderMock(string renderedTemplateToReturn)
       {

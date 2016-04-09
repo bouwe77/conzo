@@ -16,7 +16,7 @@ namespace Conzo
       private readonly Settings _settings;
       private bool _running;
       private Command _currentCommand;
-      private string _currentContents;
+      private string _currentCommandContents;
 
       /// <summary>
       /// Initializes a new instance of the <see cref="ConsoleApplication" /> class.
@@ -72,6 +72,8 @@ namespace Conzo
 
          _running = true;
 
+         _commandManager.Configure(_settings.StartCommand);
+
          _currentCommand = _settings.StartCommand;
          RefreshCurrentCommandContents();
 
@@ -90,7 +92,13 @@ namespace Conzo
       {
          try
          {
-            _currentContents = _currentCommand.Action.Invoke();
+            string newCommandContents;
+            bool commandExecuted = _commandManager.ExecuteCommand(_currentCommand, out newCommandContents);
+
+            if (commandExecuted)
+            {
+               _currentCommandContents = newCommandContents;
+            }
          }
          catch (Exception exception)
          {
@@ -113,7 +121,7 @@ namespace Conzo
 
       private void ShowCurrentCommandContents()
       {
-         string renderedTemplate = _settings.TemplateProvider.GetRenderedTemplate(_currentContents);
+         string renderedTemplate = _settings.TemplateProvider.GetRenderedTemplate(_currentCommandContents);
          _consoleWriter.WriteToConsole(renderedTemplate);
       }
 

@@ -99,7 +99,7 @@ namespace Conzo
       }
 
       [TestMethod]
-      public void Start_Success()
+      public void Run_Success()
       {
          var consoleApplication = GetConsoleApplicationWithMocks();
          consoleApplication.Run();
@@ -107,7 +107,7 @@ namespace Conzo
 
       [TestMethod]
       [ExpectedException(typeof(Exception))]
-      public void Start_ThrowsException_WhenStartedMultipleTimes()
+      public void Run_ThrowsException_WhenStartedMultipleTimes()
       {
          var consoleApplication = GetConsoleApplicationWithMocks();
          consoleApplication.Run();

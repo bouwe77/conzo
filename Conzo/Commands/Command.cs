@@ -5,14 +5,16 @@ namespace Conzo.Commands
 {
    public class Command
    {
-      public Command(Func<string> action)
+      public Command(Func<string> action, Func<bool> condition = null)
       {
          Id = Guid.NewGuid().ToString("N");
          Action = Enforce.ArgumentNotNull(action, "action can not be null");
+         Condition = condition;
       }
 
       internal string Id { get; private set; }
-      internal Func<string> Action { get; private set; } 
+      internal Func<string> Action { get; private set; }
+      internal Func<bool> Condition { get; private set; } 
 
       protected bool Equals(Command other)
       {

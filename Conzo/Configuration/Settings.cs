@@ -37,7 +37,8 @@ namespace Conzo.Configuration
 
       /// <summary>
       /// Gets or sets the quit delay in milliseconds.
-      /// Use this if you want to display a command when hitting the <see cref="QuitKey"/>, because then you need a delay so the user will at least see the command.
+      /// Use this if you want to display a command when hitting the <see cref="QuitKey"/>, 
+      /// because then you need a delay so the user will at least see the output of the command.
       /// </summary>
       public int QuitDelay
       {

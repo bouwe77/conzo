@@ -5,7 +5,7 @@ VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Conzo", "Conzo\Conzo.csproj", "{84A9F4B9-9D38-4B56-97A8-1FCA8560A7F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "Example\Example.csproj", "{53B75F97-7FAA-4041-A7D8-6D118F1C15D8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "Examples\Examples.csproj", "{53B75F97-7FAA-4041-A7D8-6D118F1C15D8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConzoTests", "ConzoTests\ConzoTests.csproj", "{F88313E1-7EB3-41AB-A4E5-1ED140AB81DB}"
 EndProject

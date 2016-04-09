@@ -141,5 +141,23 @@ namespace Conzo.Commands
             configuredCommand.Value.AddNextCommand(key, command);
          }
       }
+
+
+      public bool ExecuteCommand(Command command, out string commandContents)
+      {
+         bool executeCommand = true;
+         if (command.Condition != null)
+         {
+            executeCommand = command.Condition.Invoke();
+         }
+
+         commandContents = null;
+         if (executeCommand)
+         {
+            commandContents = command.Action.Invoke();
+         }
+
+         return executeCommand;
+      }
    }
 }
