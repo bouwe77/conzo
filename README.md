@@ -17,7 +17,7 @@ static void Main()
 {
   // The command that must be invoked when the application starts.
   // This is a method that (at least) returns a string that will be displayed on the console.
-  // However, it could also do something useful like quering a database.
+  // However, besides that it could also do something useful like quering a database.
   var startCommand = new Command(() => "Hello World");
   
   // We need a Settings object containing at least the startCommand, but you could configure more if you want.
