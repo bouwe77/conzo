@@ -26,7 +26,8 @@ namespace Conzo.Console
       {
          Enforce.ArgumentNotNull(textToWrite, "textToWrite can not be null");
 
-//TODO Clear causes flickering, so writing (or clearing) each char separately would be better. See http://gamedev.stackexchange.com/questions/25013/c-console-snake-game-sort-of-fps-problem         System.Console.Clear();
+//TODO Clear causes flickering, so writing (or clearing) each char separately would be better. See http://gamedev.stackexchange.com/questions/25013/c-console-snake-game-sort-of-fps-problem         
+         System.Console.Clear();
 
          bool doLayoutStuff = textToWrite.Contains("$");
          if (!doLayoutStuff)
