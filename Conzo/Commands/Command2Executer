@@ -1,0 +1,18 @@
+namespace Conzo.Commands
+{
+  class Command2Executer<Command1> : ICommandExecuter
+  {
+    privare readonly Command2 _command;
+    private readonly ConsoleKey _consoleKey;
+    
+    public Command1Executer(Command2 command, ConsoleKey consoleKey)
+    {
+      _command = command;
+      _consoleKey = consoleKey;
+    }
+    
+    public void Execute()
+    {
+      command.Invoke(_consoleKey);
+    }
+}
