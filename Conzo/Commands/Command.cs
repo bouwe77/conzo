@@ -1,20 +1,15 @@
 ﻿using System;
-using Conzo.Utilities;
 
 namespace Conzo.Commands
 {
-   public class Command
+   public abstract partial class Command
    {
-      public Command(Func<string> action, Func<bool> condition = null)
+      internal Command()
       {
          Id = Guid.NewGuid().ToString("N");
-         Action = Enforce.ArgumentNotNull(action, "action can not be null");
-         Condition = condition;
       }
 
-      internal string Id { get; private set; }
-      internal Func<string> Action { get; private set; }
-      internal Func<bool> Condition { get; private set; } 
+      internal string Id { get; }
 
       protected bool Equals(Command other)
       {
@@ -31,7 +26,7 @@ namespace Conzo.Commands
 
       public override int GetHashCode()
       {
-         return (Id != null ? Id.GetHashCode() : 0);
+         return Id?.GetHashCode() ?? 0;
       }
    }
 }

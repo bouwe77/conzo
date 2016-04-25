@@ -1,4 +1,6 @@
 ﻿using System;
+using System.CodeDom;
+using Conzo.Commands;
 using Conzo.Configuration;
 using Conzo.Templates;
 using Conzo.Utilities;
@@ -28,7 +30,8 @@ namespace Conzo
 
       public static IConsoleApplication Create(Settings settings)
       {
-         return Create(settings, () => new ConsoleApplication(settings), () => new DefaultTemplateProvider(settings.QuitKey, settings.ApplicationTitle));
+         var commandConfigurationManager = new CommandConfigurationManager(settings);
+         return Create(settings, () => new ConsoleApplication(settings, commandConfigurationManager), () => new DefaultTemplateProvider(settings.QuitKey, settings.ApplicationTitle));
       }
 
       /// <summary>

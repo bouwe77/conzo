@@ -3,3 +3,14 @@
 ################################################################################
 
 /Conzo/bin/Debug
+/.vs/Conzo/v14
+/Conzo/obj/Debug
+/ConzoTests/bin/Debug
+/ConzoTests/obj/Debug
+/Examples/bin/Debug
+/Examples/obj/Debug
+/packages
+/TempStuff/bin/Debug
+/TempStuff/obj/Debug
+/Conzo.v12.suo
+/CodeCoverage.runsettings

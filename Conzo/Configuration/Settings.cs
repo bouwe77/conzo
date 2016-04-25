@@ -57,11 +57,12 @@ namespace Conzo.Configuration
 
       public LayoutSettings Layout { internal get; set; }
 
-      internal Command StartCommand { get; private set; }
+      internal InternalCommand StartCommand { get; private set; }
 
       public Settings(Command startCommand)
       {
-         StartCommand = Enforce.ArgumentNotNull(startCommand, "startCommand can not be null");
+         Enforce.ArgumentNotNull(startCommand, "startCommand can not be null");
+         StartCommand = new InternalCommand(startCommand);
       }
    }
 }

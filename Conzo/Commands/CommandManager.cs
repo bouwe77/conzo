@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
+using Conzo.Configuration;
+using Conzo.Console;
 using Conzo.Keys;
 using Conzo.Utilities;
 
@@ -8,156 +9,93 @@ namespace Conzo.Commands
 {
    internal class CommandManager : ICommandManager
    {
-      private readonly Dictionary<Command, CommandConfiguration> _configuredCommands;
-      private Command _startCommand;
-      private readonly Dictionary<ConsoleKey, Command> _globalCommands;
+      private InternalCommand _currentCommand;
+      private string _currentCommandContents;
+      private readonly Settings _settings;
+      private readonly IConsoleWriter _consoleWriter;
+      private readonly ICommandConfigurationManager _commandConfigurationManager;
+      private readonly IKeyboardListener _keyboardListener;
 
-      internal CommandManager()
+      public CommandManager(Settings settings, ICommandConfigurationManager commandConfigurationManager)
+         : this(settings, new ConsoleWriter(settings.Layout), commandConfigurationManager, new KeyboardListener())
       {
-         _configuredCommands = new Dictionary<Command, CommandConfiguration>();
-         _globalCommands = new Dictionary<ConsoleKey, Command>();
       }
 
-      public CommandConfiguration Configure(Command command)
+      internal CommandManager(Settings settings, IConsoleWriter consoleWriter, ICommandConfigurationManager commandConfigurationManager, IKeyboardListener keyboardListener)
       {
-         Enforce.ArgumentNotNull(command, "command can not be null");
-
-         CommandConfiguration configuration;
-         if (!_configuredCommands.ContainsKey(command))
-         {
-            configuration = new CommandConfiguration();
-
-            foreach (var globalCommand in _globalCommands)
-            {
-               configuration.AddNextCommand(globalCommand.Key, globalCommand.Value);
-            }
-
-            configuration.GlobalCommandsAdded = true;
-
-            _configuredCommands.Add(command, configuration);
-         }
-         else
-         {
-            configuration = _configuredCommands[command];
-         }
-
-         if (StartCommand == null)
-         {
-            StartCommand = command;
-         }
-
-         return configuration;
+         _settings = settings;
+         _currentCommand = settings.StartCommand;
+         _consoleWriter = Enforce.ArgumentNotNull(consoleWriter, "consoleWriter can not be null");
+         _commandConfigurationManager = Enforce.ArgumentNotNull(commandConfigurationManager, "commandConfigurationManager can not be null");
+         _keyboardListener = Enforce.ArgumentNotNull(keyboardListener, "KeyboardListener can not be null");
       }
 
-      public Command GetNewCurrentCommand(Command currentCommand, ConsoleKey key)
+      public void Start()
       {
-         Command newCurrentCommand = null;
-
-         // Determine whether there are there any command configurations for the current command.
-         // And if so, determine whether for this key a command is configured.
-         if (_configuredCommands.ContainsKey(currentCommand))
-         {
-            var configuration = _configuredCommands[currentCommand];
-            newCurrentCommand = configuration.GetCommand(key);
-         }
-
-         if (newCurrentCommand == null)
-         {
-            newCurrentCommand = currentCommand;
-         }
-
-         return newCurrentCommand;
+         _keyboardListener.KeyPressed += OnKeyPressed;
+         _consoleWriter.Initialize();
+         _commandConfigurationManager.Validate();
+         ExecuteCurrentCommand();
+         ShowCurrentCommandContents();
+         _keyboardListener.Start();
       }
 
-      public void Validate()
+      public void Stop()
       {
-         // At least one command is required. This typically is the start command.
-         if (!_configuredCommands.Any())
+         // Stopping listening to keys pressed will stop the program.
+         _keyboardListener.Stop();
+      }
+
+      private void OnKeyPressed(KeyPressedEventArgs keyPressedEventArgs)
+      {
+         ConsoleKey consoleKey = keyPressedEventArgs.Key;
+
+         // Determine the next command from the current command with this key. If no command found the current command will be used again.
+         InternalCommand newCurrentCommand = _commandConfigurationManager.GetNextCommand(_currentCommand, consoleKey) ?? _currentCommand;
+
+         // Only execute the command if it has a condition or if it is not the same as the current command.
+         if (newCurrentCommand.Condition != null || !newCurrentCommand.Equals(_currentCommand))
          {
-            throw new Exception("No commands configured");
+            _currentCommand = newCurrentCommand;
+            ExecuteCurrentCommand(consoleKey);
          }
 
-         //TODO refactor this:
-         var commandsThatHaveCommandPointingToIt = new List<Command>();
-         foreach (var commandConfiguration in _configuredCommands.Values)
+         ShowCurrentCommandContents();
+
+         if (consoleKey == _settings.QuitKey)
          {
-            commandsThatHaveCommandPointingToIt.AddRange(commandConfiguration.GetAllCommands());
+            // The quit key is pressed. After displaying the command, wait a while and then stop the application.
+            Thread.Sleep(_settings.QuitDelay);
+            Stop();
          }
+      }
 
-         bool isOrphaned = false;
-
-         // Commands that are configured must not be "orphans", i.e. they must be either the start command or there must be a command pointing to it.
-         foreach (var configuredCommand in _configuredCommands)
+      private void ExecuteCurrentCommand(ConsoleKey consoleKey = default(ConsoleKey))
+      {
+         try
          {
-            isOrphaned = !configuredCommand.Key.Equals(_startCommand);
-            if (isOrphaned)
-            {
-               foreach (var command in commandsThatHaveCommandPointingToIt)
-               {
-                  if (command.Equals(configuredCommand.Key))
-                  {
-                     isOrphaned = false;
-                     break;
-                  }
-               }
-            }
+            string newCommandContents;
 
-            if (isOrphaned)
+            var commandExecuter = new CommandExecuter(_currentCommand, consoleKey);
+            bool commandExecuted = commandExecuter.TryExecute(out newCommandContents);
+
+            if (commandExecuted)
             {
-               break;
+               _currentCommandContents = newCommandContents;
             }
          }
-
-         if (isOrphaned)
+         catch (Exception exception)
          {
-            throw new Exception("You can not configure a orphaned command, i.e. a command that has no command pointing to it");
+            // If we end up here an unexpected exception occurred and the application crashed.
+            //TODO Een Command met error tonen of zo? En een key command eraan toevoegen. "Press any key to continue..."
+            throw;
          }
       }
 
-      public Command StartCommand
+      private void ShowCurrentCommandContents()
       {
-         get
-         {
-            return _startCommand;
-         }
-         set
-         {
-            Enforce.ArgumentNotNull(value, "startCommand can not be null");
-            Enforce.DictionaryKeyExists(_configuredCommands, value, "startCommand does not exist");
-            _startCommand = value;
-         }
-      }
-
-      public void AddGlobalCommand(ConsoleKey key, Command command)
-      {
-         SupportedKeys.Validate(key);
-         Enforce.DictionaryKeyDoesNotExist(_globalCommands, key, "Dictionary _globalCommands already contains key" + key);
-         Enforce.ArgumentNotNull(command, "command can not be null");
-
-         _globalCommands.Add(key, command);
-
-         foreach (var configuredCommand in _configuredCommands)
-         {
-            configuredCommand.Value.AddNextCommand(key, command);
-         }
-      }
-
-
-      public bool ExecuteCommand(Command command, out string commandContents)
-      {
-         bool executeCommand = true;
-         if (command.Condition != null)
-         {
-            executeCommand = command.Condition.Invoke();
-         }
-
-         commandContents = null;
-         if (executeCommand)
-         {
-            commandContents = command.Action.Invoke();
-         }
-
-         return executeCommand;
+         string renderedTemplate = _settings.TemplateProvider.GetRenderedTemplate(_currentCommandContents);
+         _consoleWriter.WriteToConsole(renderedTemplate);
       }
    }
 }

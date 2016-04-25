@@ -12,7 +12,7 @@ namespace Conzo.Configuration
       [TestInitialize]
       public void TestInitialize()
       {
-         _command = new Command(() => "Hello World");
+         _command = Command.Create(() => "Hello World");
       }
 
       [TestMethod]

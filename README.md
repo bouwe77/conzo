@@ -17,7 +17,7 @@ static void Main()
 {
   // The command that must be invoked when the application starts.
   // This is a method that (at least) returns a string but also could do something useful like quering a database.
-  var startCommand = new Command(() => "Hello World");
+  var startCommand = Command.Create(() => "Hello World");
   
   // We need a Settings object containing at least the startCommand, but you could configure more if you want.
   var settings = new Settings(startCommand)
@@ -38,7 +38,7 @@ static void Main()
 ```C#
 static void Main()
 {
-  var startCommand = new Command(() => "Hello World, press A to continue...");
+  var startCommand = Command.Create(() => "Hello World, press A to continue...");
   
   var settings = new Settings(startCommand)
 
@@ -46,7 +46,7 @@ static void Main()
   
   // Create a new command and add it as the next command for startCommand.
   // After the startCommand is invoked and displayed you can press A to continue to the next command.
-  var nextCommand = new Command(() => "This is the next command, press B to continue...");
+  var nextCommand = Command.Create(() => "This is the next command, press B to continue...");
   myApp.Configure(startCommand)
     .AddNextCommand(ConsoleKey.A, nextCommand);
   

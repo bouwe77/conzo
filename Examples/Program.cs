@@ -10,6 +10,7 @@ namespace Example
          {
             // Choose which demo to run, you can start one demo at a time.
             //HelloWorld.Run();
+            //Test.Run();
             Quiz.Run();
          }
          catch (Exception exception)

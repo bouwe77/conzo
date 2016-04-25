@@ -13,7 +13,7 @@ namespace Conzo.Commands
       [TestInitialize]
       public void TestInitialize()
       {
-         _validCommand = new Command(() => "Hello World");
+         _validCommand = Command.Create(() => "Hello World");
          _validKey = ConsoleKey.A;
       }
 

@@ -15,12 +15,10 @@ namespace Example
          {
             var controller = new QuizController();
 
-            var welcome = new Command(controller.GetWelcome);
-            var question = new Command(controller.GetQuestion);
-            var answerA = new Command(controller.AnsweredA, controller.AnyQuestionsLeft);
-            var answerB = new Command(controller.AnsweredB, controller.AnyQuestionsLeft);
-            var answerC = new Command(controller.AnsweredC, controller.AnyQuestionsLeft);
-            var outro = new Command(controller.GetOutro);
+            var welcome = Command.Create(controller.GetWelcome);
+            var question = Command.Create(controller.GetQuestion);
+            var answered = Command.Create(controller.Answered);
+            var outro = Command.Create(controller.GetOutro);
 
             var settings = new Settings(welcome)
             {
@@ -33,17 +31,11 @@ namespace Example
                .AddNextCommand(ConsoleKey.Enter, question);
 
             myApp.Configure(question)
-               .AddNextCommand(ConsoleKey.A, answerA)
-               .AddNextCommand(ConsoleKey.B, answerB)
-               .AddNextCommand(ConsoleKey.C, answerC);
+               .AddNextCommandIf(ConsoleKey.A, answered, controller.AnyQuestionsLeft)
+               .AddNextCommandIf(ConsoleKey.B, answered, controller.AnyQuestionsLeft)
+               .AddNextCommandIf(ConsoleKey.C, answered, controller.AnyQuestionsLeft);
 
-            myApp.Configure(answerA)
-               .AddNextCommand(ConsoleKey.Enter, question);
-
-            myApp.Configure(answerB)
-               .AddNextCommand(ConsoleKey.Enter, question);
-
-            myApp.Configure(answerC)
+            myApp.Configure(answered)
                .AddNextCommand(ConsoleKey.Enter, question);
 
             myApp.AddGlobalCommand(settings.QuitKey, outro);
@@ -82,7 +74,7 @@ namespace Example
       {
          var question = GetCurrentQuestion();
 
-         string textToDisplay = string.Format("You finished the quiz with {0} correct answers!", _correctAnswers);
+         string textToDisplay = $"You finished the quiz with {_correctAnswers} correct answers!";
          if (question != null)
          {
             textToDisplay = Format(question);
@@ -96,8 +88,30 @@ namespace Example
          return _currentQuestionIndex <= (_quizRepository.GetAll().Count - 1);
       }
 
-      private string CheckAnswer(int answerIndex)
+      private QuestionAndAnswer GetCurrentQuestion()
       {
+         QuestionAndAnswer question = null;
+
+         if (AnyQuestionsLeft())
+         {
+            question = _quizRepository.GetAll()[_currentQuestionIndex];
+         }
+
+         return question;
+      }
+
+      public string Answered(ConsoleKey consoleKey)
+      {
+         int answerIndex = 0;
+         if (consoleKey == ConsoleKey.B)
+         {
+            answerIndex = 1;
+         }
+         else if (consoleKey == ConsoleKey.B)
+         {
+            answerIndex = 2;
+         }
+
          var q = GetCurrentQuestion();
 
          string textToShow = "That is NOT correct...";
@@ -113,33 +127,6 @@ namespace Example
          _currentQuestionIndex++;
 
          return textToShow;
-      }
-
-      private QuestionAndAnswer GetCurrentQuestion()
-      {
-         QuestionAndAnswer question = null;
-
-         if (AnyQuestionsLeft())
-         {
-            question = _quizRepository.GetAll()[_currentQuestionIndex];
-         }
-
-         return question;
-      }
-
-      public string AnsweredA()
-      {
-         return CheckAnswer(0);
-      }
-
-      public string AnsweredB()
-      {
-         return CheckAnswer(1);
-      }
-
-      public string AnsweredC()
-      {
-         return CheckAnswer(2);
       }
 
       private string Format(QuestionAndAnswer questionAndAnswer)

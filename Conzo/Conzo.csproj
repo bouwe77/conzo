@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Conzo</RootNamespace>
     <AssemblyName>Conzo</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -45,6 +46,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\Command.Factory.cs" />
+    <Compile Include="Commands\Command1.cs" />
+    <Compile Include="Commands\Command2.cs" />
+    <Compile Include="Commands\CommandConfigurationManager.cs" />
+    <Compile Include="Commands\CommandExecuter.cs" />
+    <Compile Include="Commands\ICommandConfigurationManager.cs" />
+    <Compile Include="Commands\ICommandExecuter.cs" />
+    <Compile Include="Commands\InternalCommand.cs" />
     <Compile Include="Configuration\Settings.cs" />
     <Compile Include="Configuration\LayoutSettings.cs" />
     <Compile Include="ConsoleApplication.Factory.cs" />
