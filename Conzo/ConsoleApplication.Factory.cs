@@ -30,8 +30,12 @@ namespace Conzo
 
       public static IConsoleApplication Create(Settings settings)
       {
+         Func<ITemplateProvider> templateProviderFactoryMethod = () => new DefaultTemplateProvider(settings.QuitKey, settings.ApplicationTitle);
+         SetDefaults(settings, templateProviderFactoryMethod);
+
          var commandConfigurationManager = new CommandConfigurationManager(settings);
-         return Create(settings, () => new ConsoleApplication(settings, commandConfigurationManager), () => new DefaultTemplateProvider(settings.QuitKey, settings.ApplicationTitle));
+         var commandManager = new CommandManager(settings, commandConfigurationManager);
+         return Create(settings, () => new ConsoleApplication(commandConfigurationManager, commandManager), templateProviderFactoryMethod);
       }
 
       /// <summary>

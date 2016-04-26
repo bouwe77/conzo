@@ -11,12 +11,12 @@ namespace Conzo.Commands
       public InternalCommand(Command command, Func<bool> condition)
       {
          Command = Enforce.ArgumentNotNull(command, "Command can not be null");
-         Condition = Enforce.ArgumentNotNull(condition, "Condition can not be null");
+         Condition = condition;
       }
 
       public InternalCommand(Command command)
+         : this(command, null)
       {
-         Command = Enforce.ArgumentNotNull(command, "Command can not be null");
       }
    }
 }

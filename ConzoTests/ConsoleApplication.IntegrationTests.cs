@@ -1,88 +1,86 @@
-﻿//using System;
-//using Conzo.Commands;
-//using Conzo.Configuration;
-//using Conzo.Console;
-//using Conzo.Keys;
-//using Conzo.Templates;
-//using Microsoft.VisualStudio.TestTools.UnitTesting;
-//using Moq;
+﻿using System;
+using Conzo.Commands;
+using Conzo.Configuration;
+using Conzo.Console;
+using Conzo.Keys;
+using Conzo.Templates;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
-//namespace Conzo
-//{
-//   /// <summary>
-//   /// Integration tests by using the <see cref="ConsoleApplication"/> class.
-//   /// </summary>
-//   [TestClass]
-//   public class ConsoleApplicationIntegrationTest
-//   {
-//      private Mock<IConsoleWriter> _consoleWriterMock;
-//      private Mock<IKeyboardListener> _keyboardListenerMock;
-//      private Mock<ICommandManager> _commandManagerMock;
+namespace Conzo
+{
+   /// <summary>
+   /// Integration tests by using the <see cref="ConsoleApplication"/> class.
+   /// </summary>
+   [TestClass]
+   public class ConsoleApplicationIntegrationTest
+   {
+      private Mock<IConsoleWriter> _consoleWriterMock;
+      private Mock<IKeyboardListener> _keyboardListenerMock;
 
-//      [TestInitialize]
-//      public void TestInitialize()
-//      {
-//         _consoleWriterMock = new Mock<IConsoleWriter>();
-//         _keyboardListenerMock = new Mock<IKeyboardListener>();
-//         _commandManagerMock = new Mock<ICommandManager>();
-//         ConsoleApplication.Reset();
-//      }
+      [TestInitialize]
+      public void TestInitialize()
+      {
+         _consoleWriterMock = new Mock<IConsoleWriter>();
+         _keyboardListenerMock = new Mock<IKeyboardListener>();
 
-//      [TestCleanup]
-//      public void TestCleanup()
-//      {
-//         _consoleWriterMock.VerifyAll();
-//         _keyboardListenerMock.VerifyAll();
-//         _commandManagerMock.VerifyAll();
-//      }
+         ConsoleApplication.Reset();
+      }
 
-//      [TestMethod]
-//      public void ConsoleApplication_Start()
-//      {
-//         const string text = "Hello World";
+      [TestCleanup]
+      public void TestCleanup()
+      {
+         _consoleWriterMock.VerifyAll();
+         _keyboardListenerMock.VerifyAll();
+      }
 
-//         bool startCommandInvoked = false;
-//         var startCommand = Command.Create(() =>
-//         {
-//            startCommandInvoked = true;
-//            return text;
-//         });
+      [TestMethod]
+      public void ConsoleApplication_Start()
+      {
+         const string text = "Hello World";
 
-//         var settings = new Settings(startCommand);
+         bool startCommandInvoked = false;
+         var startCommand = Command.Create(() =>
+         {
+            startCommandInvoked = true;
+            return text;
+         });
 
-//         string expectedTextToWriteToConsole = "-Hello World-";
-//         SetupConsoleWriterMock(expectedTextToWriteToConsole);
+         var settings = new Settings(startCommand);
 
-//         Func<IConsoleApplication> consoleApplicationFactoryMethod = () => new ConsoleApplication(
-//            settings,
-//            _consoleWriterMock.Object,
-//            _keyboardListenerMock.Object,
-//            new CommandManager());
+         string expectedTextToWriteToConsole = "-Hello World-";
+         SetupConsoleWriterMock(expectedTextToWriteToConsole);
 
-//         Func<ITemplateProvider> templateProviderFactoryMethod = () => new TemplateProviderStub();
-//         var consoleApplication = ConsoleApplication.Create(settings, consoleApplicationFactoryMethod, templateProviderFactoryMethod);
+         var commandConfigurationManager = new CommandConfigurationManager(settings);
 
-//         consoleApplication.Run();
-//         Assert.IsTrue(startCommandInvoked, "startCommand was not invoked");
-//      }
+         Func<IConsoleApplication> consoleApplicationFactoryMethod = () => new ConsoleApplication(
+            commandConfigurationManager,
+            new CommandManager(settings, _consoleWriterMock.Object, commandConfigurationManager, _keyboardListenerMock.Object));
 
-//      //TODO test commands with conditions
-//      //TODO Raise event _keyboardListenerMock.Raise(x => x.KeyPressed += null, EventArgs.Empty);
+         Func<ITemplateProvider> templateProviderFactoryMethod = () => new TemplateProviderStub();
+         var consoleApplication = ConsoleApplication.Create(settings, consoleApplicationFactoryMethod, templateProviderFactoryMethod);
 
-//      private void SetupConsoleWriterMock(string expectedTextToWriteToConsole)
-//      {
-//         // Set up the console writer so it asserts whether the expectedText argument is supplied as argument for the WriteToConsole method.
-//         _consoleWriterMock
-//            .Setup(x => x.WriteToConsole(It.IsAny<string>()))
-//            .Callback<string>(actualArgument => Assert.AreEqual(expectedTextToWriteToConsole, actualArgument));
-//      }
-//   }
+         consoleApplication.Run();
+         Assert.IsTrue(startCommandInvoked, "startCommand was not invoked");
+      }
 
-//   class TemplateProviderStub : ITemplateProvider
-//   {
-//      public string GetRenderedTemplate(string stuff)
-//      {
-//         return $"-{stuff}-";
-//      }
-//   }
-//}
+      //TODO test commands with conditions
+      //TODO Raise event _keyboardListenerMock.Raise(x => x.KeyPressed += null, EventArgs.Empty);
+
+      private void SetupConsoleWriterMock(string expectedTextToWriteToConsole)
+      {
+         // Set up the console writer so it asserts whether the expectedText argument is supplied as argument for the WriteToConsole method.
+         _consoleWriterMock
+            .Setup(x => x.WriteToConsole(It.IsAny<string>()))
+            .Callback<string>(actualArgument => Assert.AreEqual(expectedTextToWriteToConsole, actualArgument));
+      }
+   }
+
+   class TemplateProviderStub : ITemplateProvider
+   {
+      public string GetRenderedTemplate(string stuff)
+      {
+         return $"-{stuff}-";
+      }
+   }
+}

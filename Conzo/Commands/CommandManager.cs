@@ -23,7 +23,7 @@ namespace Conzo.Commands
 
       internal CommandManager(Settings settings, IConsoleWriter consoleWriter, ICommandConfigurationManager commandConfigurationManager, IKeyboardListener keyboardListener)
       {
-         _settings = settings;
+         _settings = Enforce.ArgumentNotNull(settings, "settings can not be null");
          _currentCommand = settings.StartCommand;
          _consoleWriter = Enforce.ArgumentNotNull(consoleWriter, "consoleWriter can not be null");
          _commandConfigurationManager = Enforce.ArgumentNotNull(commandConfigurationManager, "commandConfigurationManager can not be null");
