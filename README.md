@@ -1,6 +1,6 @@
 ## Introduction
 
-Conzo is a framework for creating user friendly .NET console applications.
+Conzo is a library for creating user friendly .NET console applications.
 
 ## Features
 TODO
