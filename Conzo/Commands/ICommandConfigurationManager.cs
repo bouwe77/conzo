@@ -6,8 +6,8 @@ namespace Conzo.Commands
    {
       void Validate();
       
-      CommandConfiguration AddCommandIfNecessary(Command command);
-      void AddGlobalCommand(ConsoleKey consoleKey, Command command);
+      CommandConfiguration AddCommandIfNecessary(CommandBase command);
+      void AddGlobalCommand(ConsoleKey consoleKey, CommandBase command);
 
       InternalCommand GetNextCommand(InternalCommand currentCommand, ConsoleKey consoleKey);
    }

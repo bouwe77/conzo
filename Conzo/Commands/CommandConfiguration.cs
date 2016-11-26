@@ -21,12 +21,12 @@ namespace Conzo.Commands
          // This constructor only exists to avoid creating instances from outside the project.
       }
 
-      public CommandConfiguration AddNextCommand(ConsoleKey key, Command nextCommand)
+      public CommandConfiguration AddNextCommand(ConsoleKey key, CommandBase nextCommand)
       {
          return AddNextCommandIf(key, nextCommand, null);
       }
 
-      public CommandConfiguration AddNextCommandIf(ConsoleKey key, Command nextCommand, Func<bool> condition)
+      public CommandConfiguration AddNextCommandIf(ConsoleKey key, CommandBase nextCommand, Func<bool> condition)
       {
          SupportedKeys.Validate(key);
          Enforce.DictionaryKeyDoesNotExist(_internalCommands, key, "Dictionary _commands already contains key" + key);
@@ -50,7 +50,7 @@ namespace Conzo.Commands
          return command;
       }
 
-      internal IEnumerable<Command> GetAllCommands()
+      internal IEnumerable<CommandBase> GetAllCommands()
       {
          return _internalCommands.Values.Distinct().Select(x => x.Command);
       }

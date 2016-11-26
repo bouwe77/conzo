@@ -15,10 +15,10 @@ namespace Example
          {
             var controller = new QuizController();
 
-            var welcome = Command.Create(controller.GetWelcome);
-            var question = Command.Create(controller.GetQuestion);
-            var answered = Command.Create(controller.Answered);
-            var outro = Command.Create(controller.GetOutro);
+            var welcome = CommandFactory.Create(controller.GetWelcome);
+            var question = CommandFactory.Create(controller.GetQuestion);
+            var answered = CommandFactory.Create(controller.Answered);
+            var outro = CommandFactory.Create(controller.GetOutro);
 
             var settings = new Settings(welcome)
             {

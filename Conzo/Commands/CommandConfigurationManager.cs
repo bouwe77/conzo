@@ -10,14 +10,14 @@ namespace Conzo.Commands
    internal class CommandConfigurationManager : ICommandConfigurationManager
    {
       private readonly Settings _settings;
-      private readonly Dictionary<Command, CommandConfiguration> _configuredCommands;
+      private readonly Dictionary<CommandBase, CommandConfiguration> _configuredCommands;
       private InternalCommand _startCommand;
-      private readonly Dictionary<ConsoleKey, Command> _globalCommands;
+      private readonly Dictionary<ConsoleKey, CommandBase> _globalCommands;
 
       public CommandConfigurationManager(Settings settings)
       {
-         _configuredCommands = new Dictionary<Command, CommandConfiguration>();
-         _globalCommands = new Dictionary<ConsoleKey, Command>();
+         _configuredCommands = new Dictionary<CommandBase, CommandConfiguration>();
+         _globalCommands = new Dictionary<ConsoleKey, CommandBase>();
          _settings = Enforce.ArgumentNotNull(settings, "Settings can not be null");
          AddCommandIfNecessary(_settings.StartCommand.Command);
          StartCommand = _settings.StartCommand;
@@ -38,7 +38,7 @@ namespace Conzo.Commands
          }
       }
 
-      public void AddGlobalCommand(ConsoleKey key, Command command)
+      public void AddGlobalCommand(ConsoleKey key, CommandBase command)
       {
          SupportedKeys.Validate(key);
          Enforce.DictionaryKeyDoesNotExist(_globalCommands, key, "Dictionary _globalCommands already contains key" + key);
@@ -67,7 +67,7 @@ namespace Conzo.Commands
          return nextCommand;
       }
 
-      public CommandConfiguration AddCommandIfNecessary(Command command)
+      public CommandConfiguration AddCommandIfNecessary(CommandBase command)
       {
          Enforce.ArgumentNotNull(command, "command can not be null");
 
@@ -102,7 +102,7 @@ namespace Conzo.Commands
          }
 
          //TODO refactor this orphan stuff:
-         var commandsThatHaveCommandPointingToIt = new List<Command>();
+         var commandsThatHaveCommandPointingToIt = new List<CommandBase>();
          foreach (var commandConfiguration in _configuredCommands.Values)
          {
             commandsThatHaveCommandPointingToIt.AddRange(commandConfiguration.GetAllCommands());

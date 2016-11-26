@@ -59,7 +59,7 @@ namespace Conzo.Configuration
 
       internal InternalCommand StartCommand { get; private set; }
 
-      public Settings(Command startCommand)
+      public Settings(CommandBase startCommand)
       {
          Enforce.ArgumentNotNull(startCommand, "startCommand can not be null");
          StartCommand = new InternalCommand(startCommand);

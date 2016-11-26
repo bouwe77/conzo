@@ -13,7 +13,7 @@ namespace Example
    {
       public static void Run()
       {
-         var startCommand = Command.Create(DoSomething);
+         var startCommand = CommandFactory.Create(DoSomething);
 
          var settings = new Settings(startCommand);
 

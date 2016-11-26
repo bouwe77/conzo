@@ -40,7 +40,7 @@ namespace Conzo
          const string text = "Hello World";
 
          bool startCommandInvoked = false;
-         var startCommand = Command.Create(() =>
+         var startCommand = CommandFactory.Create(() =>
          {
             startCommandInvoked = true;
             return text;

@@ -35,14 +35,14 @@ namespace Conzo.Commands
 
          try
          {
-            var command1 = _command.Command as Command1;
+            var command1 = _command.Command as Command;
             if (command1 != null)
             {
                commandContents = command1.Action.Invoke();
             }
             else
             {
-               Command2 command2 = (Command2) _command.Command;
+               CommandWithPressedKey command2 = (CommandWithPressedKey) _command.Command;
                commandContents = command2.Action.Invoke(_consoleKey);
             }
          }

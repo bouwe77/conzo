@@ -7,12 +7,12 @@ namespace Conzo.Configuration
    [TestClass]
    public class SettingsTest
    {
-      private Command _command;
+      private CommandBase _command;
 
       [TestInitialize]
       public void TestInitialize()
       {
-         _command = Command.Create(() => "Hello World");
+         _command = CommandFactory.Create(() => "Hello World");
       }
 
       [TestMethod]

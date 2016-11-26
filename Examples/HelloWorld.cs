@@ -10,7 +10,7 @@ namespace Example
       {
          // The command that must be invoked when the application starts.
          // This is a method that (at least) returns a string but also could do something useful like quering a database.
-         var startCommand = Command.Create(() => "Hello World");
+         var startCommand = CommandFactory.Create(() => "Hello World");
 
          // We need a Settings object containing at least the startCommand, but you could configure more if you want.
          var settings = new Settings(startCommand)

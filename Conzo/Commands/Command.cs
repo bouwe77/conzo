@@ -1,32 +1,15 @@
 ﻿using System;
+using Conzo.Utilities;
 
 namespace Conzo.Commands
 {
-   public abstract partial class Command
+   internal class Command : CommandBase
    {
-      internal Command()
+      public Command(Func<string> action)
       {
-         Id = Guid.NewGuid().ToString("N");
+         Action = Enforce.ArgumentNotNull(action, "action can not be null");
       }
 
-      internal string Id { get; }
-
-      protected bool Equals(Command other)
-      {
-         return string.Equals(Id, other.Id);
-      }
-
-      public override bool Equals(object obj)
-      {
-         if (ReferenceEquals(null, obj)) return false;
-         if (ReferenceEquals(this, obj)) return true;
-         if (obj.GetType() != GetType()) return false;
-         return Equals((Command) obj);
-      }
-
-      public override int GetHashCode()
-      {
-         return Id?.GetHashCode() ?? 0;
-      }
+      internal Func<string> Action { get; private set; }
    }
 }

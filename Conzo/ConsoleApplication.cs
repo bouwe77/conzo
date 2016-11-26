@@ -32,12 +32,12 @@ namespace Conzo
          _commandManager = Enforce.ArgumentNotNull(commandManager, "CommandManager can not be null");
       }
 
-      public void AddGlobalCommand(ConsoleKey key, Command command)
+      public void AddGlobalCommand(ConsoleKey key, CommandBase command)
       {
          _commandConfigurationManager.AddGlobalCommand(key, command);
       }
 
-      public CommandConfiguration Configure(Command command)
+      public CommandConfiguration Configure(CommandBase command)
       {
          Enforce.ArgumentNotNull(command, "command can not be null");
 

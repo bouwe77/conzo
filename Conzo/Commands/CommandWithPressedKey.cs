@@ -3,9 +3,9 @@ using Conzo.Utilities;
 
 namespace Conzo.Commands
 {
-   internal class Command2 : Command
+   internal class CommandWithPressedKey : CommandBase
    {
-      public Command2(Func<ConsoleKey, string> action)
+      public CommandWithPressedKey(Func<ConsoleKey, string> action)
       {
          Action = Enforce.ArgumentNotNull(action, "action can not be null");
       }

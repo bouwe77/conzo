@@ -46,9 +46,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\Command.Factory.cs" />
-    <Compile Include="Commands\Command1.cs" />
-    <Compile Include="Commands\Command2.cs" />
+    <Compile Include="Commands\CommandFactory.cs" />
+    <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\CommandWithPressedKey.cs" />
     <Compile Include="Commands\CommandConfigurationManager.cs" />
     <Compile Include="Commands\CommandExecuter.cs" />
     <Compile Include="Commands\ICommandConfigurationManager.cs" />
@@ -66,7 +66,7 @@
     <Compile Include="Keys\IKeyboardListener.cs" />
     <Compile Include="Keys\KeyboardListener.cs" />
     <Compile Include="Keys\KeyPressedEventArgs.cs" />
-    <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\CommandBase.cs" />
     <Compile Include="ConsoleApplication.cs" />
     <Compile Include="Commands\CommandConfiguration.cs" />
     <Compile Include="Commands\CommandManager.cs" />

@@ -5,8 +5,8 @@ namespace Conzo
 {
    public interface IConsoleApplication
    {
-      CommandConfiguration Configure(Command command);
-      void AddGlobalCommand(ConsoleKey key, Command command);
+      CommandConfiguration Configure(CommandBase command);
+      void AddGlobalCommand(ConsoleKey key, CommandBase command);
       void Run();
       void Stop();
    }
