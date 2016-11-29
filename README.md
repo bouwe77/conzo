@@ -23,7 +23,7 @@ Download the source code and build it in Visual Studio. Then add a reference to 
 In the example code below the following text is shown:
 
 ```Text
-Hello World, press A to continue...
+Hello World
 ```
 
 Because there are no commands defined you can not go to another screen.
@@ -37,10 +37,7 @@ static void Main()
   var startCommand = CommandFactory.Create(() => "Hello World");
   
   // We need a Settings object containing at least the startCommand, but you could configure more if you want.
-  var settings = new Settings(startCommand)
-  {
-    // configure more stuff...
-  };
+  var settings = new Settings(startCommand);
   
   // Create a new ConsoleApplication with the settings.
   var myApp = ConsoleApplication.Create(settings);
