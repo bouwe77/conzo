@@ -43,6 +43,26 @@ TODO add screenshot
 
 ### Add more commands
 
+In the example code below the following text is shown:
+
+'''
+Hello World, press A to continue...
+'''
+
+When you press A, the following text is shown:
+
+'''
+This is the next command, press B to continue...
+'''
+
+When you press B, the start screen is shown again:
+
+'''
+Hello World, press A to continue...
+'''
+
+So basically you implemented a round trip with two screens.
+
 ```C#
 static void Main()
 {
