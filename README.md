@@ -45,21 +45,21 @@ TODO add screenshot
 
 In the example code below the following text is shown:
 
-'''Text
+```Text
 Hello World, press A to continue...
-'''
+```
 
 When you press A, the following text is shown:
 
-'''Text
+```Text
 This is the next command, press B to continue...
-'''
+```
 
 When you press B, the start screen is shown again:
 
-'''Text
+```Text
 Hello World, press A to continue...
-'''
+```
 
 So basically you implemented a round trip with two screens.
 
