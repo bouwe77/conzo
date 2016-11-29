@@ -12,7 +12,7 @@ TODO
 --->
 
 ## Installation
-Download the source code and build in Visual Studion. Then add a reference to Conzo.dll in your code and start coding.
+Download the source code and build in Visual Studio. Then add a reference to Conzo.dll in your code and start coding.
 
 ## Examples
 
