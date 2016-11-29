@@ -6,7 +6,9 @@ When you implement a console application with Conzo you basically create a state
 
 Conzo is suitable for creating "menu driven" (i.e. multiple choice) applications. Ofcourse, when implementing commands, besides that a screen is shown, you could also implement custom code, for example business logic and/or database queries etc.
 
-At this moment input fields for free text entering are not supported yet.
+For complex applications, with Conzo, you could write your MVC-ish console applications.
+
+Unfortunately input fields for free text entering are not supported yet.
 
 <!---
 ## Features
