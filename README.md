@@ -53,7 +53,7 @@ static void Main()
 *TODO Screenshot*
 
 Let's replace the Hello World expression by a method that
-returns the current date and time:
+returns the current time:
 
 ```C#
 static string DisplayTime()
@@ -71,7 +71,7 @@ static void Main()
 ```
 
 Now it is time for implementing our first command. The user
-can press R to refresh the date and time:
+can press R to refresh the time:
 
 ```C#
 static string DisplayTime()
@@ -141,4 +141,4 @@ static void Main()
 *TODO Add example for a MVC-like approach*
 
 ## Installation
-Download the source code and build it in Visual Studio. Then add a reference to Conzo.dll in your console application and start coding!
+Download the source code and build it in Visual Studio. Then create a console application, add a reference to Conzo.dll and start coding!
