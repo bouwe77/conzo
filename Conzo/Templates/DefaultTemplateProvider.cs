@@ -19,7 +19,7 @@ namespace Conzo.Templates
             Environment.NewLine,
             ApplicationTitle,
             Environment.NewLine,
-            "-------------------------------------------------------",
+            "_________________________________________________________",
             Environment.NewLine,
             Environment.NewLine);
          return header;
@@ -32,7 +32,7 @@ namespace Conzo.Templates
             Environment.NewLine,
             Environment.NewLine,
             Environment.NewLine,
-            "-------------------------------------------------------",
+            "_________________________________________________________",
             Environment.NewLine,
             "Press ",
             QuitKey.ToString().ToUpper(),

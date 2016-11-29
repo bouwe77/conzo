@@ -50,11 +50,11 @@ namespace Conzo.Commands
       {
          ConsoleKey consoleKey = keyPressedEventArgs.Key;
 
-         // Determine the next command from the current command with this key. If no command found the current command will be used again.
-         InternalCommand newCurrentCommand = _commandConfigurationManager.GetNextCommand(_currentCommand, consoleKey) ?? _currentCommand;
+         // Determine the next command from the current command with this key.
+         var newCurrentCommand = _commandConfigurationManager.GetNextCommand(_currentCommand, consoleKey);
 
-         // Only execute the command if it has a condition or if it is not the same as the current command.
-         if (newCurrentCommand.Condition != null || !newCurrentCommand.Equals(_currentCommand))
+         // Only execute the command if a new one was found.
+         if (newCurrentCommand != null)
          {
             _currentCommand = newCurrentCommand;
             ExecuteCurrentCommand(consoleKey);

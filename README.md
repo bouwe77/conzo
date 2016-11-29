@@ -2,104 +2,143 @@
 
 Conzo is a library for creating user friendly .NET console applications.
 
-When you implement a console application with Conzo you basically create a *state machine*. You define the actions (states) that can be executed and from that action which keyboard buttons (triggers) execute following actions. You do this by coding *commands*, which define from which action which keyboard buttons you can hit to execute a following action.
+When you build a console application with Conzo you basically 
+implement a *state machine*. In Conzo state transitions are triggered
+by hitting a *key on the keyboard* (i.e. ConsoleKey in C#).
+Then a transition to another state is triggered, which means a C# method
+(i.e. a Func of string) is called which eventually will return a string 
+that is displayed on screen. These transitions, the combination of a 
+ConsoleKey and a Func of string, are called *commands*.
 
-Every action results in a text (screen) that is displayed to the console. Typically this text contains the result of the action (if applicable) but also which keys you can press next for which action. A Conzo application at least has a *start action* that is executed when the application starts, followed by possible actions you can execute after that.
+When creating a Conzo application you must at least define one command, 
+the start command. It's the command that is executed when the application 
+starts. A Conzo application also has one default command for quitting the
+application and that is the Escape key. In the examples below you will see 
+how to define another key for quitting.
 
-Example:
-TODO
+As said before, each command at least returns a string that is displayed.
+Conzo also consists of a default template provider that makes your 
+application look good right away. By just configuring some settings or 
+even by implementing your own template provider you have total control 
+over how your GUI looks. 
 
-Conzo is suitable for creating "menu driven" (i.e. multiple choice) applications. Ofcourse, when implementing commands, besides that a screen is shown, you could also implement custom code, for example business logic and/or database queries etc.
+For complex applications, with Conzo, you could write an MVC(ish) 
+console application.
 
-For complex applications, with Conzo, you could write MVC-ish console applications.
+Unfortunately, input fields for free text entering are not supported yet.
 
-Unfortunately input fields for free text entering are not supported yet.
 
-<!---
-## Features
-TODO
---->
+## Example  
+
+Let's create a bare minimum Conzo application that only displays "Hello World":
+
+```C#
+static void Main()
+{
+   // Create the start command.
+   var helloWorldCommand = CommandFactory.Create(() => "Hello World");
+   
+   // We need a Settings object containing at least the helloWorldCommand.
+   var settings = new Settings(helloWorldCommand);
+   
+   // Create a new ConsoleApplication with the settings.
+   var myApp = ConsoleApplication.Create(settings);
+   
+   // Run the application which means the startAction will be invoked 
+   // and the string value that is returned will be displayed.
+   myApp.Run();
+}
+```
+
+*TODO Screenshot*
+
+Let's replace the Hello World expression by a method that
+returns the current date and time:
+
+```C#
+static string DisplayTime()
+{
+   return $"Time: {DateTime.Now.ToString("hh:mm:ss")} (Press R to refresh)";
+}
+
+static void Main()
+{
+   var displayTimeCommand = CommandFactory.Create(DisplayTime);
+   var settings = new Settings(displayTimeCommand);
+   var myApp = ConsoleApplication.Create(settings);
+   myApp.Run();
+}
+```
+
+Now it is time for implementing our first command. The user
+can press R to refresh the date and time:
+
+```C#
+static string DisplayTime()
+{
+   return $"Time: {DateTime.Now.ToString("hh:mm:ss")} (Press R to refresh)";
+}
+
+static void Main()
+{
+   var displayTimeCommand = CommandFactory.Create(DisplayTime);
+   var settings = new Settings(displayTimeCommand);
+   var myApp = ConsoleApplication.Create(settings);
+
+   // Configure the displayTimeCommand by triggering the same command 
+   // when the R key is pressed.
+   myApp.Configure(displayTimeCommand)
+      .AddNextCommand(ConsoleKey.R, displayTimeCommand);
+
+   myApp.Run();
+}
+```
+
+*TODO Screenshot*
+
+In the code below the application title, quit key and text and 
+background colors are changed.
+
+```C#
+static string DisplayTime()
+{
+   return $"Time: {DateTime.Now.ToString("hh:mm:ss")} (Press R to refresh)";
+}
+
+static void Main()
+{
+   var displayTimeCommand = CommandFactory.Create(DisplayTime);
+
+   // Change the application settings. 
+   var settings = new Settings(displayTimeCommand)
+   {
+      ApplicationTitle = "Hello World",
+      QuitKey = ConsoleKey.F10,
+      Layout = new LayoutSettings
+      {
+         BackgroundColor = ConsoleColor.White,
+         TextColor = ConsoleColor.DarkBlue
+      }
+   };
+
+   var myApp = ConsoleApplication.Create(settings);
+
+   myApp.Configure(displayTimeCommand)
+      .AddNextCommand(ConsoleKey.R, displayTimeCommand);
+
+   myApp.Run();
+}
+```
+
+*TODO screenshot*
+
+*TODO Add example for adding conditional commands*
+
+*TODO Add example for global commands*
+
+*TODO Add example for a custom template provider*
+
+*TODO Add example for a MVC-like approach*
 
 ## Installation
-Download the source code and build it in Visual Studio. Then add a reference to Conzo.dll in your console application and start coding.
-
-## Examples
-
-### Hello World
-
-In the example code below the following text is shown:
-
-```Text
-Hello World
-```
-
-Because there are no commands defined you can not go to another screen.
-
-```C#
-static void Main()
-{
-  // The command that must be invoked when the application starts.
-  // This is a method that (at least) returns a string that will be displayed on the console.
-  // However, besides that it could also do something useful like quering a database.
-  var startCommand = CommandFactory.Create(() => "Hello World");
-  
-  // We need a Settings object containing at least the startCommand, but you could configure more if you want.
-  var settings = new Settings(startCommand);
-  
-  // Create a new ConsoleApplication with the settings.
-  var myApp = ConsoleApplication.Create(settings);
-  
-  // Run the application which means the startAction will be invoked and the string value will be displayed.
-  myApp.Run();
-}
-```
-
-### Add more commands
-
-In the example code below the following text is shown:
-
-```Text
-Hello World, press A to continue...
-```
-
-When you press A, the following text is shown:
-
-```Text
-This is the next command, press B to continue...
-```
-
-When you press B, the start screen is shown again:
-
-```Text
-Hello World, press A to continue...
-```
-
-So basically you implemented a round trip with two screens.
-
-```C#
-static void Main()
-{
-  // Start with the application from the HelloWorld example.  
-  var startCommand = CommandFactory.Create(() => "Hello World, press A to continue...");
-  var settings = new Settings(startCommand)
-  {
-     // Default the key to quit a Conzo application is Escape. However, here we overrule this with the F10 key.
-     QuitKey = ConsoleKey.F10
-  };
-     
-  var myApp = ConsoleApplication.Create(settings);
-  
-  // Create a new command and add it as the next command for startCommand.
-  // After the startCommand is invoked and displayed the user can press A to continue to the next command.
-  var nextCommand = CommandFactory.Create(() => "This is the next command, press B to continue...");
-  myApp.Configure(startCommand)
-    .AddNextCommand(ConsoleKey.A, nextCommand);
-  
-  // When the next command is invoked and displayed, the user can press B to return to the startCommand.
-  myApp.Configure(nextCommand)
-    .AddNextCommand(ConsoleKey.B, startCommand);
-  
-  // Run the application which means the startAction will be invoked and the string value will be displayed.
-  myApp.Run();
-}
-```
+Download the source code and build it in Visual Studio. Then add a reference to Conzo.dll in your console application and start coding!

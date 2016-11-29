@@ -4,7 +4,7 @@ namespace Example
 {
    internal class Program
    {
-      private static void Main()
+      private static void Main2()
       {
          try
          {
