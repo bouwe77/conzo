@@ -45,19 +45,19 @@ TODO add screenshot
 
 In the example code below the following text is shown:
 
-'''text
+'''Text
 Hello World, press A to continue...
 '''
 
 When you press A, the following text is shown:
 
-'''text
+'''Text
 This is the next command, press B to continue...
 '''
 
 When you press B, the start screen is shown again:
 
-'''text
+'''Text
 Hello World, press A to continue...
 '''
 
