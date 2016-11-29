@@ -72,12 +72,17 @@ So basically you implemented a round trip with two screens.
 ```C#
 static void Main()
 {
-  // Start with the application from the HelloWorld example.
+  // Start with the application from the HelloWorld example.  
   var startCommand = CommandFactory.Create(() => "Hello World, press A to continue...");
-  var settings = new Settings(startCommand);
+  var settings = new Settings(startCommand)
+  {
+     // Default the key to quit a Conzo application is Escape. However, here we overrule this with the F10 key.
+     QuitKey = ConsoleKey.F10
+  };
+     
   var myApp = ConsoleApplication.Create(settings);
   
-  // Now we create a new command and add it as the next command for startCommand.
+  // Create a new command and add it as the next command for startCommand.
   // After the startCommand is invoked and displayed the user can press A to continue to the next command.
   var nextCommand = CommandFactory.Create(() => "This is the next command, press B to continue...");
   myApp.Configure(startCommand)
