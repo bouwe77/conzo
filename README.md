@@ -28,23 +28,23 @@ console application.
 Unfortunately, input fields for free text entering are not supported yet.
 
 
-## Example  
+## Examples  
 
 Let's create a bare minimum Conzo application that only displays "Hello World":
 
 ```C#
 static void Main()
 {
-   // Create the start command.
+   // Create a command that returns the text "Hello World".
    var helloWorldCommand = CommandFactory.Create(() => "Hello World");
    
-   // We need a Settings object containing at least the helloWorldCommand.
+   // Via the Settings object the start command is defined.
    var settings = new Settings(helloWorldCommand);
    
    // Create a new ConsoleApplication with the settings.
    var myApp = ConsoleApplication.Create(settings);
    
-   // Run the application which means the startAction will be invoked 
+   // Run the application which means the start command will be invoked 
    // and the string value that is returned will be displayed.
    myApp.Run();
 }
@@ -58,7 +58,7 @@ returns the current date and time:
 ```C#
 static string DisplayTime()
 {
-   return $"Time: {DateTime.Now.ToString("hh:mm:ss")} (Press R to refresh)";
+   return $"Time: {DateTime.Now.ToString("hh:mm:ss")}";
 }
 
 static void Main()
