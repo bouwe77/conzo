@@ -2,9 +2,9 @@
 
 Conzo is a library for creating user friendly .NET console applications.
 
-When you implement a console application with Conzo you basically create a state machine, where the states are the "screens" that are displayed. The user moves from one screen to another by pressing keyboard keys. The definition of a screen to show when a button is pressed is called a *Command*.
+When you implement a console application with Conzo you basically create a state machine, where the states are the "screens" that are displayed. The user moves from one screen to another by pressing keyboard keys. The definition of which screen to show when a specific button is pressed is called a *Command*.
 
-Conzo is suitable for creating "menu driven" (i.e. multiple choice) applications. Ofcourse, when implementing *Commands*, besides a screen is shown, you could also implement custom code, for example business logic, database queries etc.
+Conzo is suitable for creating "menu driven" (i.e. multiple choice) applications. Ofcourse, when implementing commands, besides that a screen is shown, you could also implement custom code, for example business logic and/or database queries etc.
 
 At this moment input fields for free text entering are not supported yet.
 
