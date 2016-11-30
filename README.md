@@ -30,6 +30,8 @@ Unfortunately, input fields for free text entering are not supported yet.
 
 ## Examples  
 
+### Example 1: Hello World
+
 Let's create a bare minimum Conzo application that only displays "Hello World":
 
 ```C#
@@ -54,6 +56,8 @@ When you run this example the output is as follows:
 
 ![Example 1](https://github.com/bouwe77/conzo/blob/master/Documentation/img1.png?raw=true)
 
+### Example 2: Display current time
+
 Let's replace the Hello World expression by a method that
 returns the current time:
 
@@ -71,6 +75,8 @@ static void Main()
    myApp.Run();
 }
 ```
+
+### Example 3: Adding a command
 
 Now it is time for implementing our first command. The user
 can press R to refresh the time:
@@ -100,8 +106,9 @@ When you run this example the output is as follows:
 
 ![Example 2](https://github.com/bouwe77/conzo/blob/master/Documentation/img2.png?raw=true)
 
-In the code below the application title, quit key and text and 
-background colors are changed.
+### Example 4: Modify display settings
+
+In the code below the application title, quit key and text and background colors are changed.
 
 ```C#
 static string DisplayTime()
