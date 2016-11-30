@@ -50,7 +50,7 @@ static void Main()
 }
 ```
 
-![alt text](https://github.com/bouwe77/conzo/blob/master/Documentation/img1.png?raw=true)
+![Example 1](https://github.com/bouwe77/conzo/blob/master/Documentation/img1.png?raw=true)
 
 Let's replace the Hello World expression by a method that
 returns the current time:
@@ -94,7 +94,7 @@ static void Main()
 }
 ```
 
-*TODO Screenshot*
+![Example 2](https://github.com/bouwe77/conzo/blob/master/Documentation/img2.png?raw=true)
 
 In the code below the application title, quit key and text and 
 background colors are changed.
@@ -130,7 +130,7 @@ static void Main()
 }
 ```
 
-*TODO screenshot*
+![Example 3](https://github.com/bouwe77/conzo/blob/master/Documentation/img3.png?raw=true)
 
 *TODO Add example for adding conditional commands*
 
