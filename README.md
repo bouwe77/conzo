@@ -50,6 +50,8 @@ static void Main()
 }
 ```
 
+When you run this example the output is as follows:
+
 ![Example 1](https://github.com/bouwe77/conzo/blob/master/Documentation/img1.png?raw=true)
 
 Let's replace the Hello World expression by a method that
@@ -94,6 +96,8 @@ static void Main()
 }
 ```
 
+When you run this example the output is as follows:
+
 ![Example 2](https://github.com/bouwe77/conzo/blob/master/Documentation/img2.png?raw=true)
 
 In the code below the application title, quit key and text and 
@@ -129,6 +133,8 @@ static void Main()
    myApp.Run();
 }
 ```
+
+When you run this example the output is as follows:
 
 ![Example 3](https://github.com/bouwe77/conzo/blob/master/Documentation/img3.png?raw=true)
 
