@@ -2,13 +2,23 @@
 
 Conzo is a library for creating user friendly .NET console applications.
 
+Conzo applications are keyboard driven applications. A specific key can
+execute a command and show output to the console, if implemented to do so.
+
+Unfortunately, input fields for free text entering are not supported yet,
+but they are on the road map.
+
+Conzo is not intended to support command line statements.
+
+## How it works
+
 When you build a console application with Conzo you basically 
 implement a *state machine*. In Conzo state transitions are triggered
 by hitting a *key on the keyboard* (i.e. ConsoleKey in C#).
 Then a transition to another state is triggered, which means a C# method
-(i.e. a Func of string) is called which eventually will return a string 
-that is displayed on screen. These transitions, the combination of a 
-ConsoleKey and a Func of string, are called *commands*.
+(i.e. a Func of string) is called. This method is called a *Command* and
+can do something useful, e.g. querying a database, but will always result 
+in returning some kind of string that will be displayed on screen.
 
 When creating a Conzo application you must at least define one command, 
 the start command. It's the command that is executed when the application 
@@ -24,8 +34,6 @@ over how your GUI looks.
 
 For complex applications, with Conzo, you could write an MVC(ish) 
 console application.
-
-Unfortunately, input fields for free text entering are not supported yet.
 
 
 ## Examples  
