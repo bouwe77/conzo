@@ -9,7 +9,7 @@ code which key executes which command and what output is displayed.
 
 There are unlimited possibilities for styling your Conzo application.
 
-You could even use Conzo for building an MVC console application.
+You could even use Conzo for building MVC console applications.
 
 Unfortunately, input fields for free text entering are not supported yet,
 but they are on the road map.
