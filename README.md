@@ -2,13 +2,17 @@
 
 Conzo is a library for creating user friendly .NET console applications.
 
-Conzo applications are keyboard driven applications. A specific key can
-execute a command and show output to the console, if implemented to do so.
+Conzo applications are keyboard driven applications. You define in your 
+code which key executes which command and what output is displayed.
+
+There are unlimited possibilities for styling your Conzo application.
+
+You could even use Conzo for building an MVC console application.
 
 Unfortunately, input fields for free text entering are not supported yet,
 but they are on the road map.
 
-Conzo is not intended to support command line statements.
+Conzo does not support command-line statements.
 
 ## How it works
 
@@ -30,10 +34,7 @@ As said before, each command at least returns a string that is displayed.
 Conzo also consists of a default template provider that makes your 
 application look good right away. By just configuring some settings or 
 even by implementing your own template provider you have total control 
-over how your GUI looks. 
-
-For complex applications, with Conzo, you could write an MVC(ish) 
-console application.
+of how your GUI looks. 
 
 
 ## Examples  
