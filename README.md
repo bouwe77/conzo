@@ -7,8 +7,6 @@ Conzo is a library for creating user friendly .NET console applications.
 Conzo applications are keyboard driven applications. You define in your 
 code which key executes which command and what output is displayed.
 
-There are unlimited possibilities for styling your Conzo application.
-
 You could even use Conzo for building MVC console applications.
 
 Unfortunately, input fields for free text entering are not supported yet,
@@ -31,12 +29,6 @@ the start command. It's the command that is executed when the application
 starts. A Conzo application also has one default command for quitting the
 application and that is the Escape key. In the examples below you will see 
 how to define another key for quitting.
-
-As said before, each command at least returns a string that is displayed.
-Conzo also consists of a default template provider that makes your 
-application look good right away. By just configuring some settings or 
-even by implementing your own template provider you have total control 
-of how your GUI looks. 
 
 
 ## Examples  
@@ -61,8 +53,7 @@ static void Main()
 ```
 
 When you run this example the output is as follows:
-
-![Example 1](https://github.com/bouwe77/conzo/blob/master/Documentation/img1.png?raw=true)
+TODO
 
 ### Example 2: Display current time
 
@@ -109,8 +100,7 @@ static void Main()
 ```
 
 When you run this example the output is as follows:
-
-![Example 3](https://github.com/bouwe77/conzo/blob/master/Documentation/img2.png?raw=true)
+TODO
 
 ### Example 4: Modify display settings
 
@@ -143,8 +133,7 @@ static void Main()
 ```
 
 When you run this example the output is as follows:
-
-![Example 4](https://github.com/bouwe77/conzo/blob/master/Documentation/img3.png?raw=true)
+TODO
 
 *TODO Add example for adding conditional commands*
 
