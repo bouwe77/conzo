@@ -45,7 +45,7 @@
     <Compile Include="HelloWorld.cs" />
     <Compile Include="MyTemplateProvider.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="Program2.cs" />
+    <Compile Include="ExampleFromReadme.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Quiz.cs" />
     <Compile Include="Test.cs" />

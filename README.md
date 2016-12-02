@@ -50,16 +50,13 @@ static void Main()
 {
    // Create a command that returns the text "Hello World".
    var helloWorldCommand = CommandFactory.Create(() => "Hello World");
-   
-   // Via the Settings object the start command is defined.
-   var settings = new Settings(helloWorldCommand);
-   
-   // Create a new ConsoleApplication with the settings.
-   var myApp = ConsoleApplication.Create(settings);
-   
-   // Run the application which means the start command will be invoked 
-   // and the string value that is returned will be displayed.
-   myApp.Run();
+
+   // Create a new ConzoApplication with the Hello World command as start command.
+   var myApp = new ConzoApplication(helloWorldCommand);
+
+   // Start the application which means the start command will be invoked 
+   // and the "Hello World" string that is returned will be displayed.
+   myApp.Start();
 }
 ```
 
@@ -81,9 +78,8 @@ static string DisplayTime()
 static void Main()
 {
    var displayTimeCommand = CommandFactory.Create(DisplayTime);
-   var settings = new Settings(displayTimeCommand);
-   var myApp = ConsoleApplication.Create(settings);
-   myApp.Run();
+   var myApp = new ConzoApplication(displayTimeCommand);
+   myApp.Start();
 }
 ```
 
@@ -101,25 +97,24 @@ static string DisplayTime()
 static void Main()
 {
    var displayTimeCommand = CommandFactory.Create(DisplayTime);
-   var settings = new Settings(displayTimeCommand);
-   var myApp = ConsoleApplication.Create(settings);
+   var myApp = new ConzoApplication(displayTimeCommand);
 
    // Configure the displayTimeCommand by triggering the same command 
    // when the R key is pressed.
    myApp.Configure(displayTimeCommand)
       .AddNextCommand(ConsoleKey.R, displayTimeCommand);
 
-   myApp.Run();
+   myApp.Start();
 }
 ```
 
 When you run this example the output is as follows:
 
-![Example 2](https://github.com/bouwe77/conzo/blob/master/Documentation/img2.png?raw=true)
+![Example 3](https://github.com/bouwe77/conzo/blob/master/Documentation/img2.png?raw=true)
 
 ### Example 4: Modify display settings
 
-In the code below the application title, quit key and text and background colors are changed.
+In the code below the quit key and text and background colors are changed.
 
 ```C#
 static string DisplayTime()
@@ -130,31 +125,26 @@ static string DisplayTime()
 static void Main()
 {
    var displayTimeCommand = CommandFactory.Create(DisplayTime);
-
-   // Change the application settings. 
-   var settings = new Settings(displayTimeCommand)
-   {
-      ApplicationTitle = "Hello World",
-      QuitKey = ConsoleKey.F10,
-      Layout = new LayoutSettings
-      {
-         BackgroundColor = ConsoleColor.White,
-         TextColor = ConsoleColor.DarkBlue
-      }
-   };
-
-   var myApp = ConsoleApplication.Create(settings);
+   var myApp = new ConzoApplication(displayTimeCommand);
 
    myApp.Configure(displayTimeCommand)
       .AddNextCommand(ConsoleKey.R, displayTimeCommand);
 
-   myApp.Run();
+   // Change some settings:
+   myApp.QuitKey = ConsoleKey.F10;
+   myApp.Layout = new LayoutSettings
+   {
+      BackgroundColor = ConsoleColor.DarkBlue,
+      TextColor = ConsoleColor.White
+   };
+
+   myApp.Start();
 }
 ```
 
 When you run this example the output is as follows:
 
-![Example 3](https://github.com/bouwe77/conzo/blob/master/Documentation/img3.png?raw=true)
+![Example 4](https://github.com/bouwe77/conzo/blob/master/Documentation/img3.png?raw=true)
 
 *TODO Add example for adding conditional commands*
 

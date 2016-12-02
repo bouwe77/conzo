@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Text;
 using Conzo;
 using Conzo.Commands;
-using Conzo.Configuration;
 
 namespace Example
 {
    public class Quiz
    {
-      public static void Run()
+      public static void Start()
       {
          try
          {
@@ -20,12 +19,7 @@ namespace Example
             var answered = CommandFactory.Create(controller.Answered);
             var outro = CommandFactory.Create(controller.GetOutro);
 
-            var settings = new Settings(welcome)
-            {
-               QuitDelay = 2000
-            };
-
-            var myApp = ConsoleApplication.Create(settings);
+            var myApp = new ConzoApplication(welcome) { QuitDelay = 2000 };
 
             myApp.Configure(welcome)
                .AddNextCommand(ConsoleKey.Enter, question);
@@ -38,9 +32,9 @@ namespace Example
             myApp.Configure(answered)
                .AddNextCommand(ConsoleKey.Enter, question);
 
-            myApp.AddGlobalCommand(settings.QuitKey, outro);
+            myApp.AddGlobalCommand(myApp.QuitKey, outro);
 
-            myApp.Run();
+            myApp.Start();
          }
          catch (Exception exception)
          {

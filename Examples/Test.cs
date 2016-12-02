@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using Conzo;
 using Conzo.Commands;
-using Conzo.Configuration;
 
 namespace Example
 {
@@ -15,15 +11,13 @@ namespace Example
       {
          var startCommand = CommandFactory.Create(DoSomething);
 
-         var settings = new Settings(startCommand);
-
-         var myApp = ConsoleApplication.Create(settings);
+         var myApp = new ConzoApplication(startCommand);
 
          myApp.Configure(startCommand)
             .AddNextCommandIf(ConsoleKey.A, startCommand, () => false);
 
          // Run the application which means the startAction will be invoked and the string value will be displayed.
-         myApp.Run();
+         myApp.Start();
       }
 
       private static string DoSomething()

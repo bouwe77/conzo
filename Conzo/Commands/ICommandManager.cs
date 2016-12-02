@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Conzo.Commands
+﻿namespace Conzo.Commands
 {
    internal interface ICommandManager
    {

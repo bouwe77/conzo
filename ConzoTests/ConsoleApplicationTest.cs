@@ -106,7 +106,7 @@
 //      public void Run_Success()
 //      {
 //         var consoleApplication = GetConsoleApplicationWithMocks();
-//         consoleApplication.Run();
+//         consoleApplication.Start();
 //      }
 
 //      [TestMethod]
@@ -114,15 +114,15 @@
 //      public void Run_ThrowsException_WhenStartedMultipleTimes()
 //      {
 //         var consoleApplication = GetConsoleApplicationWithMocks();
-//         consoleApplication.Run();
-//         consoleApplication.Run();
+//         consoleApplication.Start();
+//         consoleApplication.Start();
 //      }
 
 //      [TestMethod]
 //      public void Stop_Success()
 //      {
 //         var consoleApplication = GetConsoleApplicationWithMocks();
-//         consoleApplication.Run();
+//         consoleApplication.Start();
 //         consoleApplication.Stop();
 //      }
 

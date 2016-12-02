@@ -11,20 +11,18 @@ namespace Conzo.Commands
    {
       private InternalCommand _currentCommand;
       private string _currentCommandContents;
-      private readonly Settings _settings;
       private readonly IConsoleWriter _consoleWriter;
       private readonly ICommandConfigurationManager _commandConfigurationManager;
       private readonly IKeyboardListener _keyboardListener;
 
-      public CommandManager(Settings settings, ICommandConfigurationManager commandConfigurationManager)
-         : this(settings, new ConsoleWriter(settings.Layout), commandConfigurationManager, new KeyboardListener())
+      public CommandManager(InternalCommand startCommand, ICommandConfigurationManager commandConfigurationManager)
+         : this(startCommand, new ConsoleWriter(), commandConfigurationManager, new KeyboardListener())
       {
       }
 
-      internal CommandManager(Settings settings, IConsoleWriter consoleWriter, ICommandConfigurationManager commandConfigurationManager, IKeyboardListener keyboardListener)
+      internal CommandManager(InternalCommand startCommand, IConsoleWriter consoleWriter, ICommandConfigurationManager commandConfigurationManager, IKeyboardListener keyboardListener)
       {
-         _settings = Enforce.ArgumentNotNull(settings, "settings can not be null");
-         _currentCommand = settings.StartCommand;
+         _currentCommand = startCommand;
          _consoleWriter = Enforce.ArgumentNotNull(consoleWriter, "consoleWriter can not be null");
          _commandConfigurationManager = Enforce.ArgumentNotNull(commandConfigurationManager, "commandConfigurationManager can not be null");
          _keyboardListener = Enforce.ArgumentNotNull(keyboardListener, "KeyboardListener can not be null");
@@ -62,10 +60,10 @@ namespace Conzo.Commands
 
          ShowCurrentCommandContents();
 
-         if (consoleKey == _settings.QuitKey)
+         if (consoleKey == Settings.QuitKey)
          {
             // The quit key is pressed. After displaying the command, wait a while and then stop the application.
-            Thread.Sleep(_settings.QuitDelay);
+            Thread.Sleep(Settings.QuitDelay);
             Stop();
          }
       }
@@ -94,7 +92,8 @@ namespace Conzo.Commands
 
       private void ShowCurrentCommandContents()
       {
-         string renderedTemplate = _settings.TemplateProvider.GetRenderedTemplate(_currentCommandContents);
+         //         string renderedTemplate = Settings.TemplateProvider.GetRenderedTemplate(_currentCommandContents);
+         string renderedTemplate = _currentCommandContents;
          _consoleWriter.WriteToConsole(renderedTemplate);
       }
    }

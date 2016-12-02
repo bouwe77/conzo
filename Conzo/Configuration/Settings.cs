@@ -1,37 +1,30 @@
 ﻿using System;
 using Conzo.Keys;
-using Conzo.Commands;
-using Conzo.Templates;
 using Conzo.Utilities;
 
 namespace Conzo.Configuration
 {
-   public class Settings
+   internal static class Settings
    {
-      private string _applicationTitle;
-      private ConsoleKey _quitKey;
-      private int _quitDelay;
+      private static ConsoleKey _quitKey;
+      private static int _quitDelay;
+      private static LayoutSettings _layout;
 
-      /// <summary>
-      /// Gets or sets the application title which is displayed by the <see cref="ITemplateProvider"/>.
-      /// </summary>
-      public string ApplicationTitle
+      static Settings()
       {
-         get { return _applicationTitle; }
-         set { _applicationTitle = Enforce.StringNotNullOrEmpty(value, "ApplicationTitle can not be empty"); }
+         SettingsManager.SetDefaults();
       }
 
       /// <summary>
       /// Gets or sets the key that makes the application quit.
       /// </summary>
-      public ConsoleKey QuitKey
+      public static ConsoleKey QuitKey
       {
          get { return _quitKey; }
          set
          {
             SupportedKeys.Validate(value);
             _quitKey = value;
-            QuitKeySet = true;
          }
       }
 
@@ -40,29 +33,20 @@ namespace Conzo.Configuration
       /// Use this if you want to display a command when hitting the <see cref="QuitKey"/>, 
       /// because then you need a delay so the user will at least see the output of the command.
       /// </summary>
-      public int QuitDelay
+      public static int QuitDelay
       {
-         internal get { return _quitDelay; }
+         get { return _quitDelay; }
          set
          {
             _quitDelay = Enforce.Condition(value, value >= 0, "QuitDelay must 0 or greater");
-            QuitDelaySet = true;
          }
       }
 
-      internal bool QuitDelaySet { get; private set; }
-      internal bool QuitKeySet { get; private set; }
 
-      public ITemplateProvider TemplateProvider { internal get; set; }
-
-      public LayoutSettings Layout { internal get; set; }
-
-      internal InternalCommand StartCommand { get; private set; }
-
-      public Settings(CommandBase startCommand)
+      public static LayoutSettings Layout
       {
-         Enforce.ArgumentNotNull(startCommand, "startCommand can not be null");
-         StartCommand = new InternalCommand(startCommand);
+         get { return _layout; }
+         set { _layout = Enforce.ArgumentNotNull(value, "Layout can not be null"); }
       }
    }
 }

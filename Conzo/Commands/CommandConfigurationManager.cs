@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Conzo.Configuration;
 using Conzo.Keys;
 using Conzo.Utilities;
 
@@ -9,18 +8,16 @@ namespace Conzo.Commands
 {
    internal class CommandConfigurationManager : ICommandConfigurationManager
    {
-      private readonly Settings _settings;
       private readonly Dictionary<CommandBase, CommandConfiguration> _configuredCommands;
       private InternalCommand _startCommand;
       private readonly Dictionary<ConsoleKey, CommandBase> _globalCommands;
 
-      public CommandConfigurationManager(Settings settings)
+      public CommandConfigurationManager(InternalCommand startCommand)
       {
          _configuredCommands = new Dictionary<CommandBase, CommandConfiguration>();
          _globalCommands = new Dictionary<ConsoleKey, CommandBase>();
-         _settings = Enforce.ArgumentNotNull(settings, "Settings can not be null");
-         AddCommandIfNecessary(_settings.StartCommand.Command);
-         StartCommand = _settings.StartCommand;
+         AddCommandIfNecessary(startCommand.Command);
+         StartCommand = startCommand;
       }
 
       public InternalCommand StartCommand
