@@ -2,7 +2,7 @@
 {
    internal class SettingsManager
    {
-      public static void SetDefaults()//Func<ITemplateProvider> templateProviderFactoryMethod)
+      public static void SetDefaults()
       {
          Settings.QuitKey = Defaults.QuitKey;
 
@@ -13,10 +13,6 @@
             BackgroundColor = Defaults.BackgroundColor,
             TextColor = Defaults.TextColor
          };
-
-         Settings.Layout.BackgroundColor = Defaults.BackgroundColor;
-
-         Settings.Layout.TextColor = Defaults.TextColor;
       }
    }
 }

@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Conzo.Helpers;
 using Conzo.Keys;
-using Conzo.Utilities;
 
 namespace Conzo.Commands
 {
    public class CommandConfiguration
    {
-      private readonly Dictionary<ConsoleKey, InternalCommand> _internalCommands = new Dictionary<ConsoleKey, InternalCommand>();
+      private readonly Dictionary<ConsoleKey, CommandBase> _internalCommands = new Dictionary<ConsoleKey, CommandBase>();
 
       internal bool GlobalCommandsAdded { get; set; }
 
@@ -32,16 +32,14 @@ namespace Conzo.Commands
          Enforce.DictionaryKeyDoesNotExist(_internalCommands, key, "Dictionary _commands already contains key" + key);
          Enforce.ArgumentNotNull(nextCommand, "nextCommand can not be null");
 
-         var internalCommand = new InternalCommand(nextCommand, condition);
-
-         _internalCommands.Add(key, internalCommand);
+         _internalCommands.Add(key, nextCommand);
 
          return this;
       }
 
-      internal InternalCommand GetCommand(ConsoleKey consoleKey)
+      internal CommandBase GetCommand(ConsoleKey consoleKey)
       {
-         InternalCommand command = null;
+         CommandBase command = null;
          if (_internalCommands.ContainsKey(consoleKey))
          {
             command = _internalCommands[consoleKey];
@@ -52,7 +50,7 @@ namespace Conzo.Commands
 
       internal IEnumerable<CommandBase> GetAllCommands()
       {
-         return _internalCommands.Values.Distinct().Select(x => x.Command);
+         return _internalCommands.Values.Distinct();
       }
    }
 }

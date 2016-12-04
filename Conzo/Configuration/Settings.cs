@@ -1,6 +1,6 @@
 ﻿using System;
+using Conzo.Helpers;
 using Conzo.Keys;
-using Conzo.Utilities;
 
 namespace Conzo.Configuration
 {

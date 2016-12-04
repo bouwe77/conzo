@@ -49,9 +49,8 @@
     <Compile Include="Commands\CommandFactory.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\CommandWithPressedKey.cs" />
-    <Compile Include="Commands\CommandConfigurationManager.cs" />
+    <Compile Include="Commands\CommandRepository.cs" />
     <Compile Include="Commands\CommandExecuter.cs" />
-    <Compile Include="Commands\ICommandConfigurationManager.cs" />
     <Compile Include="Commands\ICommandExecuter.cs" />
     <Compile Include="Commands\InternalCommand.cs" />
     <Compile Include="Configuration\Settings.cs" />
@@ -60,9 +59,10 @@
     <Compile Include="Console\ConsoleWriter.cs" />
     <Compile Include="Console\IConsoleWriter.cs" />
     <Compile Include="Configuration\Defaults.cs" />
+    <Compile Include="Exceptions\ConzoException.cs" />
     <Compile Include="IConzoApplication.cs" />
     <Compile Include="Keys\SupportedKeys.cs" />
-    <Compile Include="Utilities\Enforce.cs" />
+    <Compile Include="Helpers\Enforce.cs" />
     <Compile Include="Keys\IKeyboardListener.cs" />
     <Compile Include="Keys\KeyboardListener.cs" />
     <Compile Include="Keys\KeyPressedEventArgs.cs" />

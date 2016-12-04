@@ -101,7 +101,7 @@ namespace Example
          {
             answerIndex = 1;
          }
-         else if (consoleKey == ConsoleKey.B)
+         else if (consoleKey == ConsoleKey.C)
          {
             answerIndex = 2;
          }
@@ -162,8 +162,8 @@ namespace Example
          new QuestionAndAnswer
          {
             Question = "What is the first letter of the alphabet?",
-            Choices = new List<string> {"A", "B", "C"},
-            Answer = 0
+            Choices = new List<string> {"C", "A", "B"},
+            Answer = 1
          }
       };
 

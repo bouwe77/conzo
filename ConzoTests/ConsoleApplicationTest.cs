@@ -1,166 +1,103 @@
-﻿//using System;
-//using Conzo.Commands;
-//using Conzo.Configuration;
-//using Conzo.Console;
-//using Conzo.Keys;
-//using Conzo.Templates;
-//using Microsoft.VisualStudio.TestTools.UnitTesting;
-//using Moq;
+﻿using System;
+using Conzo.Commands;
+using Conzo.Console;
+using Conzo.Exceptions;
+using Conzo.Keys;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
-//namespace Conzo
-//{
-//   [TestClass]
-//   public partial class ConsoleApplicationTest
-//   {
-//      private Mock<IConsoleWriter> _consoleWriterMock;
-//      private Mock<IKeyboardListener> _keyboardListenerMock;
-//      private Mock<ICommandManager> _commandManagerMock;
-//      private Mock<IConsoleApplication> _consoleApplicationMock;
-//      private Mock<ITemplateProvider> _templateProviderMock;
-//      private Mock<ICommandConfigurationManager> _commandConfigurationManagerMock;
-//      private Settings _settings;
-//      private Command _command;
+namespace Conzo
+{
+   [TestClass]
+   public class ConsoleApplicationTest
+   {
+      private IConzoApplication _consoleApplication;
+      private Mock<IConsoleWriter> _consoleWriterMock;
+      private Mock<IKeyboardListener> _keyboardListenerMock;
+      private Mock<ICommandManager> _commandManagerMock;
+      private Command _command;
 
-//      [TestInitialize]
-//      public void TestInitialize()
-//      {
-//         _consoleWriterMock = new Mock<IConsoleWriter>();
-//         _keyboardListenerMock = new Mock<IKeyboardListener>();
-//         _commandManagerMock = new Mock<ICommandManager>();
-//         _consoleApplicationMock = new Mock<IConsoleApplication>();
-//         _templateProviderMock = new Mock<ITemplateProvider>();
-//         _commandConfigurationManagerMock = new Mock<ICommandConfigurationManager>();
-//         _command = Command.Create(() => "dummy");
-//         _settings = GetSettings();
-//         ConsoleApplication.Reset();
-//      }
+      [TestInitialize]
+      public void TestInitialize()
+      {
+         _consoleWriterMock = new Mock<IConsoleWriter>();
+         _keyboardListenerMock = new Mock<IKeyboardListener>();
+         _commandManagerMock = new Mock<ICommandManager>();
+         _command = new Command(() => "dummy");
+         CommandRepository.Clear();
+         _consoleApplication = new ConzoApplication(_command, _commandManagerMock.Object);
+      }
 
-//      [TestCleanup]
-//      public void TestCleanup()
-//      {
-//         _consoleWriterMock.VerifyAll();
-//         _keyboardListenerMock.VerifyAll();
-//         _commandManagerMock.VerifyAll();
-//         _consoleApplicationMock.VerifyAll();
-//         _templateProviderMock.VerifyAll();
-//         _commandConfigurationManagerMock.VerifyAll();
-//      }
+      [TestCleanup]
+      public void TestCleanup()
+      {
+         _consoleWriterMock.VerifyAll();
+         _keyboardListenerMock.VerifyAll();
+         _commandManagerMock.VerifyAll();
+      }
 
-//      [TestMethod]
-//      public void Constructor_Success()
-//      {
-//         var consoleApplication = GetConsoleApplicationWithMocks();
-//         Assert.IsNotNull(consoleApplication);
-//      }
+      [TestMethod]
+      [ExpectedException(typeof(ArgumentException))]
+      public void Configure_ThrowsException_WhenCommandIsNull()
+      {
+         _consoleApplication.Configure(null);
+      }
 
-//      [TestMethod]
-//      public void Constructor1_Success_WhenSettingsNull()
-//      {
-//         // Settings can be null because ConsoleApplication class does not use it, it is passed directly into the CommandManager.
-//         var consoleApplication = new ConsoleApplication(null, _commandConfigurationManagerMock.Object);
-//      }
+      [TestMethod]
+      public void Configure_Success_WhenCommandIsNotNull()
+      {
+         var commandConfiguration = _consoleApplication.Configure(_command);
 
-//      [TestMethod]
-//      [ExpectedException(typeof(ArgumentException))]
-//      public void Constructor1_ThrowsException_WhenCommandConfigurationManagerNull()
-//      {
-//         var consoleApplication = new ConsoleApplication(_settings, null);
-//      }
+         Assert.IsNotNull(commandConfiguration);
+      }
 
-//      [TestMethod]
-//      [ExpectedException(typeof(ArgumentException))]
-//      public void Constructor2_ThrowsException_WhenCommandManagerNull()
-//      {
-//         var consoleApplication = new ConsoleApplication(_commandConfigurationManagerMock.Object, null);
-//      }
+      [TestMethod]
+      public void Run_Success()
+      {
+         _consoleApplication.Start();
+      }
 
+      [TestMethod]
+      [ExpectedException(typeof(ConzoException))]
+      public void Run_ThrowsException_WhenStartedMultipleTimes()
+      {
+         try
+         {
+            _consoleApplication.Start();
+         }
+         catch
+         {
+            Assert.Fail("There is no exception expected here");
+         }
 
-//      [TestMethod]
-//      [ExpectedException(typeof(ArgumentException))]
-//      public void Constructor2_ThrowsException_WhenCommandConfigurationManagerNull()
-//      {
-//         var consoleApplication = new ConsoleApplication(null, _commandManagerMock.Object);
-//      }
+         _consoleApplication.Start();
+      }
 
-//      [TestMethod]
-//      [ExpectedException(typeof(ArgumentException))]
-//      public void Configure_ThrowsException_WhenCommandIsNull()
-//      {
-//         var consoleApplication = GetConsoleApplicationWithMocks();
-//         consoleApplication.Configure(null);
-//      }
+      [TestMethod]
+      public void Stop_Success()
+      {
+         _consoleApplication.Start();
+         _consoleApplication.Stop();
+      }
 
-//      [TestMethod]
-//      public void Configure_Success_WhenCommandIsNotNull()
-//      {
-//         var consoleApplication = GetConsoleApplicationWithMocks();
+      [TestMethod]
+      [ExpectedException(typeof(ConzoException))]
+      public void Stop_ThrowsException_WhenNotStarted()
+      {
+         _consoleApplication.Stop();
+      }
 
-//         _commandConfigurationManagerMock.Setup(x => x.AddCommandIfNecessary(It.IsAny<Command>())).Returns(new CommandConfiguration());
+      [TestMethod]
+      public void AddGlobalCommand_Success()
+      {
+         _consoleApplication.AddGlobalCommand(ConsoleKey.A, _command);
+      }
 
-//         var commandConfiguration = consoleApplication.Configure(_command);
-
-//         Assert.IsNotNull(commandConfiguration);
-//      }
-
-//      [TestMethod]
-//      public void Run_Success()
-//      {
-//         var consoleApplication = GetConsoleApplicationWithMocks();
-//         consoleApplication.Start();
-//      }
-
-//      [TestMethod]
-//      [ExpectedException(typeof(Exception))]
-//      public void Run_ThrowsException_WhenStartedMultipleTimes()
-//      {
-//         var consoleApplication = GetConsoleApplicationWithMocks();
-//         consoleApplication.Start();
-//         consoleApplication.Start();
-//      }
-
-//      [TestMethod]
-//      public void Stop_Success()
-//      {
-//         var consoleApplication = GetConsoleApplicationWithMocks();
-//         consoleApplication.Start();
-//         consoleApplication.Stop();
-//      }
-
-//      [TestMethod]
-//      [ExpectedException(typeof(Exception))]
-//      public void Stop_ThrowsException_WhenNotStarted()
-//      {
-//         var consoleApplication = GetConsoleApplicationWithMocks();
-//         consoleApplication.Stop();
-//      }
-
-//      [TestMethod]
-//      public void AddGlobalCommand_Success()
-//      {
-//         var consoleApplication = GetConsoleApplicationWithMocks();
-//         consoleApplication.AddGlobalCommand(ConsoleKey.A, _command);
-//      }
-
-//      [TestMethod]
-//      public void AddGlobalCommand_Success_WhenCommandNull()
-//      {
-//         var consoleApplication = GetConsoleApplicationWithMocks();
-//         consoleApplication.AddGlobalCommand(ConsoleKey.A, null);
-//      }
-
-//      private IConsoleApplication GetConsoleApplicationWithMocks()
-//      {
-//         return new ConsoleApplication(_commandConfigurationManagerMock.Object, _commandManagerMock.Object);
-//      }
-
-//      private Settings GetSettings()
-//      {
-//         var settings = new Settings(_command)
-//         {
-//            TemplateProvider = new Mock<ITemplateProvider>().Object
-//         };
-
-//         return settings;
-//      }
-//   }
-//}
+      [TestMethod]
+      [ExpectedException(typeof(ArgumentException))]
+      public void AddGlobalCommand_ThrowsException_WhenCommandNull()
+      {
+         _consoleApplication.AddGlobalCommand(ConsoleKey.A, null);
+      }
+   }
+}

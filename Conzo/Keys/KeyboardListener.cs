@@ -1,5 +1,5 @@
 ﻿using Conzo.Console;
-using Conzo.Utilities;
+using Conzo.Helpers;
 
 namespace Conzo.Keys
 {
@@ -25,10 +25,7 @@ namespace Conzo.Keys
 
       protected void OnKeyPressed(KeyPressedEventArgs keyPressedEventArgs)
       {
-         if (KeyPressed != null)
-         {
-            KeyPressed(keyPressedEventArgs);
-         }
+         KeyPressed?.Invoke(keyPressedEventArgs);
       }
 
       public void Start()

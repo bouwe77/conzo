@@ -1,14 +1,14 @@
 ﻿using System;
-using Conzo.Utilities;
+using Conzo.Helpers;
 
 namespace Conzo.Commands
 {
    internal class CommandExecuter : ICommandExecuter
    {
-      private readonly InternalCommand _command;
+      private readonly CommandBase _command;
       private readonly ConsoleKey _consoleKey;
 
-      public CommandExecuter(InternalCommand command, ConsoleKey consoleKey)
+      public CommandExecuter(CommandBase command, ConsoleKey consoleKey)
       {
          _command = Enforce.ArgumentNotNull(command, "command can not be null");
          _consoleKey = consoleKey;
@@ -35,15 +35,15 @@ namespace Conzo.Commands
 
          try
          {
-            var command1 = _command.Command as Command;
+            var command1 = _command as Command;
             if (command1 != null)
             {
                commandContents = command1.Action.Invoke();
             }
             else
             {
-               CommandWithPressedKey command2 = (CommandWithPressedKey) _command.Command;
-               commandContents = command2.Action.Invoke(_consoleKey);
+               CommandWithPressedKey commandWithPressedKey = (CommandWithPressedKey) _command;
+               commandContents = commandWithPressedKey.Action.Invoke(_consoleKey);
             }
          }
          catch

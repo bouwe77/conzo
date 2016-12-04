@@ -68,7 +68,6 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Compile Include="ConsoleApplicationTest.Factory.cs" />
     <None Include="ConzoTests.snk" />
     <None Include="packages.config" />
   </ItemGroup>

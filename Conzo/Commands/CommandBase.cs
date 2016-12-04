@@ -28,5 +28,7 @@ namespace Conzo.Commands
       {
          return Id?.GetHashCode() ?? 0;
       }
+
+      internal Func<bool> Condition { get; private set; }
    }
 }

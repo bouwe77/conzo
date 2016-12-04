@@ -2,29 +2,27 @@
 using System.Threading;
 using Conzo.Configuration;
 using Conzo.Console;
+using Conzo.Helpers;
 using Conzo.Keys;
-using Conzo.Utilities;
 
 namespace Conzo.Commands
 {
    internal class CommandManager : ICommandManager
    {
-      private InternalCommand _currentCommand;
+      private CommandBase _currentCommand;
       private string _currentCommandContents;
       private readonly IConsoleWriter _consoleWriter;
-      private readonly ICommandConfigurationManager _commandConfigurationManager;
       private readonly IKeyboardListener _keyboardListener;
 
-      public CommandManager(InternalCommand startCommand, ICommandConfigurationManager commandConfigurationManager)
-         : this(startCommand, new ConsoleWriter(), commandConfigurationManager, new KeyboardListener())
+      public CommandManager(CommandBase startCommand)
+         : this(startCommand, new ConsoleWriter(), new KeyboardListener())
       {
       }
 
-      internal CommandManager(InternalCommand startCommand, IConsoleWriter consoleWriter, ICommandConfigurationManager commandConfigurationManager, IKeyboardListener keyboardListener)
+      internal CommandManager(CommandBase startCommand, IConsoleWriter consoleWriter, IKeyboardListener keyboardListener)
       {
          _currentCommand = startCommand;
          _consoleWriter = Enforce.ArgumentNotNull(consoleWriter, "consoleWriter can not be null");
-         _commandConfigurationManager = Enforce.ArgumentNotNull(commandConfigurationManager, "commandConfigurationManager can not be null");
          _keyboardListener = Enforce.ArgumentNotNull(keyboardListener, "KeyboardListener can not be null");
       }
 
@@ -32,7 +30,7 @@ namespace Conzo.Commands
       {
          _keyboardListener.KeyPressed += OnKeyPressed;
          _consoleWriter.Initialize();
-         _commandConfigurationManager.Validate();
+         CommandRepository.Validate();
          ExecuteCurrentCommand();
          ShowCurrentCommandContents();
          _keyboardListener.Start();
@@ -49,7 +47,7 @@ namespace Conzo.Commands
          ConsoleKey consoleKey = keyPressedEventArgs.Key;
 
          // Determine the next command from the current command with this key.
-         var newCurrentCommand = _commandConfigurationManager.GetNextCommand(_currentCommand, consoleKey);
+         var newCurrentCommand = CommandRepository.GetNextCommand(_currentCommand, consoleKey);
 
          // Only execute the command if a new one was found.
          if (newCurrentCommand != null)
