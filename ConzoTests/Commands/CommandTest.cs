@@ -8,7 +8,7 @@ namespace Conzo.Commands
       [TestMethod]
       public void Constructor_Success()
       {
-         var command = CommandFactory.Create(() => "Hello World");
+         var command = new Command(() => "Hello World");
          Assert.IsNotNull(command);
          Assert.IsTrue(!string.IsNullOrEmpty(command.Id));
       }

@@ -46,13 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\CommandFactory.cs" />
     <Compile Include="Commands\Command.cs" />
-    <Compile Include="Commands\CommandWithPressedKey.cs" />
     <Compile Include="Commands\CommandRepository.cs" />
     <Compile Include="Commands\CommandExecuter.cs" />
     <Compile Include="Commands\ICommandExecuter.cs" />
-    <Compile Include="Commands\InternalCommand.cs" />
     <Compile Include="Configuration\Settings.cs" />
     <Compile Include="Configuration\LayoutSettings.cs" />
     <Compile Include="Configuration\SettingsManager.cs" />
@@ -66,7 +63,6 @@
     <Compile Include="Keys\IKeyboardListener.cs" />
     <Compile Include="Keys\KeyboardListener.cs" />
     <Compile Include="Keys\KeyPressedEventArgs.cs" />
-    <Compile Include="Commands\CommandBase.cs" />
     <Compile Include="ConzoApplication.cs" />
     <Compile Include="Commands\CommandConfiguration.cs" />
     <Compile Include="Commands\CommandManager.cs" />

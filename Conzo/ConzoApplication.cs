@@ -22,7 +22,7 @@ namespace Conzo
       /// Initializes a new instance of the <see cref="ConzoApplication"/> class.
       /// </summary>
       /// <param name="startCommand">The start command.</param>
-      public ConzoApplication(CommandBase startCommand)
+      public ConzoApplication(Command startCommand)
          : this(startCommand, new CommandManager(startCommand))
       {
       }
@@ -32,7 +32,7 @@ namespace Conzo
       /// </summary>
       /// <param name="startCommand">The start command.</param>
       /// <param name="commandManager">The command manager.</param>
-      internal ConzoApplication(CommandBase startCommand, ICommandManager commandManager)
+      internal ConzoApplication(Command startCommand, ICommandManager commandManager)
       {
          _started = false;
          CommandRepository.SetStartCommand(startCommand);
@@ -44,7 +44,7 @@ namespace Conzo
       /// </summary>
       /// <param name="key">The key.</param>
       /// <param name="command">The command.</param>
-      public void AddGlobalCommand(ConsoleKey key, CommandBase command)
+      public void AddGlobalCommand(ConsoleKey key, Command command)
       {
          CommandRepository.AddGlobalCommand(key, command);
       }
@@ -54,7 +54,7 @@ namespace Conzo
       /// </summary>
       /// <param name="command">The command.</param>
       /// <returns>The <see cref="CommandConfiguration" />.</returns>
-      public CommandConfiguration Configure(CommandBase command)
+      public CommandConfiguration Configure(Command command)
       {
          Enforce.ArgumentNotNull(command, "command can not be null");
 

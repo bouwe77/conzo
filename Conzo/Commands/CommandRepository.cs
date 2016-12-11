@@ -10,23 +10,23 @@ namespace Conzo.Commands
 {
    internal class CommandRepository
    {
-      private static readonly Dictionary<CommandBase, CommandConfiguration> ConfiguredCommands;
-      private static CommandBase StartCommand;
-      private static readonly Dictionary<ConsoleKey, CommandBase> GlobalCommands;
+      private static readonly Dictionary<Command, CommandConfiguration> ConfiguredCommands;
+      private static Command StartCommand;
+      private static readonly Dictionary<ConsoleKey, Command> GlobalCommands;
 
       static CommandRepository()
       {
-         ConfiguredCommands = new Dictionary<CommandBase, CommandConfiguration>();
-         GlobalCommands = new Dictionary<ConsoleKey, CommandBase>();
+         ConfiguredCommands = new Dictionary<Command, CommandConfiguration>();
+         GlobalCommands = new Dictionary<ConsoleKey, Command>();
       }
 
-      public static void SetStartCommand(CommandBase startCommand)
+      public static void SetStartCommand(Command startCommand)
       {
          AddCommandIfNecessary(startCommand);
          StartCommand = startCommand;
       }
 
-      public static void AddGlobalCommand(ConsoleKey key, CommandBase command)
+      public static void AddGlobalCommand(ConsoleKey key, Command command)
       {
          SupportedKeys.Validate(key);
          Enforce.DictionaryKeyDoesNotExist(GlobalCommands, key, "Dictionary _globalCommands already contains key" + key);
@@ -40,9 +40,9 @@ namespace Conzo.Commands
          }
       }
 
-      public static CommandBase GetNextCommand(CommandBase currentCommand, ConsoleKey consoleKey)
+      public static Command GetNextCommand(Command currentCommand, ConsoleKey consoleKey)
       {
-         CommandBase nextCommand = null;
+         Command nextCommand = null;
 
          // Determine whether there are there any command configurations for the current command.
          // And if so, determine whether for this key a command is configured.
@@ -56,7 +56,7 @@ namespace Conzo.Commands
       }
 
       //TODO kan deze private worden?
-      public static CommandConfiguration AddCommandIfNecessary(CommandBase command)
+      public static CommandConfiguration AddCommandIfNecessary(Command command)
       {
          Enforce.ArgumentNotNull(command, "command can not be null");
 
@@ -91,7 +91,7 @@ namespace Conzo.Commands
          }
 
          //TODO refactor this orphan stuff:
-         var commandsThatHaveCommandPointingToIt = new List<CommandBase>();
+         var commandsThatHaveCommandPointingToIt = new List<Command>();
          foreach (var commandConfiguration in ConfiguredCommands.Values)
          {
             commandsThatHaveCommandPointingToIt.AddRange(commandConfiguration.GetAllCommands());

@@ -5,10 +5,10 @@ namespace Conzo.Commands
 {
    internal class CommandExecuter : ICommandExecuter
    {
-      private readonly CommandBase _command;
+      private readonly Command _command;
       private readonly ConsoleKey _consoleKey;
 
-      public CommandExecuter(CommandBase command, ConsoleKey consoleKey)
+      public CommandExecuter(Command command, ConsoleKey consoleKey)
       {
          _command = Enforce.ArgumentNotNull(command, "command can not be null");
          _consoleKey = consoleKey;
@@ -35,15 +35,13 @@ namespace Conzo.Commands
 
          try
          {
-            var command1 = _command as Command;
-            if (command1 != null)
+            if (_command.Action != null)
             {
-               commandContents = command1.Action.Invoke();
+               commandContents = _command.Action.Invoke();
             }
             else
             {
-               CommandWithPressedKey commandWithPressedKey = (CommandWithPressedKey) _command;
-               commandContents = commandWithPressedKey.Action.Invoke(_consoleKey);
+               commandContents = _command.ActionWithPressedKey.Invoke(_consoleKey);
             }
          }
          catch

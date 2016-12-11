@@ -66,7 +66,7 @@ namespace Example
 
       static void Main()
       {
-         var displayTimeCommand = CommandFactory.Create(DisplayTime);
+         var displayTimeCommand = new Command(DisplayTime);
          var myApp = new ConzoApplication(displayTimeCommand);
 
          myApp.Configure(displayTimeCommand)

@@ -41,7 +41,7 @@ Let's create a bare minimum Conzo application that only displays "Hello World":
 static void Main()
 {
    // Create a command that returns the text "Hello World".
-   var helloWorldCommand = CommandFactory.Create(() => "Hello World");
+   var helloWorldCommand = new Command(() => "Hello World");
 
    // Create a new ConzoApplication with the Hello World command as start command.
    var myApp = new ConzoApplication(helloWorldCommand);
@@ -68,7 +68,7 @@ static string DisplayTime()
 
 static void Main()
 {
-   var displayTimeCommand = CommandFactory.Create(DisplayTime);
+   var displayTimeCommand = new Command(DisplayTime);
    var myApp = new ConzoApplication(displayTimeCommand);
    myApp.Start();
 }
@@ -87,7 +87,7 @@ static string DisplayTime()
 
 static void Main()
 {
-   var displayTimeCommand = CommandFactory.Create(DisplayTime);
+   var displayTimeCommand = new Command(DisplayTime);
    var myApp = new ConzoApplication(displayTimeCommand);
 
    // Configure the displayTimeCommand by triggering the same command 
@@ -114,7 +114,7 @@ static string DisplayTime()
 
 static void Main()
 {
-   var displayTimeCommand = CommandFactory.Create(DisplayTime);
+   var displayTimeCommand = new Command(DisplayTime);
    var myApp = new ConzoApplication(displayTimeCommand);
 
    myApp.Configure(displayTimeCommand)

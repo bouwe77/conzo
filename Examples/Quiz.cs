@@ -14,10 +14,10 @@ namespace Example
          {
             var controller = new QuizController();
 
-            var welcome = CommandFactory.Create(controller.GetWelcome);
-            var question = CommandFactory.Create(controller.GetQuestion);
-            var answered = CommandFactory.Create(controller.Answered);
-            var outro = CommandFactory.Create(controller.GetOutro);
+            var welcome = new Command(controller.GetWelcome);
+            var question = new Command(controller.GetQuestion);
+            var answered = new Command(controller.Answered);
+            var outro = new Command(controller.GetOutro);
 
             var myApp = new ConzoApplication(welcome) { QuitDelay = 2000 };
 

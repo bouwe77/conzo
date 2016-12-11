@@ -9,17 +9,17 @@ namespace Conzo.Commands
 {
    internal class CommandManager : ICommandManager
    {
-      private CommandBase _currentCommand;
+      private Command _currentCommand;
       private string _currentCommandContents;
       private readonly IConsoleWriter _consoleWriter;
       private readonly IKeyboardListener _keyboardListener;
 
-      public CommandManager(CommandBase startCommand)
+      public CommandManager(Command startCommand)
          : this(startCommand, new ConsoleWriter(), new KeyboardListener())
       {
       }
 
-      internal CommandManager(CommandBase startCommand, IConsoleWriter consoleWriter, IKeyboardListener keyboardListener)
+      internal CommandManager(Command startCommand, IConsoleWriter consoleWriter, IKeyboardListener keyboardListener)
       {
          _currentCommand = startCommand;
          _consoleWriter = Enforce.ArgumentNotNull(consoleWriter, "consoleWriter can not be null");

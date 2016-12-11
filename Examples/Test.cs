@@ -9,7 +9,7 @@ namespace Example
    {
       public static void Run()
       {
-         var startCommand = CommandFactory.Create(DoSomething);
+         var startCommand = new Command(DoSomething);
 
          var myApp = new ConzoApplication(startCommand);
 

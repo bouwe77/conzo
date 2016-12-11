@@ -7,13 +7,13 @@ namespace Conzo.Commands
    [TestClass]
    public class CommandConfigurationTest
    {
-      private CommandBase _validCommand;
+      private Command _validCommand;
       private ConsoleKey _validKey;
 
       [TestInitialize]
       public void TestInitialize()
       {
-         _validCommand = CommandFactory.Create(() => "Hello World");
+         _validCommand = new Command(() => "Hello World");
          _validKey = ConsoleKey.A;
       }
 
