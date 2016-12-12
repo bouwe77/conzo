@@ -64,7 +64,7 @@ namespace Example
          return $"Time: {DateTime.Now.ToString("hh:mm:ss")} (Press R to refresh)";
       }
 
-      static void Main()
+      static void Main2()
       {
          var displayTimeCommand = new Command(DisplayTime);
          var myApp = new ConzoApplication(displayTimeCommand);

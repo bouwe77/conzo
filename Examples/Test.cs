@@ -1,42 +1,51 @@
 ﻿using System;
-using System.Text;
+using System.Collections.Generic;
 using Conzo;
 using Conzo.Commands;
+using HandlebarsDotNet;
 
 namespace Example
 {
    public class Test
    {
-      public static void Run()
+      public static void Start()
       {
          var startCommand = new Command(DoSomething);
 
          var myApp = new ConzoApplication(startCommand);
 
-         myApp.Configure(startCommand)
-            .AddNextCommandIf(ConsoleKey.A, startCommand, () => false);
-
-         // Run the application which means the startAction will be invoked and the string value will be displayed.
          myApp.Start();
       }
 
       private static string DoSomething()
       {
-         var stringBuilder = new StringBuilder();
+         string source = @"{{title}}
+-------------
+{{#names}}
+{{name}}
+{{/names}}";
 
-         for (int i = 0; i < 10; i++)
+         var template = Handlebars.Compile(source);
+
+         var data = new
          {
-            for (int j = 0; j < 6; j++)
+            title = "Ja moio",
+            names = new[]
             {
-               stringBuilder.Append("a");
+               new { name = "Kees" },
+               new { name = "Miep" }
             }
+         };
 
-            stringBuilder.AppendLine();
-         }
+         var result = template(data);
 
-         stringBuilder.Append(DateTime.Now);
-
-         return stringBuilder.ToString();
+         return result;
       }
+   }
+
+
+   public class Customer
+   {
+      public string Name { get; set; }
    }
 }
