@@ -53,7 +53,10 @@ static void Main()
 ```
 
 When you run this example the output is as follows:
-TODO
+
+```
+Hello World
+```
 
 ### Example 2: Display current time
 
@@ -72,6 +75,10 @@ static void Main()
    var myApp = new ConzoApplication(displayTimeCommand);
    myApp.Start();
 }
+```
+
+```
+Time: 12:34:56
 ```
 
 ### Example 3: Adding a command
@@ -99,8 +106,12 @@ static void Main()
 }
 ```
 
-When you run this example the output is as follows:
-TODO
+When you run this example (and after each time the R button is pressed) the output is as follows:
+
+```
+Time: 12:34:56 (Press R to refresh)
+```
+
 
 ### Example 4: Modify display settings
 
@@ -132,8 +143,8 @@ static void Main()
 }
 ```
 
-When you run this example the output is as follows:
-TODO
+When you run this example the output is he same as the previous example, but the colors are different.
+
 
 *TODO Add example for adding conditional commands*
 
