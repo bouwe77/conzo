@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Conzo is a library for creating user friendly .NET console applications.
+Conzo is a .NET library for creating user friendly .NET console applications.
 
 Conzo applications are keyboard driven applications. You define in your 
 code which key executes which command and what output is displayed.
