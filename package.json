@@ -2,7 +2,7 @@
   "name": "conzo",
   "version": "0.0.6",
   "license": "MIT",
-  "bin": "dist/Conzo.js",
+  "main": "dist/Conzo.js",
   "type": "module",
   "engines": {
     "node": ">=16"
