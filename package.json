@@ -8,7 +8,7 @@
     "node": ">=16"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "rm -rf dist && tsc && cp package.json README.md ./dist"
   },
   "files": [
     "dist"
