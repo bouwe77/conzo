@@ -1,6 +1,6 @@
 {
   "name": "conzo",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "license": "MIT",
   "main": "dist/Conzo.js",
   "type": "module",
