@@ -18,6 +18,7 @@
     "moduleResolution": "Bundler",
     "outDir": "dist",
     "sourceMap": true,
+    "rootDir": "src",
 
     /* If your code doesn't run in the DOM: */
     "lib": ["ES2022"],
@@ -28,6 +29,7 @@
     /* If you're building for a library in a monorepo: */
     "composite": true,
     "declarationMap": true,
+    "tsBuildInfoFile": "./dist/tsconfig.tsbuildinfo",
 
     "jsx": "react-jsx"
   },
