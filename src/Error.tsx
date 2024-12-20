@@ -1,6 +1,6 @@
 import React from 'react'
 import { EscapeBackToSearch } from './helpers/EscapeBackToSearch.js'
-import { FallbackProps } from 'react-error-boundary'
+import type { FallbackProps } from 'react-error-boundary'
 import { Box, Text, useInput } from 'ink'
 
 export const Error = ({ error }: { error: Error }) => {

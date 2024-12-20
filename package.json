@@ -2,7 +2,7 @@
   "name": "conzo",
   "version": "0.0.10",
   "license": "MIT",
-  "main": "dist/Conzo.js",
+  "main": "dist/index.js",
   "type": "module",
   "engines": {
     "node": ">=16"
@@ -21,7 +21,6 @@
     "react-error-boundary": "^4.1.2"
   },
   "devDependencies": {
-    "@sindresorhus/tsconfig": "^6.0.0",
     "@types/react": "^18.3.12",
     "chalk": "^5.3.0",
     "eslint-plugin-react": "^7.37.2",

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Config } from './types.js'
+import type { Config } from './types.js'
 
 type ConfigContextType = Config
 

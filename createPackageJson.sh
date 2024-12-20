@@ -23,7 +23,7 @@ cat <<EOF > "$DIST_PACKAGE_JSON"
   "name": "conzo",
   "version": "$VERSION",
   "type": "module",
-  "main": "./Conzo.js",
+  "main": "./src/index.js",
   "files": ["**/*"],
   "dependencies": $DEPENDENCIES,
   "author": "Bouwe",

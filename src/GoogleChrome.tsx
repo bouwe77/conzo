@@ -2,7 +2,7 @@ import React from 'react'
 import { Box, Text } from 'ink'
 import { useView } from './ViewContext.js'
 import { useConfig } from './config/ConfigContext.js'
-import { BookmarkInfo } from './items/types.js'
+import type { BookmarkInfo } from './items/types.js'
 import { spawnProcess } from './helpers/spawnProcess.js'
 import { SelectBox } from './SelectBox.js'
 

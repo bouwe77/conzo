@@ -1,5 +1,5 @@
 import React from 'react'
-import { ReactItem } from './items/types.js'
+import type { ReactItem } from './items/types.js'
 
 type ErrorView = {
   error: Error

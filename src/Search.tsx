@@ -4,7 +4,7 @@ import { Box, Text, useInput } from 'ink'
 import { useApplicationsCache } from './apps/ApplicationsCacheContext.js'
 import { useConfig } from './config/ConfigContext.js'
 import { useView } from './ViewContext.js'
-import { Item } from './items/types.js'
+import type { Item } from './items/types.js'
 import { getItems } from './items/items.js'
 
 const MAX_VISIBLE_RESULTS = 10

@@ -1,6 +1,6 @@
 import React from 'react'
-import { BookmarkItem, Item, ReactItem } from './types.js'
-import { Config } from '../config/types.js'
+import type { BookmarkItem, Item, ReactItem } from './types.js'
+import type { Config } from '../config/types.js'
 import { RefreshApps } from '../apps/RefreshApps.js'
 import { spawnProcess } from '../helpers/spawnProcess.js'
 

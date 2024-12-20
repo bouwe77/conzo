@@ -1,5 +1,5 @@
-import { Config, UserConfig, UserItem } from './types.js'
-import { BookmarkAction, Item } from '../items/types.js'
+import type { Config, UserConfig, UserItem } from './types.js'
+import type { BookmarkAction, Item } from '../items/types.js'
 import { openBookmark } from '../GoogleChrome.js'
 
 const defaultConfig: Config = {
