@@ -48,6 +48,8 @@ export const parseAndValidate = (userConfig?: UserConfig): Config => {
           actionType: 'Fire and forget',
         }
 
+      console.error('Unexpected action type: ', actionString)
+
       return null
     })
     .filter((item) => item !== null) as Item[]
