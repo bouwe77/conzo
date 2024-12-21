@@ -26,7 +26,7 @@ export default function App() {
     if (view === 'loading') {
       setTimeout(() => {
         renderSearch()
-      }, 1500)
+      }, 3000)
     }
   }, [view])
 
@@ -65,7 +65,7 @@ export default function App() {
         {view === 'search' ? (
           <Search key={searchKey} width={containerWidth} choose={choose} />
         ) : view === 'loading' ? (
-          <Text>\n\n\n\n\n\n\n\nLoading...</Text>
+          <Text>Please wait...</Text>
         ) : 'error' in view ? (
           <Error error={view.error} />
         ) : 'actionType' in view && view.actionType === 'Show UI' ? (
