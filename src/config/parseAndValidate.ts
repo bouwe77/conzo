@@ -21,7 +21,11 @@ export const parseAndValidate = (userConfig?: UserConfig): Config => {
     ?.map((userItem: UserItem) => {
       const actionString = userItem.action.toString()
       // A function that returns JSX is considered a UI action
-      if (actionString.startsWith('() => React.createElement('))
+      if (
+        ['() => React.createElement(', '() => _jsx('].some((str) =>
+          actionString.startsWith(str),
+        )
+      )
         return {
           name: userItem.name,
           action: userItem.action as () => JSX.Element,
