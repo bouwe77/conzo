@@ -10,6 +10,7 @@ import { tryCatch } from './helpers/tryCatch.js'
 import { Error, Fallback } from './Error.js'
 import { ErrorBoundary } from 'react-error-boundary'
 import { render } from 'ink'
+import { EscapeBackToSearchProvider } from './EscapeBackToSearchProvider.js'
 
 meow('conzo', {
   importMeta: import.meta,
@@ -29,7 +30,9 @@ export const createApp = (userConfig?: UserConfig) => {
           <ViewProvider>
             <ConfigProvider config={config}>
               <ApplicationsCacheProvider>
-                <App />
+                <EscapeBackToSearchProvider>
+                  <App />
+                </EscapeBackToSearchProvider>
               </ApplicationsCacheProvider>
             </ConfigProvider>
           </ViewProvider>
