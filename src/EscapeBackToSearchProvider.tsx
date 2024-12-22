@@ -18,7 +18,7 @@ export const EscapeBackToSearchProvider = ({ children }: PropsWithChildren) => {
   )
 }
 
-export const useEscape = () => {
+const useEscapeBackToSearchContext = () => {
   const context = useContext(EscapeContext)
   if (context === undefined) {
     throw new Error(
@@ -27,4 +27,16 @@ export const useEscape = () => {
   }
 
   return context
+}
+
+// Determine if the escape key to return to search is enabled
+export const useEscapeBackToSearch = () => {
+  const { escapeEnabled } = useEscapeBackToSearchContext()
+  return escapeEnabled
+}
+
+// Enable or disable the escape key to return to search
+export const useEnableBackToSearch = (enable: boolean) => {
+  const { setEscapeEnabled } = useEscapeBackToSearchContext()
+  setEscapeEnabled(enable)
 }

@@ -1,10 +1,9 @@
 import React from 'react'
-import type { PropsWithChildren } from 'react'
 import { useInput } from 'ink'
 import { useView } from '../ViewContext.js'
 import { Box, Text } from 'ink'
 import { useConfig } from '../config/ConfigContext.js'
-import { useEscape } from '../EscapeBackToSearchProvider.js'
+import { useEscapeBackToSearch } from '../EscapeBackToSearchProvider.js'
 
 type Props = {
   title: string
@@ -14,7 +13,7 @@ type Props = {
 export const EscapeBackToSearch = ({ title, children }: Props) => {
   const config = useConfig()
 
-  const { escapeEnabled } = useEscape()
+  const escapeEnabled = useEscapeBackToSearch()
   const { goToView } = useView()
 
   useInput(
