@@ -36,7 +36,7 @@ export const useEscapeBackToSearch = () => {
 }
 
 // Enable or disable the escape key to return to search
-export const useEnableBackToSearch = (enable: boolean) => {
+export const useEnableEscapeBackToSearch = (enable: boolean) => {
   const { setEscapeEnabled } = useEscapeBackToSearchContext()
   setEscapeEnabled(enable)
 }
