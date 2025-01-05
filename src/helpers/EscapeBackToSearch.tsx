@@ -1,9 +1,8 @@
 import React from 'react'
-import { useInput } from 'ink'
 import { useView } from '../ViewContext.js'
 import { Box, Text } from 'ink'
 import { useConfig } from '../config/ConfigContext.js'
-import { useEscapeBackToSearch } from '../EscapeBackToSearchProvider.js'
+import { useEscapeKey } from '../keyboardInput/KeyboardInputContext.js'
 
 type Props = {
   title: string
@@ -13,17 +12,9 @@ type Props = {
 export const EscapeBackToSearch = ({ title, children }: Props) => {
   const config = useConfig()
 
-  const escapeEnabled = useEscapeBackToSearch()
   const { goToView } = useView()
 
-  useInput(
-    (_, key) => {
-      if (key.escape) goToView('search')
-    },
-    {
-      isActive: escapeEnabled,
-    },
-  )
+  useEscapeKey(() => goToView('search'))
 
   return (
     <>
@@ -39,11 +30,9 @@ export const EscapeBackToSearch = ({ title, children }: Props) => {
         {children}
       </Box>
 
-      {escapeEnabled && (
-        <Box borderStyle="round" borderColor="grey">
-          <Text>ESC = back</Text>
-        </Box>
-      )}
+      <Box borderStyle="round" borderColor="grey">
+        <Text>ESC = back</Text>
+      </Box>
     </>
   )
 }

@@ -10,7 +10,7 @@ import { tryCatch } from './helpers/tryCatch.js'
 import { Error, Fallback } from './Error.js'
 import { ErrorBoundary } from 'react-error-boundary'
 import { render } from 'ink'
-import { EscapeBackToSearchProvider } from './EscapeBackToSearchProvider.js'
+import { KeyboardInputProvider } from './keyboardInput/KeyboardInputContext.js'
 
 meow('conzo', {
   importMeta: import.meta,
@@ -27,15 +27,15 @@ export const createApp = (userConfig?: UserConfig) => {
   const Conzo = config
     ? () => (
         <ErrorBoundary FallbackComponent={Fallback}>
-          <ViewProvider>
-            <ConfigProvider config={config}>
-              <ApplicationsCacheProvider>
-                <EscapeBackToSearchProvider>
+          <KeyboardInputProvider>
+            <ViewProvider>
+              <ConfigProvider config={config}>
+                <ApplicationsCacheProvider>
                   <App />
-                </EscapeBackToSearchProvider>
-              </ApplicationsCacheProvider>
-            </ConfigProvider>
-          </ViewProvider>
+                </ApplicationsCacheProvider>
+              </ConfigProvider>
+            </ViewProvider>
+          </KeyboardInputProvider>
         </ErrorBoundary>
       )
     : () => <Error error={error} />
