@@ -15,7 +15,7 @@ npm init -y
 npm i conzo@latest
 echo '#!/usr/bin/env node
 import { createApp } from "conzo"
-const app = createApp({ color: "red" }).start()' > index.js
+const app = createApp({ theme: { color: "magentaBright" }}).start()' > index.js
 chmod +x index.js
 ./index.js
 ```
