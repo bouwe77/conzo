@@ -17,42 +17,45 @@ export const parseAndValidate = (userConfig?: UserConfig): Config => {
 
   const chromeProfiles = userConfig.chromeProfiles || false
 
-  const items = userConfig.items
-    ?.map((userItem: UserItem) => {
-      const actionString = userItem.action.toString()
-      // A function that returns JSX is considered a UI action
-      if (
-        ['() => React.createElement(', '() => _jsx('].some((str) =>
-          actionString.startsWith(str),
+  let items: Item[] = []
+  if (userConfig.items) {
+    items = userConfig.items
+      .map((userItem: UserItem) => {
+        const actionString = userItem.action.toString()
+        // A function that returns JSX is considered a UI action
+        if (
+          ['() => React.createElement(', '() => _jsx('].some((str) =>
+            actionString.startsWith(str),
+          )
         )
-      )
-        return {
-          name: userItem.name,
-          action: userItem.action as () => JSX.Element,
-          actionType: 'Show UI',
-        }
+          return {
+            name: userItem.name,
+            action: userItem.action as () => JSX.Element,
+            actionType: 'Show UI',
+          }
 
-      // A function that returns a promise is considered a fire-and-forget action
-      if (actionString.startsWith('() => Promise.resolve('))
-        return {
-          name: userItem.name,
-          action: userItem.action as () => Promise<void>,
-          actionType: 'Fire and forget',
-        }
+        // A function that returns a promise is considered a fire-and-forget action
+        if (actionString.startsWith('() => Promise.resolve('))
+          return {
+            name: userItem.name,
+            action: userItem.action as () => Promise<void>,
+            actionType: 'Fire and forget',
+          }
 
-      // An object is considered a bookmark object, which is converted to a fire-and-forget actions
-      if (actionString === '[object Object]')
-        return {
-          name: userItem.name,
-          action: () => openBookmark(userItem.action as BookmarkAction),
-          actionType: 'Fire and forget',
-        }
+        // An object is considered a bookmark object, which is converted to a fire-and-forget actions
+        if (actionString === '[object Object]')
+          return {
+            name: userItem.name,
+            action: () => openBookmark(userItem.action as BookmarkAction),
+            actionType: 'Fire and forget',
+          }
 
-      console.error('Unexpected action type: ', actionString)
+        console.error('Unexpected action type: ', actionString)
 
-      return null
-    })
-    .filter((item) => item !== null) as Item[]
+        return null
+      })
+      .filter((item) => item !== null) as Item[]
+  }
 
   return {
     excludeApps: userConfig.excludeApps || [],
