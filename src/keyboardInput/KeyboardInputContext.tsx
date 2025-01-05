@@ -6,8 +6,11 @@ import {
   type KeyboardInput,
 } from './convertToKeyboardInput'
 
+type StringifiedKeyboardInput = string
+type Callback = () => void
+
 interface KeyboardInputContextProps {
-  registerHandler: (keyboardInput: KeyboardInput, callback: () => void) => void
+  registerHandler: (keyboardInput: KeyboardInput, callback: Callback) => void
   unregisterHandler: (keyboardInput: KeyboardInput) => void
 }
 
@@ -16,13 +19,17 @@ const KeyboardInputContext = React.createContext<
 >(undefined)
 
 export const KeyboardInputProvider = ({ children }: PropsWithChildren) => {
-  const [handlers, setHandlers] = React.useState(new Map<string, () => void>())
+  const [handlers, setHandlers] = React.useState<
+    Map<StringifiedKeyboardInput, Callback[]>
+  >(new Map())
 
   const registerHandler = React.useCallback(
-    (keyboardInput: KeyboardInput, callback: () => void) => {
+    (keyboardInput: KeyboardInput, callback: Callback) => {
       setHandlers((prevHandlers) => {
         const newHandlers = new Map(prevHandlers)
-        newHandlers.set(JSON.stringify(keyboardInput), callback)
+        const key = JSON.stringify(keyboardInput)
+        const stack = newHandlers.get(key) || []
+        newHandlers.set(key, [...stack, callback])
         return newHandlers
       })
     },
@@ -33,18 +40,27 @@ export const KeyboardInputProvider = ({ children }: PropsWithChildren) => {
     (keyboardInput: KeyboardInput) => {
       setHandlers((prevHandlers) => {
         const newHandlers = new Map(prevHandlers)
-        newHandlers.delete(JSON.stringify(keyboardInput))
+        const key = JSON.stringify(keyboardInput)
+        const stack = newHandlers.get(key)
+        if (stack) {
+          stack.pop()
+          if (stack.length === 0) {
+            newHandlers.delete(key)
+          } else {
+            newHandlers.set(key, stack)
+          }
+        }
         return newHandlers
       })
     },
     [],
   )
 
-  // When Ink detects keyboard input, call the handler for that input if it exists
+  // When Ink detects keyboard input, call the last handler for that input if it exists
   useInput((input, key) => {
     const keyboardInput = convertToKeyboardInput(input, key)
-    const handler = handlers.get(keyboardInput)
-    if (handler) handler()
+    const stack = handlers.get(JSON.stringify(keyboardInput))
+    stack?.[stack.length - 1]?.()
   })
 
   return (
@@ -69,7 +85,7 @@ const useKeyboardInputContext = () => {
 
 export const useKeyboard = (
   keyboardInput: KeyboardInput,
-  callback: () => void,
+  callback: Callback,
 ) => {
   const { registerHandler, unregisterHandler } = useKeyboardInputContext()
 
@@ -87,7 +103,7 @@ export const useKeyboard = (
 
 // Convenience hook for the escape key, as it is a global key that you might want to override
 // in child components
-export const useEscapeKey = (callback: () => void) => {
+export const useEscapeKey = (callback: Callback) => {
   useKeyboard(
     {
       key: 'escape',
