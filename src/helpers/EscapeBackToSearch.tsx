@@ -1,5 +1,5 @@
 import React from 'react'
-import { useView } from '../ViewContext.js'
+import { useBackToSearch, useView } from '../ViewContext.js'
 import { Box, Text } from 'ink'
 import { useConfig } from '../config/ConfigContext.js'
 import { useEscapeKey } from '../keyboardInput/KeyboardInputContext.js'
@@ -12,9 +12,8 @@ type Props = {
 export const EscapeBackToSearch = ({ title, children }: Props) => {
   const config = useConfig()
 
-  const { goToView } = useView()
-
-  useEscapeKey(() => goToView('search'))
+  const backToSearch = useBackToSearch()
+  useEscapeKey(backToSearch)
 
   return (
     <>
