@@ -14,7 +14,7 @@ type ViewContextType = {
 
 const ViewContext = React.createContext<ViewContextType | null>(null)
 
-function ViewProvider({ children }: React.PropsWithChildren) {
+const ViewProvider = ({ children }: React.PropsWithChildren) => {
   const [view, setView] = React.useState<View>('search')
 
   const goToView = React.useCallback((view: View) => {
@@ -26,10 +26,18 @@ function ViewProvider({ children }: React.PropsWithChildren) {
   return <ViewContext.Provider value={value}>{children}</ViewContext.Provider>
 }
 
-function useView() {
+const useView = () => {
   const context = React.useContext(ViewContext)
   if (!context) throw new Error('useView must be used within a ViewProvider')
   return context
+}
+
+export const useBackToSearch = () => {
+  const { goToView } = useView()
+
+  return React.useCallback(() => {
+    goToView('search')
+  }, [goToView])
 }
 
 export { ViewProvider, useView }
