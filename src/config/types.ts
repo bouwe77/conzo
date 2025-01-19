@@ -42,10 +42,16 @@ export type UserConfig = {
   excludeApps?: string[]
   favoriteItems?: string[]
   items?: UserItem[]
+  debug?: Debug
+}
+
+type Debug = {
+  enabled: boolean
 }
 
 export type Config = {
   theme: Theme
+  debug: Debug
   chromeProfiles: ChromeProfiles
   excludeApps: string[]
   favoriteItems: string[]

@@ -27,15 +27,15 @@ export const createApp = (userConfig?: UserConfig) => {
   const Conzo = config
     ? () => (
         <ErrorBoundary FallbackComponent={Fallback}>
-          <KeyboardInputProvider>
-            <ViewProvider>
-              <ConfigProvider config={config}>
+          <ConfigProvider config={config}>
+            <KeyboardInputProvider>
+              <ViewProvider>
                 <ApplicationsCacheProvider>
                   <App />
                 </ApplicationsCacheProvider>
-              </ConfigProvider>
-            </ViewProvider>
-          </KeyboardInputProvider>
+              </ViewProvider>
+            </KeyboardInputProvider>
+          </ConfigProvider>
         </ErrorBoundary>
       )
     : () => <Error error={error} />

@@ -10,6 +10,9 @@ const defaultConfig: Config = {
   theme: {
     color: 'green',
   },
+  debug: {
+    enabled: false,
+  },
 }
 
 export const parseAndValidate = (userConfig?: UserConfig): Config => {
@@ -65,5 +68,6 @@ export const parseAndValidate = (userConfig?: UserConfig): Config => {
     theme: {
       color: userConfig.theme?.color || defaultConfig.theme.color,
     },
+    debug: userConfig.debug || defaultConfig.debug,
   }
 }
