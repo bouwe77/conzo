@@ -59,7 +59,7 @@ export const KeyboardInputProvider = ({ children }: PropsWithChildren) => {
   // When Ink detects keyboard input, call the last handler for that input if it exists
   useInput((input, key) => {
     const keyboardInput = convertToKeyboardInput(input, key)
-    const stack = handlers.get(JSON.stringify(keyboardInput))
+    const stack = handlers.get(keyboardInput)
     stack?.[stack.length - 1]?.()
   })
 
