@@ -38,7 +38,11 @@ export const parseAndValidate = (userConfig?: UserConfig): Config => {
           }
 
         // A function that returns a promise is considered a fire-and-forget action
-        if (actionString.startsWith('() => Promise.resolve('))
+        if (
+          ['() => Promise.resolve(', 'async () =>'].some((str) =>
+            actionString.startsWith(str),
+          )
+        )
           return {
             name: userItem.name,
             action: userItem.action as () => Promise<void>,
