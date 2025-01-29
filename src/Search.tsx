@@ -148,6 +148,7 @@ export const Search = ({ width, choose }: Props) => {
   return (
     <>
       <Box borderStyle="round" borderColor={config.theme.color}>
+        <Text> </Text>
         <TextInput
           value={query}
           onChange={filter}
@@ -158,12 +159,12 @@ export const Search = ({ width, choose }: Props) => {
           }}
         />
       </Box>
-      <Text>{filteredResults.length === 0 && 'No items...'}</Text>
-      <Box
-        borderStyle={filteredResults.length > 0 ? 'round' : undefined}
-        borderColor={filteredResults.length > 0 ? 'grey' : undefined}
-        flexDirection="column"
-      >
+      <Box borderStyle="round" borderColor="grey" flexDirection="column">
+        {filteredResults.length === 0 && (
+          <Box marginLeft={1}>
+            <Text>No items...</Text>
+          </Box>
+        )}
         {filteredResults
           .slice(visibleStartIndex, visibleStartIndex + MAX_VISIBLE_RESULTS)
           .map((item) => {
