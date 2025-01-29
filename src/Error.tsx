@@ -2,6 +2,7 @@ import React from 'react'
 import { EscapeBackToSearch } from './helpers/EscapeBackToSearch.js'
 import type { FallbackProps } from 'react-error-boundary'
 import { Box, Text, useInput } from 'ink'
+import { Container } from './Container.js'
 
 export const Error = ({ error }: { error: Error }) => {
   const [showStack, setShowStack] = React.useState(false)
@@ -14,15 +15,17 @@ export const Error = ({ error }: { error: Error }) => {
   })
 
   return (
-    <EscapeBackToSearch title="Oops...">
-      <Text>{error.message}</Text>
-      <Box marginTop={1}>
-        {showStack ? (
-          <Text>{error.stack}</Text>
-        ) : (
-          <Text>S = show stack trace</Text>
-        )}
-      </Box>
+    <EscapeBackToSearch>
+      <Container title="Oops...">
+        <Text>{error.message}</Text>
+        <Box marginTop={1}>
+          {showStack ? (
+            <Text>{error.stack}</Text>
+          ) : (
+            <Text>S = show stack trace</Text>
+          )}
+        </Box>
+      </Container>
     </EscapeBackToSearch>
   )
 }

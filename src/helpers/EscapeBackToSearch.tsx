@@ -1,33 +1,15 @@
-import React from 'react'
+import React, { type PropsWithChildren } from 'react'
 import { useBackToSearch, useView } from '../ViewContext.js'
 import { Box, Text } from 'ink'
-import { useConfig } from '../config/ConfigContext.js'
 import { useEscapeKey } from '../keyboardInput/KeyboardInputContext.js'
 
-type Props = {
-  title: string
-  children: React.ReactNode
-}
-
-export const EscapeBackToSearch = ({ title, children }: Props) => {
-  const config = useConfig()
-
+export const EscapeBackToSearch = ({ children }: PropsWithChildren) => {
   const backToSearch = useBackToSearch()
   useEscapeKey(backToSearch)
 
   return (
     <>
-      <Box
-        flexDirection="column"
-        borderStyle="round"
-        borderColor={config.theme.color}
-      >
-        <Box marginBottom={1}>
-          <Text color={config.theme.color}>{title}</Text>
-        </Box>
-
-        {children}
-      </Box>
+      {children}
 
       <Box borderStyle="round" borderColor="grey">
         <Text>ESC = back</Text>
