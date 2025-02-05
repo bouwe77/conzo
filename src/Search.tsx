@@ -63,8 +63,18 @@ const resultsReducer = (state: ResultsState, action: ResultsAction) => {
         }
       }
 
+      // Returns true if all characters in `query` appear in `target` in the same order
+      const isSubsequence = (query: string, target: string) => {
+        let i = 0
+        for (const char of target) {
+          if (char === query[i]) i++
+          if (i === query.length) return true
+        }
+        return false
+      }
+
       const filteredResults = state.allItems.filter((result) =>
-        result.name.toLowerCase().includes(query.toLowerCase()),
+        isSubsequence(query.toLowerCase(), result.name.toLowerCase()),
       )
       return {
         ...state,
