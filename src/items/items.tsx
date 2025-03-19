@@ -3,14 +3,24 @@ import type { BookmarkItem, Item, ReactItem } from './types.js'
 import type { Config } from '../config/types.js'
 import { RefreshApps } from '../apps/RefreshApps.js'
 import { spawnProcess } from '../helpers/spawnProcess.js'
+import { homedir } from 'node:os'
+import * as path from 'node:path'
 
-// Fetch installed apps using the `ls` command
-const getApplications = async (excludeApps: string[]): Promise<Item[]> => {
-  const data = await spawnProcess('ls', ['/Applications'])
+const createPathResolver =
+  (parentDir: string) =>
+  (...parts: string[]) => {
+    return path.resolve(parentDir, ...parts)
+  }
 
+const home = (...pathParts: string[]) => {
+  return createPathResolver(homedir())(...pathParts)
+}
+
+const parseAppList = (data: Buffer, excludeApps: string[]) => {
   const apps = data
     .toString()
     .split('\n')
+    .filter((app) => app.endsWith('.app'))
     .map((app) => app.replace('.app', '').trim())
     .filter((app) => app !== '' && !excludeApps.includes(app))
 
@@ -25,44 +35,41 @@ const getApplications = async (excludeApps: string[]): Promise<Item[]> => {
   return items
 }
 
+// Fetch installed apps using the `ls` command
+const getApplications = async (excludeApps: string[]): Promise<Item[]> => {
+  const data = await spawnProcess('ls', ['/Applications'])
+  return parseAppList(data, excludeApps)
+}
+
+// Fetch system applications using the `ls` command
+const getSystemApplications = async (
+  excludeApps: string[],
+): Promise<Item[]> => {
+  const data = await spawnProcess('ls', ['/System/Applications'])
+  return parseAppList(data, excludeApps)
+}
+
+const getSystemUtilities = async (excludeApps: string[]): Promise<Item[]> => {
+  const data = await spawnProcess('ls', ['/System/Applications/Utilities'])
+  return parseAppList(data, excludeApps)
+}
+
+const getChromeAppsLocalized = async (
+  excludeApps: string[],
+): Promise<Item[]> => {
+  const data = await spawnProcess('ls', [
+    home('Applications', 'Chrome Apps.localized'),
+  ])
+  return parseAppList(data, excludeApps)
+}
+
 // Fetch installed preference panes using the `find` command
 const getPrefPanes = async (): Promise<Item[]> => {
-  // Somehow this command does not return anything...
-  // const data = await spawnProcess('find', [
-  //   '/System/Library/PreferencePanes',
-  //   '-name',
-  //   '"*.prefPane"',
-  // ])
-
-  // ScriptKit lists the following applications:
-  // const APP_DIR = '/Applications'
-  // const UTILITIES_DIR = `${APP_DIR}/Utilities`
-  // const SYSTEM_UTILITIES_DIR = '/System/Applications/Utilities'
-  // const CHROME_APPS_DIR = home('Applications', 'Chrome Apps.localized')
-
-  // as long as the command does not work, here is a hardcoded list with the most common prefPanes
-  const data = `
-  /System/Library/PreferencePanes/Bluetooth.prefPane
-  /System/Library/PreferencePanes/Network.prefPane
-  /System/Library/PreferencePanes/Battery.prefPane
-  /System/Library/PreferencePanes/Security.prefPane
-  /System/Library/PreferencePanes/Dock.prefPane
-  /System/Library/PreferencePanes/Sound.prefPane
-  /System/Library/PreferencePanes/Appearance.prefPane
-  /System/Library/PreferencePanes/Displays.prefPane
-  /System/Library/PreferencePanes/Notifications.prefPane
-  /System/Library/PreferencePanes/Accounts.prefPane
-  /System/Library/PreferencePanes/Trackpad.prefPane
-  /System/Library/PreferencePanes/DateAndTime.prefPane
-  /System/Library/PreferencePanes/EnergySaverPref.prefPane
-  /System/Library/PreferencePanes/Keyboard.prefPane
-  /System/Library/PreferencePanes/Spotlight.prefPane
-  /System/Library/PreferencePanes/AppleIDPrefPane.prefPane
-  /System/Library/PreferencePanes/SharingPref.prefPane
-  /System/Library/PreferencePanes/Profiles.prefPane
-  /System/Library/PreferencePanes/SoftwareUpdate.prefPane
-  /System/Library/PreferencePanes/Mouse.prefPane
-  `
+  const data = await spawnProcess('find', [
+    '/System/Library/PreferencePanes',
+    '-name',
+    '*.prefPane',
+  ])
 
   const prefPanes = data
     .toString()
@@ -82,12 +89,22 @@ const getPrefPanes = async (): Promise<Item[]> => {
 }
 
 const getCachableItems = async (excludeApps: string[]): Promise<Item[]> => {
-  const [apps, prefPanes] = await Promise.all([
-    getApplications(excludeApps),
-    getPrefPanes(),
-  ])
+  const [apps, systemApps, systemUtilities, chromeApps, prefPanes] =
+    await Promise.all([
+      getApplications(excludeApps),
+      getSystemApplications(excludeApps),
+      getSystemUtilities(excludeApps),
+      getChromeAppsLocalized(excludeApps),
+      getPrefPanes(),
+    ])
 
-  return [...apps, ...prefPanes]
+  return [
+    ...apps,
+    ...prefPanes,
+    ...systemApps,
+    ...systemUtilities,
+    ...chromeApps,
+  ]
 }
 
 const getDefaultUIs = (): ReactItem[] => [
