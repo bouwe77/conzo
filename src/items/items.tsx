@@ -16,13 +16,12 @@ const home = (...pathParts: string[]) => {
   return createPathResolver(homedir())(...pathParts)
 }
 
-const parseAppList = (data: Buffer, excludeApps: string[]) => {
+const parseAppList = (data: Buffer) => {
   const apps = data
     .toString()
     .split('\n')
     .filter((app) => app.endsWith('.app'))
     .map((app) => app.replace('.app', '').trim())
-    .filter((app) => app !== '' && !excludeApps.includes(app))
 
   const items = apps.map((app) => ({
     name: app,
@@ -36,31 +35,27 @@ const parseAppList = (data: Buffer, excludeApps: string[]) => {
 }
 
 // Fetch installed apps using the `ls` command
-const getApplications = async (excludeApps: string[]): Promise<Item[]> => {
+const getApplications = async (): Promise<Item[]> => {
   const data = await spawnProcess('ls', ['/Applications'])
-  return parseAppList(data, excludeApps)
+  return parseAppList(data)
 }
 
 // Fetch system applications using the `ls` command
-const getSystemApplications = async (
-  excludeApps: string[],
-): Promise<Item[]> => {
+const getSystemApplications = async (): Promise<Item[]> => {
   const data = await spawnProcess('ls', ['/System/Applications'])
-  return parseAppList(data, excludeApps)
+  return parseAppList(data)
 }
 
-const getSystemUtilities = async (excludeApps: string[]): Promise<Item[]> => {
+const getSystemUtilities = async (): Promise<Item[]> => {
   const data = await spawnProcess('ls', ['/System/Applications/Utilities'])
-  return parseAppList(data, excludeApps)
+  return parseAppList(data)
 }
 
-const getChromeAppsLocalized = async (
-  excludeApps: string[],
-): Promise<Item[]> => {
+const getChromeAppsLocalized = async (): Promise<Item[]> => {
   const data = await spawnProcess('ls', [
     home('Applications', 'Chrome Apps.localized'),
   ])
-  return parseAppList(data, excludeApps)
+  return parseAppList(data)
 }
 
 // Fetch installed preference panes using the `find` command
@@ -91,20 +86,28 @@ const getPrefPanes = async (): Promise<Item[]> => {
 const getCachableItems = async (excludeApps: string[]): Promise<Item[]> => {
   const [apps, systemApps, systemUtilities, chromeApps, prefPanes] =
     await Promise.all([
-      getApplications(excludeApps),
-      getSystemApplications(excludeApps),
-      getSystemUtilities(excludeApps),
-      getChromeAppsLocalized(excludeApps),
+      getApplications(),
+      getSystemApplications(),
+      getSystemUtilities(),
+      getChromeAppsLocalized(),
       getPrefPanes(),
     ])
 
-  return [
+  const items = [
     ...apps,
     ...prefPanes,
     ...systemApps,
     ...systemUtilities,
     ...chromeApps,
   ]
+    // Get rid of app names that are empty or contain any of the excluded strings
+    .filter(
+      (app) =>
+        app.name !== '' &&
+        !excludeApps.some((exclude) => app.name.includes(exclude)),
+    )
+
+  return items
 }
 
 const getDefaultUIs = (): ReactItem[] => [
