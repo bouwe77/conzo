@@ -39,7 +39,7 @@ export type Theme = {
 export type UserConfig = {
   theme?: Theme
   chromeProfiles?: ChromeProfiles
-  excludeApps?: string[]
+  excludeItems?: string[]
   favoriteItems?: string[]
   items?: UserItem[]
   maxItemsVisible?: number
@@ -54,7 +54,7 @@ export type Config = {
   theme: Theme
   debug: Debug
   chromeProfiles: ChromeProfiles
-  excludeApps: string[]
+  excludeItems: string[]
   favoriteItems: string[]
   items: Item[]
   maxItemsVisible: number
