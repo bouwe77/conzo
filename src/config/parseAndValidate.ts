@@ -7,6 +7,7 @@ const defaultConfig: Config = {
   favoriteItems: [],
   chromeProfiles: false,
   items: [],
+  maxItemsVisible: 10,
   theme: {
     color: 'green',
   },
@@ -64,11 +65,17 @@ export const parseAndValidate = (userConfig?: UserConfig): Config => {
       .filter((item) => item !== null) as Item[]
   }
 
+  const maxItemsVisible =
+    userConfig.maxItemsVisible && userConfig.maxItemsVisible > 0
+      ? userConfig.maxItemsVisible
+      : defaultConfig.maxItemsVisible
+
   return {
     excludeApps: userConfig.excludeApps || [],
     favoriteItems: userConfig.favoriteItems || [],
     chromeProfiles,
     items,
+    maxItemsVisible,
     theme: {
       color: userConfig.theme?.color || defaultConfig.theme.color,
     },

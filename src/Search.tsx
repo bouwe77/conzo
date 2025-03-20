@@ -7,8 +7,6 @@ import { useView } from './ViewContext.js'
 import type { Item } from './items/types.js'
 import { getItems } from './items/items.js'
 
-const MAX_VISIBLE_RESULTS = 10
-
 const initialState = {
   allItems: [],
   filteredResults: [],
@@ -37,24 +35,46 @@ type ResultsAction =
       query: string
     }
 
-const resultsReducer = (state: ResultsState, action: ResultsAction) => {
-  switch (action.type) {
-    case 'INIT_ITEMS': {
-      const allItems = action.payload
-      return {
-        ...state,
-        allItems,
-        filteredResults: allItems,
-        selectedItem: allItems[0] ?? null,
+const createResultsReducer =
+  (maxItemsVisible: number) => (state: ResultsState, action: ResultsAction) => {
+    switch (action.type) {
+      case 'INIT_ITEMS': {
+        const allItems = action.payload
+        return {
+          ...state,
+          allItems,
+          filteredResults: allItems,
+          selectedItem: allItems[0] ?? null,
+        }
       }
-    }
-    case 'FILTER_RESULTS': {
-      const query = action.query.toLowerCase()
+      case 'FILTER_RESULTS': {
+        const query = action.query.toLowerCase()
 
-      const visibleStartIndex = 0
+        const visibleStartIndex = 0
 
-      if (query === '') {
-        const filteredResults = state.allItems
+        if (query === '') {
+          const filteredResults = state.allItems
+          return {
+            ...state,
+            filteredResults,
+            visibleStartIndex,
+            selectedItem: filteredResults[visibleStartIndex] ?? null,
+          }
+        }
+
+        // Returns true if all characters in `query` appear in `target` in the same order
+        const isSubsequence = (query: string, target: string) => {
+          let i = 0
+          for (const char of target) {
+            if (char === query[i]) i++
+            if (i === query.length) return true
+          }
+          return false
+        }
+
+        const filteredResults = state.allItems.filter((result) =>
+          isSubsequence(query.toLowerCase(), result.name.toLowerCase()),
+        )
         return {
           ...state,
           filteredResults,
@@ -63,55 +83,34 @@ const resultsReducer = (state: ResultsState, action: ResultsAction) => {
         }
       }
 
-      // Returns true if all characters in `query` appear in `target` in the same order
-      const isSubsequence = (query: string, target: string) => {
-        let i = 0
-        for (const char of target) {
-          if (char === query[i]) i++
-          if (i === query.length) return true
+      case 'SELECT_RESULT': {
+        if (state.filteredResults.length === 0 || state.selectedItem === null) {
+          return state
         }
-        return false
+
+        const selectedIndex = state.filteredResults
+          .map((r) => r.name)
+          .indexOf(state.selectedItem.name)
+        let newSelectedIndex =
+          action.which === 'previous'
+            ? (selectedIndex - 1 + state.filteredResults.length) %
+              state.filteredResults.length
+            : (selectedIndex + 1) % state.filteredResults.length
+        const newSelectedName = state.filteredResults[newSelectedIndex] ?? null
+
+        const start = Math.max(0, newSelectedIndex - maxItemsVisible + 1)
+
+        return {
+          ...state,
+          selectedItem: newSelectedName,
+          visibleStartIndex: start,
+        }
       }
 
-      const filteredResults = state.allItems.filter((result) =>
-        isSubsequence(query.toLowerCase(), result.name.toLowerCase()),
-      )
-      return {
-        ...state,
-        filteredResults,
-        visibleStartIndex,
-        selectedItem: filteredResults[visibleStartIndex] ?? null,
-      }
-    }
-
-    case 'SELECT_RESULT': {
-      if (state.filteredResults.length === 0 || state.selectedItem === null) {
+      default:
         return state
-      }
-
-      const selectedIndex = state.filteredResults
-        .map((r) => r.name)
-        .indexOf(state.selectedItem.name)
-      let newSelectedIndex =
-        action.which === 'previous'
-          ? (selectedIndex - 1 + state.filteredResults.length) %
-            state.filteredResults.length
-          : (selectedIndex + 1) % state.filteredResults.length
-      const newSelectedName = state.filteredResults[newSelectedIndex] ?? null
-
-      const start = Math.max(0, newSelectedIndex - MAX_VISIBLE_RESULTS + 1)
-
-      return {
-        ...state,
-        selectedItem: newSelectedName,
-        visibleStartIndex: start,
-      }
     }
-
-    default:
-      return state
   }
-}
 
 type Props = {
   width: number
@@ -120,9 +119,9 @@ type Props = {
 
 export const Search = ({ width, choose }: Props) => {
   const [query, setQuery] = React.useState('')
-  const [{ filteredResults, visibleStartIndex, selectedItem }, dispatch] =
-    React.useReducer(resultsReducer, initialState)
   const config = useConfig()
+  const [{ filteredResults, visibleStartIndex, selectedItem }, dispatch] =
+    React.useReducer(createResultsReducer(config.maxItemsVisible), initialState)
   const { needsRefresh, setNeedsRefresh } = useApplicationsCache()
   const { goToView } = useView()
 
@@ -176,7 +175,7 @@ export const Search = ({ width, choose }: Props) => {
           </Box>
         )}
         {filteredResults
-          .slice(visibleStartIndex, visibleStartIndex + MAX_VISIBLE_RESULTS)
+          .slice(visibleStartIndex, visibleStartIndex + config.maxItemsVisible)
           .map((item) => {
             const selected = selectedItem?.name === item.name
 

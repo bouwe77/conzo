@@ -42,6 +42,7 @@ export type UserConfig = {
   excludeApps?: string[]
   favoriteItems?: string[]
   items?: UserItem[]
+  maxItemsVisible?: number
   debug?: Debug
 }
 
@@ -56,4 +57,5 @@ export type Config = {
   excludeApps: string[]
   favoriteItems: string[]
   items: Item[]
+  maxItemsVisible: number
 }

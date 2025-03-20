@@ -6,9 +6,12 @@ import type { Item, ReactItem } from './items/types.js'
 import { useView } from './ViewContext.js'
 import { Error } from './Error.js'
 import { Footer } from './Footer.js'
+import { useConfig } from './config/ConfigContext.js'
 
 export default function App() {
   const { view, goToView } = useView()
+
+  const { maxItemsVisible } = useConfig()
 
   // The searchKey is used to force a re-render of the Search component
   const [searchKey, setSearchKey] = React.useState(0)
@@ -59,7 +62,7 @@ export default function App() {
         borderStyle="round"
         borderColor="grey"
         width="100%"
-        minHeight={20}
+        minHeight={maxItemsVisible + 6}
         ref={containerRef}
       >
         {view === 'search' ? (
