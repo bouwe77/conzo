@@ -104,7 +104,9 @@ const getCachableItems = async (excludeItems: string[]): Promise<Item[]> => {
     .filter(
       (app) =>
         app.name !== '' &&
-        !excludeItems.some((exclude) => app.name.includes(exclude)),
+        !excludeItems.some((exclude) =>
+          app.name.toLowerCase().includes(exclude.toLowerCase()),
+        ),
     )
 
   return items
