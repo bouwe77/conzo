@@ -83,7 +83,7 @@ const getPrefPanes = async (): Promise<Item[]> => {
   return items
 }
 
-const getCachableItems = async (excludeItems: string[]): Promise<Item[]> => {
+const getCachableItems = async (excludeApps: string[]): Promise<Item[]> => {
   const [apps, systemApps, systemUtilities, chromeApps, prefPanes] =
     await Promise.all([
       getApplications(),
@@ -104,7 +104,7 @@ const getCachableItems = async (excludeItems: string[]): Promise<Item[]> => {
     .filter(
       (app) =>
         app.name !== '' &&
-        !excludeItems.some((exclude) =>
+        !excludeApps.some((exclude) =>
           app.name.toLowerCase().includes(exclude.toLowerCase()),
         ),
     )
@@ -134,7 +134,7 @@ export const getItems = (() => {
     config: Config
   }): Promise<Item[]> => {
     if (!cachedItems || refresh)
-      cachedItems = await getCachableItems(config.excludeItems)
+      cachedItems = await getCachableItems(config.excludeApps)
 
     const defaultItems = [
       ...getDefaultUIs(),

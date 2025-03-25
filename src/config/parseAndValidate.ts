@@ -3,7 +3,7 @@ import type { BookmarkAction, Item } from '../items/types.js'
 import { openBookmark } from '../GoogleChrome.js'
 
 const defaultConfig: Config = {
-  excludeItems: [],
+  excludeApps: [],
   favoriteItems: [],
   chromeProfiles: false,
   items: [],
@@ -71,7 +71,7 @@ export const parseAndValidate = (userConfig?: UserConfig): Config => {
       : defaultConfig.maxItemsVisible
 
   return {
-    excludeItems: userConfig.excludeItems || [],
+    excludeApps: userConfig.excludeApps || [],
     favoriteItems: userConfig.favoriteItems || [],
     chromeProfiles,
     items,
