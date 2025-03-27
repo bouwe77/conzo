@@ -4,6 +4,6 @@ import { version } from './version.js'
 
 export const Footer = () => (
   <Box justifyContent="flex-end">
-    <Text>conzo v{version} </Text>
+    <Text>conzo {version} </Text>
   </Box>
 )
