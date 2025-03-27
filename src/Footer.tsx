@@ -1,8 +1,9 @@
 import React from 'react'
 import { Box, Text } from 'ink'
+import { version } from './version.js'
 
 export const Footer = () => (
   <Box justifyContent="flex-end">
-    <Text>conzo </Text>
+    <Text>conzo v{version} </Text>
   </Box>
 )
