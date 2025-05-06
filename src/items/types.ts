@@ -1,6 +1,7 @@
 type BaseItem<T extends string> = {
   name: string
   actionType: T
+  alias?: string
 }
 
 // Functions

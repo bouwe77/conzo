@@ -72,9 +72,23 @@ const createResultsReducer =
           return false
         }
 
-        const filteredResults = state.allItems.filter((result) =>
-          isSubsequence(query.toLowerCase(), result.name.toLowerCase()),
+        const q = query.toLowerCase()
+
+        // Find the item that matches the alias, if any
+        const aliasMatch = state.allItems.find(
+          (r) => r.alias?.toLowerCase() === q,
         )
+
+        // Fuzzy search on the item name
+        const others = state.allItems.filter((r) =>
+          isSubsequence(q, r.name.toLowerCase()),
+        )
+
+        // Make sure the matched alias is at the top of the list
+        const filteredResults = aliasMatch
+          ? [aliasMatch, ...others.filter((r) => r !== aliasMatch)]
+          : others
+
         return {
           ...state,
           filteredResults,

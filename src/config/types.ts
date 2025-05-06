@@ -8,6 +8,7 @@ import type {
 export type UserItem = {
   name: string
   action: FunctionAction | ReactAction | BookmarkAction
+  alias?: string
 }
 
 type FriendlyName = string

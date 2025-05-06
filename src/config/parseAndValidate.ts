@@ -36,6 +36,7 @@ export const parseAndValidate = (userConfig?: UserConfig): Config => {
             name: userItem.name,
             action: userItem.action as () => JSX.Element,
             actionType: 'Show UI',
+            alias: userItem.alias,
           }
 
         // A function that returns a promise is considered a fire-and-forget action
@@ -48,6 +49,7 @@ export const parseAndValidate = (userConfig?: UserConfig): Config => {
             name: userItem.name,
             action: userItem.action as () => Promise<void>,
             actionType: 'Fire and forget',
+            alias: userItem.alias,
           }
 
         // An object is considered a bookmark object, which is converted to a fire-and-forget actions
@@ -56,13 +58,22 @@ export const parseAndValidate = (userConfig?: UserConfig): Config => {
             name: userItem.name,
             action: () => openBookmark(userItem.action as BookmarkAction),
             actionType: 'Fire and forget',
+            alias: userItem.alias,
           }
 
-        console.error('Unexpected action type: ', actionString)
+        console.error('ERROR: Unexpected action type: ', actionString)
 
         return null
       })
       .filter((item) => item !== null) as Item[]
+  }
+
+  const aliases = items
+    .map((item) => item.alias)
+    .filter((alias) => alias !== undefined) as string[]
+  const uniqueAliases = new Set(aliases)
+  if (uniqueAliases.size !== aliases.length) {
+    console.error('ERROR: Aliases should be unique')
   }
 
   const maxItemsVisible =
