@@ -1,3 +1,5 @@
+import type { JSX } from 'react'
+
 type BaseItem<T extends string> = {
   name: string
   actionType: T

@@ -1,6 +1,7 @@
 import type { Config, UserConfig, UserItem } from './types.js'
 import type { BookmarkAction, Item } from '../items/types.js'
 import { openBookmark } from '../GoogleChrome.js'
+import type { JSX } from 'react'
 
 const defaultConfig: Config = {
   excludeApps: [],

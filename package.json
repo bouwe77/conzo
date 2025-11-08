@@ -8,27 +8,28 @@
     "node": ">=16"
   },
   "scripts": {
-    "build": "rm -rf dist && tsc && tsc-alias && ./createPackageJson.sh && cp README.md ./dist"
+    "build": "rm -rf dist && tsc && tsc-alias && ./createPackageJson.sh && cp README.md ./dist",
+    "update": "npx -y jelmerro/nus"
   },
   "files": [
     "dist"
   ],
   "dependencies": {
-    "ink": "^5.0.1",
-    "ink-text-input": "^6.0.0",
-    "meow": "^13.2.0",
-    "react": "^18.3.1",
-    "react-error-boundary": "^4.1.2"
+    "ink": "6.4.0",
+    "ink-text-input": "6.0.0",
+    "meow": "14.0.0",
+    "react": "19.2.0",
+    "react-error-boundary": "6.0.0"
   },
   "devDependencies": {
-    "@types/react": "^18.3.12",
-    "chalk": "^5.3.0",
-    "eslint-plugin-react": "^7.37.2",
-    "eslint-plugin-react-hooks": "^5.0.0",
-    "prettier": "^3.3.3",
-    "react-devtools-core": "^4.28.5",
-    "ts-node": "^10.9.2",
-    "tsc-alias": "^1.8.10",
-    "typescript": "^5.6.3"
+    "@types/react": "19.2.2",
+    "chalk": "5.6.2",
+    "eslint-plugin-react": "7.37.5",
+    "eslint-plugin-react-hooks": "7.0.1",
+    "prettier": "3.6.2",
+    "react-devtools-core": "6.1.2",
+    "ts-node": "10.9.2",
+    "tsc-alias": "1.8.16",
+    "typescript": "5.9.3"
   }
 }
