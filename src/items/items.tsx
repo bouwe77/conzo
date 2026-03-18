@@ -1,5 +1,5 @@
 import React from 'react'
-import type { BookmarkItem, Item, ReactItem } from './types.js'
+import type { BookmarkItem, FunctionItem, Item, ReactItem } from './types.js'
 import type { Config } from '../config/types.js'
 import { RefreshApps } from '../apps/RefreshApps.js'
 import { spawnProcess } from '../helpers/spawnProcess.js'
@@ -120,6 +120,19 @@ const getDefaultUIs = (): ReactItem[] => [
   },
 ]
 
+const getDefaultFunctionItems = (): FunctionItem[] => [
+  {
+    name: 'Toggle dark/light theme',
+    action: async () => {
+      await spawnProcess('osascript', [
+        '-e',
+        'tell application "System Events" to tell appearance preferences to set dark mode to not dark mode',
+      ])
+    },
+    actionType: 'Fire and forget',
+  },
+]
+
 const getDefaultBookmarks = (): BookmarkItem[] => []
 
 // Main function to get items, with caching support for apps only
@@ -138,6 +151,7 @@ export const getItems = (() => {
 
     const defaultItems = [
       ...getDefaultUIs(),
+      ...getDefaultFunctionItems(),
       ...getDefaultBookmarks(),
     ] as Item[]
 
